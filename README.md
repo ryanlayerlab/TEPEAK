@@ -60,6 +60,13 @@ extendible to sbatch script
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
 
+#### Checking quality of insertions calls
+Insertion call quality depends highly on sample quality. Run the following to check the number of insertions per samples
+
+```bash checkInsertions.sh -f <sample_filename> -s <species>```
+
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+
 #### Generating Size-Frequency Histogram and getting preliminary DFAM Annotations
 
 
