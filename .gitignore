@@ -1,2 +1,7 @@
 data/
 output/
+bcftools-1.18/
+bin/
+libexec/
+share/
+
