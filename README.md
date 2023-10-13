@@ -1,7 +1,7 @@
 # TEPEAK
 novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations
 
-TODO: bcftools
+TODO: bcftools, pandas
 
 ### Setup
 
