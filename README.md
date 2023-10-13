@@ -69,8 +69,13 @@ Insertion call quality depends highly on sample quality. Run the following to ch
 Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
 
 #### Generating Size-Frequency Histogram and getting preliminary DFAM Annotations
+Run the following to generate the global vcf information file and overall size-frequency histogram.
 
+```bash getGlobalVCF.sh -f <sample_filename> -s <species>```
 
+You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
+
+```python -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
 
 ####
 
