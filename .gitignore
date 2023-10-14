@@ -6,3 +6,5 @@ libexec/
 share/
 sratoolkit.3.0.7-mac64/
 prefetch_tmp/
+geckodriver
+geckodriver.log
