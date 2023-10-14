@@ -26,7 +26,7 @@ Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please 
 
 See Wiki for details on setting up the requirements for this option.
 
-Once a reference and species name is chosen navigate to Species Name Start below
+Once the requirements are setup and a reference and species name is chosen navigate to Species Name Start below
 
 2. SRA Numbers
 
@@ -67,6 +67,24 @@ Note: The reference and GTF file need to be named after the species.
 
 ### Species Name Start
 
+``` python ncbi_scrape.py -s <species name> ```
+
+This will download a file ```SraRunInfo.csv``` to your downloads directory. Once finished downloading either move to TEPEAK directory or copy its path as input to the next script
+
+``` python get_sra_numbers.py -f <SRA file path> -n <max no. of samples> -o <output file name> ```
+
+To prepare and index the reference genome run 
+
+``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
+
+You can now proceed to the SRA List Start
+
+### SRA List Start
+
+If you do not already have a reference genome see the wiki about selecting one from the NCBI database and run 
+
+
+``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
 
 
 ### Aligned BAMs Start
