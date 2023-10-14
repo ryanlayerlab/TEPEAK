@@ -16,7 +16,19 @@ conda install insurveyor
 ``` 
 Singularity and source options also available https://github.com/kensung-lab/INSurVeyor
 
+### Start Options
 
+1. Species Name
+
+Simply supply a species name and the location of a desired reference genome and TEPEAK will do the rest. 
+
+Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
+
+See Wiki for details on setting up the requirements for this option.
+
+3. SRA Numbers
+
+4. Aligned BAMs
 ### Data Requirements
 Singularity requires coordinate sorted, indexed with MC and MQ tags, BAM files. 
 
