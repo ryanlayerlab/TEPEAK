@@ -1,0 +1,58 @@
+1697313520836	geckodriver	INFO	Listening on 127.0.0.1:59740
+1697313520898	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "--remote-debugging-port" "59741" "--remote-allow-hosts" "localhost" "-foreground" "-no-remote" "-profile" "/var/folders/wr/4rqnvky57y35yvhv5by1523m0000gn/T/rust_mozprofilecjbkyC"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1697313521350	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-remote-allow-hosts"
+1697313521535	Marionette	INFO	Listening on port 59744
+Read port: 59744
+2023-10-14 13:58:41.631 plugin-container[86537:2727735] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 13:58:41.631 plugin-container[86537:2727735] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 13:58:41.634 plugin-container[86537:2727735] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 13:58:41.634 plugin-container[86537:2727735] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 13:58:41.634 plugin-container[86537:2727738] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 13:58:41.634 plugin-container[86537:2727738] nil host used in call to allowsAnyHTTPSCertificateForHost:
+WebDriver BiDi listening on ws://127.0.0.1:59741
+1697313521682	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+2023-10-14 19:58:43.256 plugin-container[86541:2727926] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 19:58:43.256 plugin-container[86541:2727926] nil host used in call to allowsAnyHTTPSCertificateForHost:
+DevTools listening on ws://127.0.0.1:59741/devtools/browser/1424b5b7-538b-4c1c-9da7-142cd3c955dc
+2023-10-14 19:58:43.272 plugin-container[86541:2727926] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 19:58:43.272 plugin-container[86541:2727926] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 19:58:43.273 plugin-container[86541:2727935] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 19:58:43.273 plugin-container[86541:2727935] nil host used in call to allowsAnyHTTPSCertificateForHost:
+JavaScript warning: https://www.ncbi.nlm.nih.gov/sra?term=%28%22akhal-teke%22%5BOrganism%5D%20OR%20akhal-teke%5BAll%20Fields%5D%29%20AND%20%28cluster_public%5Bprop%5D%20AND%20%22biomol%20dna%22%5BProperties%5D%20AND%20%22strategy%20wgs%22%5BProperties%5D%20AND%20%22library%20layout%20paired%22%5BProperties%5D%20AND%20%22platform%20illumina%22%5BProperties%5D%20AND%20%22strategy%20wgs%22%5BProperties%5D%20OR%20%22strategy%20wga%22%5BProperties%5D%20OR%20%22strategy%20wcs%22%5BProperties%5D%20OR%20%22strategy%20clone%22%5BProperties%5D%20OR%20%22strategy%20finishing%22%5BProperties%5D%20OR%20%22strategy%20validation%22%5BProperties%5D%20AND%20%22filetype%20fastq%22%5BProperties%5D%29&cmd=DetailsSearch, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.ncbi.nlm.nih.gov."
+1697313888255	geckodriver	INFO	Listening on 127.0.0.1:59894
+1697313888671	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "--remote-debugging-port" "59895" "--remote-allow-hosts" "localhost" "-foreground" "-no-remote" "-profile" "/var/folders/wr/4rqnvky57y35yvhv5by1523m0000gn/T/rust_mozprofilerMB7u7"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1697313889095	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-remote-allow-hosts"
+1697313889292	Marionette	INFO	Listening on port 59900
+2023-10-14 14:04:49.336 plugin-container[86574:2731594] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 14:04:49.336 plugin-container[86574:2731594] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 14:04:49.357 plugin-container[86574:2731594] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 14:04:49.357 plugin-container[86574:2731594] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 14:04:49.358 plugin-container[86574:2731597] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 14:04:49.358 plugin-container[86574:2731597] nil host used in call to allowsAnyHTTPSCertificateForHost:
+Read port: 59900
+WebDriver BiDi listening on ws://127.0.0.1:59895
+1697313889450	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+DevTools listening on ws://127.0.0.1:59895/devtools/browser/0e7eed79-bb39-4909-8095-2d4362db9f10
+2023-10-14 20:04:51.073 plugin-container[86577:2731773] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 20:04:51.073 plugin-container[86577:2731773] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 20:04:51.076 plugin-container[86577:2731773] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 20:04:51.076 plugin-container[86577:2731773] nil host used in call to allowsAnyHTTPSCertificateForHost:
+2023-10-14 20:04:51.076 plugin-container[86577:2731772] nil host used in call to allowsSpecificHTTPSCertificateForHost
+2023-10-14 20:04:51.076 plugin-container[86577:2731772] nil host used in call to allowsAnyHTTPSCertificateForHost:
+JavaScript warning: https://www.ncbi.nlm.nih.gov/sra?term=%28%22akhal-teke%22%5BOrganism%5D%20OR%20akhal-teke%5BAll%20Fields%5D%29%20AND%20%28cluster_public%5Bprop%5D%20AND%20%22biomol%20dna%22%5BProperties%5D%20AND%20%22strategy%20wgs%22%5BProperties%5D%20AND%20%22library%20layout%20paired%22%5BProperties%5D%20AND%20%22platform%20illumina%22%5BProperties%5D%20AND%20%22strategy%20wgs%22%5BProperties%5D%20OR%20%22strategy%20wga%22%5BProperties%5D%20OR%20%22strategy%20wcs%22%5BProperties%5D%20OR%20%22strategy%20clone%22%5BProperties%5D%20OR%20%22strategy%20finishing%22%5BProperties%5D%20OR%20%22strategy%20validation%22%5BProperties%5D%20AND%20%22filetype%20fastq%22%5BProperties%5D%29&cmd=DetailsSearch, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.ncbi.nlm.nih.gov."
+JavaScript warning: https://siteintercept.qualtrics.com/dxjsmodule/CoreModule.js?Q_CLIENTVERSION=1.100.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise, line 1: Script terminated by timeout at:
+c@https://siteintercept.qualtrics.com/dxjsmodule/CoreModule.js?Q_CLIENTVERSION=1.100.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise:1:3765
+sendStat@https://siteintercept.qualtrics.com/dxjsmodule/CoreModule.js?Q_CLIENTVERSION=1.100.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise:1:60836
+Creative/t.prototype.impress@https://siteintercept.qualtrics.com/dxjsmodule/CoreModule.js?Q_CLIENTVERSION=1.100.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise:1:56859
+_display@https://siteintercept.qualtrics.com/dxjsmodule/WebResponsiveDialogModule.js?Q_CLIENTVERSION=1.100.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise:1:5700
+
+1697313896887	Marionette	INFO	Stopped listening on port 59900
+1697313899506	Marionette	INFO	Stopped listening on port 59744
