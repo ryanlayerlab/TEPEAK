@@ -26,11 +26,20 @@ Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please 
 
 See Wiki for details on setting up the requirements for this option.
 
-3. SRA Numbers
+Once a reference and species name is chosen navigate to Species Name Start below
 
-4. Aligned BAMs
+2. SRA Numbers
+
+TODO
+
+3. Aligned BAMs
+
+Insurveyor requires coordinate sorted, indexed with MC and MQ tags, BAM files.
+
+Ensure your BAM meet the data requirements below then proceed to Aligned Bams Start below
+
 ### Data Requirements
-Singularity requires coordinate sorted, indexed with MC and MQ tags, BAM files. 
+
 
 TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
 directory. TEPEAK also requires an indexed reference fasta file and optional GTF file in the same directory. 
@@ -54,8 +63,13 @@ DATA_DIR/
 Note: The reference and GTF file need to be named after the species. 
 
 
-### Running TEPEAK
+## Running TEPEAK
 
+### Species Name Start
+
+
+
+### Aligned BAMs Start
 
 #### Calling Insertions
 There are two different options for calling insertions, serial and parallel. If you have a large sample size its highly reccomenmded the parallel method 
