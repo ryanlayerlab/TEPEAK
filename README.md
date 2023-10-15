@@ -72,21 +72,23 @@ Required data: zipped reference genome downloaded and species name
 
 Required environment setup: NCBI Scraper, NCBI SDK, picard (SEE WIKI) 
 
-(TODO BUILD A CONFIG FILE TO SIMPLIFY)
+Begin by creating a config file
 
-1. ``` python ncbi_scrape.py -s <species name> ```
+1. ``` bash species_start_config.sh -s <species> -d <data_dir> -n <number of threads> ```
+ 
+2. ``` python ncbi_scrape.py -s <species name> ```
 
-This will download a file ```SraRunInfo.csv``` to your downloads directory. Once finished downloading either move to TEPEAK directory or copy its path as input to the next script.(TODO MOVE LIST TO DATA DIRECTORY)
+This will download a file ```SraRunInfo.csv``` to your downloads directory. Once finished downloading either move to TEPEAK directory or copy its path as input to the next script.
 
-2. ``` python get_sra_numbers.py -f <SRA file path> -n <max no. of samples> -o <output file name> ```
+2. ``` python get_sra_numbers.py -f <SraRunInfo.csv file path and name> -n <max no. of samples> -s <species name> ```
 
-Prepare reference genome (TODO MOVE REF TO DATA DIRECTORY)
+Prepare reference genome 
 
-3. ``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
+3. ``` bash process_reference.sh -s <species name> -f <zipped genome file path and namemvc > ```
 
-Download SRA data and align to reference (TODO REMOVE COMMAND LINE FLAGS AND DO CONFIG FILE)
+Download SRA data and align to reference 
 
-4.  ``` bash align_sra.sh -s <species> -f <samples filename> -d <data dir> -n <threads> ```
+4.  ``` bash align_sra.sh -s <species>```
 
 Call insertions (Note if you would like to run parallel jobs see Parallel Run section below)
 
@@ -100,12 +102,13 @@ Output will be a tab deliminated file ```count_{species}.txt``` where each line 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram.
 
-7. ```bash getGlobalVCF.sh -f <sample_filename> -s <species>```
+7. ```bash getGlobalVCF.sh -s <species>```
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
 ```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
 
+Note: delete the contents of ```prefetch_tmp``` when finished
 
 ### SRA List Start
 
