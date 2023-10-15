@@ -120,7 +120,7 @@ Run the following to generate the global vcf information file and overall size-f
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
 
 ####
 
