@@ -29,9 +29,16 @@ See Wiki for details on setting up the requirements for this option.
 
 Once the requirements are setup and a reference and species name is chosen navigate to Species Name Start below
 
-2. SRA Numbers
+2. SRA List
 
-TODO
+Start with a list of SRA number for the same species
+
+Find the reference genome Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details
+
+See Wiki for details on setting up the requirements for this option
+
+Once the requirements are setup and a reference and species name is chosen navigate to SRA List Start below
+
 
 3. Aligned BAMs
 
