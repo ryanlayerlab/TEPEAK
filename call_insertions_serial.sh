@@ -4,6 +4,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+
 while getopts s: flag
 do
     case "${flag}" in
@@ -12,13 +13,29 @@ do
 done
 
 
+
 mkdir -p output
 mkdir -p output/$species
 
 
+
+BAM_DIR_VALUE=$(grep '^bam_dir:' config_${species}.yaml | awk '{print $2}')
+
+if [ -n "$BAM_DIR_VALUE" ]; then
+    bam_dir=$BAM_DIR_VALUE
+    data_path="$(pwd)/$bam_dir"
+
+    # You can now use the $bam_dir variable in your script
+else
+     data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+     data_path="$(pwd)/$data_dir/${species}"
+fi
+
 data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
 echo $data_dir
-data_path="$(pwd)/$data_dir/${species}"
+
+#data_path="$(pwd)/$data_dir/${species}"
+
 threads=$(grep 'threads:' config_${species}.yaml | awk '{print $2}')
 picard_path="$(pwd)"
 
