@@ -119,9 +119,23 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ### SRA List Start
 
-If you do not already have a reference genome see the wiki about selecting one from the NCBI database and run 
+If you do not already have a reference genome see the wiki about selecting one from the NCBI database 
 
-``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
+
+
+Prepare reference genome 
+
+SRA list must be txt file with each line being one SRA accessions. Name this file  ```<species>_samples.txt``` and move it to TEPEAK directory
+
+Begin by creating a config file
+
+1. ``` bash sra_start_config.sh -s <species> -d <data_dir> -n <number of threads> ```
+
+Process reference genome
+
+2. ``` bash process_reference.sh -s <species name> -f <zipped genome file path and namemvc > ```
+
+
 
 
 ### Aligned BAMs Start
