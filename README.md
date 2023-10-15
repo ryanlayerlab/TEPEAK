@@ -106,6 +106,8 @@ extendible to sbatch script
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
 
+### Analysis
+
 #### Checking quality of insertions calls
 Insertion call quality depends highly on sample quality. Run the following to check the number of insertions per samples
 
