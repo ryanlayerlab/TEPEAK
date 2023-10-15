@@ -27,15 +27,19 @@ Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please 
 
 See Wiki for details on setting up the requirements for this option.
 
+Requirements: Find reference genome in NCBI database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
+
+Setup webscraper, NCBI SDK, and picard (see Wiki)
+
 Once the requirements are setup and a reference and species name is chosen navigate to Species Name Start below
 
 2. SRA List
 
 Start with a list of SRA number for the same species
 
-Find the reference genome Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details
+Requirements: Find reference genome in NCBI database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
 
-See Wiki for details on setting up the requirements for this option
+Setup NCBI SDK, and picard (see Wiki)
 
 Once the requirements are setup and a reference and species name is chosen navigate to SRA List Start below
 
@@ -78,7 +82,7 @@ Note: The reference and GTF file need to be named after the species.
 
 Required data: zipped reference genome downloaded and species name 
 
-Required environment setup: NCBI Scraper, NCBI SDK, picard (SEE WIKI) 
+Required environment setup: webscraper, NCBI SDK, picard (SEE WIKI) 
 
 Begin by creating a config file
 
@@ -122,7 +126,9 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ## OPTION 2: SRA List Start
 
-If you do not already have a reference genome see the wiki about selecting one from the NCBI database 
+Required data: zipped reference genome downloaded and SRA list
+
+Required environment setup: NCBI SDK, picard (SEE WIKI) 
 
 Prepare reference genome 
 
@@ -161,6 +167,8 @@ You can get the histogram for specific ranges by running the following. Omitting
 ---
 
 ## OPTION 3: Aligned BAMs Start
+
+Required data: reference genome named as ```<species>.fa``` and Aligned BAMs list
 
 Ensure your data matches the data structure requirements. Name your list of BAM ids as  ```<species>_samples.txt``` and move it to TEPEAK directory
 
