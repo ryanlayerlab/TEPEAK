@@ -46,8 +46,9 @@ Insurveyor requires coordinate sorted, indexed with MC and MQ tags, BAM files.
 
 Ensure your BAM meet the data requirements below then proceed to Aligned Bams Start below
 
-### Data Requirements
+---
 
+### Data Requirements
 
 TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
 directory. TEPEAK also requires an indexed reference fasta file and optional GTF file in the same directory. 
@@ -70,7 +71,7 @@ DATA_DIR/
 ``` 
 Note: The reference and GTF file need to be named after the species. 
 
-
+---
 ## Running TEPEAK
 
 ### Species Name Start
@@ -95,15 +96,15 @@ Prepare reference genome
 
 Download SRA data and align to reference 
 
-4.  ``` bash align_sra.sh -s <species>```
+4.  ``` bash align_species.sh -s <species>```
 
 Call insertions (Note if you would like to run parallel jobs see Parallel Run section below)
 
-5. ```bash call_insertions_serial.sh -f <sample filename> -d <data directory> -n <number of threads> -s <species name> ```
+5. ```bash call_insertions_serial.sh -s <species name> ```
 
 Insertion call quality depends highly on sample quality. The following will check the number of insertions per samples
 
-6. ```bash checkInsertions.sh -f <sample_filename> -s <species>```
+6. ```bash checkInsertions.sh -s <species>```
 
 Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
 
@@ -117,11 +118,11 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 Note: delete the contents of ```prefetch_tmp``` when finished
 
+---
+
 ### SRA List Start
 
 If you do not already have a reference genome see the wiki about selecting one from the NCBI database 
-
-
 
 Prepare reference genome 
 
@@ -135,8 +136,29 @@ Process reference genome
 
 2. ``` bash process_reference.sh -s <species name> -f <zipped genome file path and namemvc > ```
 
+Download and align 
 
+3. ``` bash align_species.sh -s <species>```
 
+Call insertions (Note if you would like to run parallel jobs see Parallel Run section below)
+
+5. ```bash call_insertions_serial.sh -s <species name> ```
+
+Insertion call quality depends highly on sample quality. The following will check the number of insertions per samples
+
+6. ```bash checkInsertions.sh -s <species>```
+
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+
+Run the following to generate the global vcf information file and overall size-frequency histogram.
+
+7. ```bash getGlobalVCF.sh -s <species>```
+
+You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
+
+```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+
+---
 
 ### Aligned BAMs Start
 
