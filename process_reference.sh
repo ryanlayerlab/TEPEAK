@@ -24,6 +24,10 @@ while getopts "f:s:" opt; do
   esac
 done
 
+DATA_DIR=$(grep 'data_directory:' config_$SPECIES.yaml | awk '{print $2}')
+
+echo $DATA_DIR
+
 # Check if both required parameters are provided
 if [[ -z $FILENAME || -z $SPECIES ]]; then
     echo "Both filename (-f) and species (-s) flags are required."
@@ -40,11 +44,13 @@ DIR_PATH=$(dirname "${FILENAME}")
 # Move the only file from the specified path to the current directory and rename
 mv ncbi_dataset/data/${BASENAME}/$(ls ncbi_dataset/data/${BASENAME}/ | head -n 1) ${SPECIES}.fa
 
+echo $pwd
+
 rm -r ncbi_dataset/
-mv ${SPECIES}.fa "${DIR_PATH}/"
+mv ${SPECIES}.fa "${DATA_DIR}/${SPECIES}/"
 
 echo "File has been moved and renamed as ${SPECIES}.fa"
-cd "${DIR_PATH}/"
+cd "${DATA_DIR}/${SPECIES}/"
 samtools faidx ${SPECIES}.fa
 
 bwa index -p ${SPECIES} ${SPECIES}.fa

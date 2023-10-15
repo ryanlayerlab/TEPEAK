@@ -4,29 +4,28 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:f:d:n: flag
+while getopts s: flag
 do
     case "${flag}" in
         s) species=${OPTARG};;
-        f) file=${OPTARG};;
-        d) data_dir=${OPTARG};;
-        n) threads=${OPTARG};;
     esac
 done
 
-data_path="$(pwd)/$data_dir"
-file_path="$data_dir/$file"
-
 
 mkdir -p output
-
-
-if [ ! -f "$file_path" ]; then
-    echo "Error: File '$file_path' does not exist."
-    exit 3
-fi
-
 mkdir -p output/$species
+
+
+data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+echo $data_dir
+data_path="$(pwd)/$data_dir/${species}"
+threads=$(grep 'threads:' config_${species}.yaml | awk '{print $2}')
+picard_path="$(pwd)"
+
+sra_file=$data_dir/$species/${species}_samples.txt
+
+
+#mkdir -p output/$species
 
 while IFS= read -r line; do
     line=$(echo "$line" | tr -d '[:space:]')
@@ -34,9 +33,9 @@ while IFS= read -r line; do
 
     mkdir -p output/$species/"${sra_example}"
     
-    echo insurveyor.py --threads $threads data/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa | cat -v
+    echo insurveyor.py --threads $threads $data_path/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa | cat -v
    
-    insurveyor.py --threads $threads data/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa
+    insurveyor.py --threads $threads $data_path/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa
 
-done < "$file_path"
+done < "$sra_file"
 
