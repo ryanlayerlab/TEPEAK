@@ -3,6 +3,7 @@ novel method for identifying and characterizing polymorphic transposable element
 
 TODO: bcftools, pandas, bwa
  conda install -c conda-forge selenium
+ picard
 
 ### Setup
 
