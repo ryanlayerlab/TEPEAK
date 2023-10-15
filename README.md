@@ -1,6 +1,6 @@
 # TEPEAK
 novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations
-
+---
 TODO: bcftools, pandas, bwa
  conda install -c conda-forge selenium
  picard
@@ -73,8 +73,8 @@ Note: The reference and GTF file need to be named after the species.
 
 ---
 ## Running TEPEAK
-
-### Species Name Start
+---
+## OPTION 1: Species Name Start
 
 Required data: zipped reference genome downloaded and species name 
 
@@ -120,7 +120,7 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ---
 
-### SRA List Start
+## OPTION 2 SRA List Start
 
 If you do not already have a reference genome see the wiki about selecting one from the NCBI database 
 
@@ -160,7 +160,7 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 ---
 
-### Aligned BAMs Start
+## OPTION 3 Aligned BAMs Start
 
 #### Calling Insertions
 There are two different options for calling insertions, serial and parallel. If you have a large sample size its highly reccomenmded the parallel method 
