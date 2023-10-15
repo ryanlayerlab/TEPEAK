@@ -68,22 +68,48 @@ Note: The reference and GTF file need to be named after the species.
 
 ### Species Name Start
 
-``` python ncbi_scrape.py -s <species name> ```
+Required data: zipped reference genome downloaded and species name 
 
-This will download a file ```SraRunInfo.csv``` to your downloads directory. Once finished downloading either move to TEPEAK directory or copy its path as input to the next script
+Required environment setup: NCBI Scraper, NCBI SDK, picard (SEE WIKI) 
 
-``` python get_sra_numbers.py -f <SRA file path> -n <max no. of samples> -o <output file name> ```
+(TODO BUILD A CONFIG FILE TO SIMPLIFY)
 
-To prepare and index the reference genome run 
+1. ``` python ncbi_scrape.py -s <species name> ```
 
-``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
+This will download a file ```SraRunInfo.csv``` to your downloads directory. Once finished downloading either move to TEPEAK directory or copy its path as input to the next script.(TODO MOVE LIST TO DATA DIRECTORY)
 
-You can now proceed to the SRA List Start
+2. ``` python get_sra_numbers.py -f <SRA file path> -n <max no. of samples> -o <output file name> ```
+
+Prepare reference genome (TODO MOVE REF TO DATA DIRECTORY)
+
+3. ``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
+
+Download SRA data and align to reference (TODO REMOVE COMMAND LINE FLAGS AND DO CONFIG FILE)
+
+4.  ``` bash align_sra.sh -s <species> -f <samples filename> -d <data dir> -n <threads> ```
+
+Call insertions (Note if you would like to run parallel jobs see Parallel Run section below)
+
+5. ```bash call_insertions_serial.sh -f <sample filename> -d <data directory> -n <number of threads> -s <species name> ```
+
+Insertion call quality depends highly on sample quality. The following will check the number of insertions per samples
+
+6. ```bash checkInsertions.sh -f <sample_filename> -s <species>```
+
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+
+Run the following to generate the global vcf information file and overall size-frequency histogram.
+
+7. ```bash getGlobalVCF.sh -f <sample_filename> -s <species>```
+
+You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
+
+```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+
 
 ### SRA List Start
 
 If you do not already have a reference genome see the wiki about selecting one from the NCBI database and run 
-
 
 ``` bash process_reference.sh -s <species name> -f <zipped genome file path> ```
 
