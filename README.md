@@ -120,7 +120,7 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ---
 
-## OPTION 2 SRA List Start
+## OPTION 2: SRA List Start
 
 If you do not already have a reference genome see the wiki about selecting one from the NCBI database 
 
@@ -160,22 +160,36 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 ---
 
-## OPTION 3 Aligned BAMs Start
+## OPTION 3: Aligned BAMs Start
 
-#### Calling Insertions
+Ensure your data matches the data structure requirements. Name your list of BAM ids as  ```<species>_samples.txt``` and move it to TEPEAK directory
+
+As of now the BAMs need to be inside the TEPEAK directory, stored in ```<data directory>```
+
 There are two different options for calling insertions, serial and parallel. If you have a large sample size its highly reccomenmded the parallel method 
-is used.
+is used. See Parallel Insertion Calling section below
 
 ##### Serial Run
 
-```bash call_insertions_serial.sh -f <sample filename> -d <data directory> -n <number of threads> -s <species name> ```
+Begin by creating a config file
 
-##### Parallel Run
-Requires xargs
-Determine how many separate jobs you want to start as -p flag (this parameter will divide number of lines in your input sample number file), also easily 
-extendible to sbatch script
+1. ``` bash bam_start_config.sh -s <species> -d <data_dir> -n <number of threads> ```
 
-```bash spawn_parallel.sh -f <sample filename> -d <data directory> -n <number of threads per process> -s <species name> -p <number of jobs>```
+2. ```bash call_insertions_serial.sh -s <species name> ```
+
+Insertion call quality depends highly on sample quality. The following will check the number of insertions per samples
+
+3. ```bash checkInsertions.sh -s <species>```
+
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+
+Run the following to generate the global vcf information file and overall size-frequency histogram.
+
+4. ```bash getGlobalVCF.sh -s <species>```
+
+You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
+
+5. ```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
 
@@ -197,5 +211,15 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 ```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
 
-####
+---
+
+### Parallel Insertion Calling
+
+TODO CONFIG FILE
+
+Requires xargs
+Determine how many separate jobs you want to start as -p flag (this parameter will divide number of lines in your input sample number file), also easily 
+extendible to sbatch script
+
+```bash spawn_parallel.sh -f <sample filename> -d <data directory> -n <number of threads per process> -s <species name> -p <number of jobs>```
 
