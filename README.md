@@ -50,8 +50,8 @@ Ensure your BAM meet the data requirements below then proceed to Aligned Bams St
 
 ### Data Requirements
 
-TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
-directory. TEPEAK also requires an indexed reference fasta file and optional GTF file in the same directory. 
+For SRA and BAM list options, TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
+directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and optional GTF file in the same directory. 
 ```
 horse_samples.csv
   SAMPLE1
