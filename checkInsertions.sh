@@ -1,11 +1,9 @@
 #!/bin/bash
 
 # Parse command line arguments
-while getopts ":s:f:" opt; do
+while getopts ":s:" opt; do
   case $opt in
     s) species="$OPTARG"
-    ;;
-    f) filename="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&2
     exit 1
@@ -16,13 +14,16 @@ while getopts ":s:f:" opt; do
   esac
 done
 
-# Check if species and filename have been provided
-if [ -z "$species" ] || [ -z "$filename" ]; then
-    echo "Both -s (species) and -f (filename) must be provided."
-    exit 1
-fi
 
-# Process each line of the file
+data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+echo $data_dir
+data_path="$(pwd)/$data_dir/${species}"
+threads=$(grep 'threads:' config_$species.yaml | awk '{print $2}')
+picard_path="$(pwd)"
+
+filename=$data_dir/$species/${species}_samples.txt
+
+
 output_file="count_${species}.txt"
 echo -e "Sample\tINS Count" > "$output_file"  # Initialize output file with headers
 
