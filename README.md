@@ -114,7 +114,7 @@ Run the following to generate the global vcf information file and overall size-f
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 Note: delete the contents of ```prefetch_tmp``` when finished
 
@@ -156,7 +156,7 @@ Run the following to generate the global vcf information file and overall size-f
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 ---
 
@@ -189,7 +189,7 @@ Run the following to generate the global vcf information file and overall size-f
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-5. ```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+5. ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
 
@@ -205,14 +205,14 @@ Output will be a tab deliminated file ```count_{species}.txt``` where each line 
 #### Generating Size-Frequency Histogram and getting preliminary DFAM Annotations
 Run the following to generate the global vcf information file and overall size-frequency histogram.
 
-```bash getGlobalVCF.sh -f <sample_filename> -s <species>```
+```bash getGlobalVCF.sh -s <species>```
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python buildHistogram.py -f <sample_filename> -s <species> -l <lower range> -u <upper range>```
+```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 ---
-
+::::TODO::::
 ### Parallel Insertion Calling
 
 TODO CONFIG FILE
