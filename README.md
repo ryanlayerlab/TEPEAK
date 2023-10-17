@@ -14,6 +14,7 @@ Conda is preferred method
 conda activate insurveyor-env
 conda config --append channels bioconda
 conda install insurveyor
+conda install -c bioconda bedtools
 ``` 
 Singularity and source options also available https://github.com/kensung-lab/INSurVeyor
 
@@ -119,6 +120,10 @@ Run the following to generate the global vcf information file and overall size-f
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
 ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+
+Now that you have a range of interest in the histogram extract all sequences with sizes that match
+
+8. ``` extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
 
 Note: delete the contents of ```prefetch_tmp``` when finished
 
