@@ -203,14 +203,11 @@ Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK
 
 
 ---
-::::TODO::::
 ### Parallel Insertion Calling
-
-TODO CONFIG FILE
 
 Requires xargs
 Determine how many separate jobs you want to start as -p flag (this parameter will divide number of lines in your input sample number file), also easily 
-extendible to sbatch script
+extendible to sbatch script. Requires aligned BAMs
 
-```bash spawn_parallel.sh -f <sample filename> -d <data directory> -n <number of threads per process> -s <species name> -p <number of jobs>```
+```bash spawn_parallel.sh -f <sample filename> -d <bam data directory> -n <number of threads per process> -s <species name> -p <number of jobs>```
 
