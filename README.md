@@ -112,7 +112,7 @@ Insertion call quality depends highly on sample quality. The following will chec
 
 Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
 
-Run the following to generate the global vcf information file and overall size-frequency histogram.
+Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
 7. ```bash getGlobalVCF.sh -s <species>```
 
@@ -156,7 +156,7 @@ Insertion call quality depends highly on sample quality. The following will chec
 
 Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
 
-Run the following to generate the global vcf information file and overall size-frequency histogram.
+Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
 7. ```bash getGlobalVCF.sh -s <species>```
 
@@ -191,7 +191,7 @@ Insertion call quality depends highly on sample quality. The following will chec
 
 Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
 
-Run the following to generate the global vcf information file and overall size-frequency histogram.
+Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
 4. ```bash getGlobalVCF.sh -s <species>```
 
