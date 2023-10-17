@@ -1,0 +1,24 @@
+List of designated improvements for future updates
+
+1. 
+Snakemake overhaul 
+
+2.
+Add sequence clustering
+
+3.
+NCBI SRA Scraper
+
+
+4. 
+Improve parallel methods
+
+5.
+Parallelize aligner
+
+
+
+
+
+
+

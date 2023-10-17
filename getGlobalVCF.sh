@@ -33,3 +33,4 @@ mv  "$species"_global_vcf.txt output/"$species"/"$species"_global_vcf.txt
 
 python3 buildHistogram.py -f output/"$species"/"$species"_global_vcf.txt
 
+python3 dfam_annotate.py -s "$species"
