@@ -123,7 +123,15 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 Now that you have a range of interest in the histogram extract all sequences with sizes that match
 
-8. ``` extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
+8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
+
+Annotate loci for genes
+
+9. 
+
+Write final output files for a range. Use the ``` -g ``` flag to include gene annotations (y or n)
+
+10. ```bash write_output -s species -l <lower bp range> -u <upper bp range> -g <(y/n) include genes> ``` 
 
 Note: delete the contents of ```prefetch_tmp``` when finished
 
