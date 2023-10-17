@@ -125,11 +125,11 @@ Now that you have a range of interest in the histogram extract all sequences wit
 
 8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
 
-Annotate loci for genes
+Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
 
-9. 
+9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
 
-Write final output files for a range. Use the ``` -g ``` flag to include gene annotations (y or n)
+Write final output files for a range. Use the ``` -g ``` flag to include gene annotations (y or n). This will output a final with merged loci information in ``` output/species/peak_l-h/``` as ```_merged.txt```, ```_merged_genes.txt``` , and ```_pop_vcf_.txt```  
 
 10. ```bash write_output -s species -l <lower bp range> -u <upper bp range> -g <(y/n) include genes> ``` 
 
@@ -176,6 +176,20 @@ Run the following to generate the global vcf information file and overall size-f
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
 ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+Now that you have a range of interest in the histogram extract all sequences with sizes that match
+
+8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
+
+Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
+
+9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
+
+Write final output files for a range. Use the ``` -g ``` flag to include gene annotations (y or n). This will output a final with merged loci information in ``` output/species/peak_l-h/``` as ```_merged.txt```, ```_merged_genes.txt``` , and ```_pop_vcf_.txt```  
+
+10. ```bash write_output -s species -l <lower bp range> -u <upper bp range> -g <(y/n) include genes> ``` 
+
+Note: delete the contents of ```prefetch_tmp``` when finished
+
 
 ---
 
@@ -213,6 +227,18 @@ You can get the histogram for specific ranges by running the following. Omitting
 5. ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
+
+Now that you have a range of interest in the histogram extract all sequences with sizes that match
+
+8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
+
+Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
+
+9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
+
+Write final output files for a range. Use the ``` -g ``` flag to include gene annotations (y or n). This will output a final with merged loci information in ``` output/species/peak_l-h/``` as ```_merged.txt```, ```_merged_genes.txt``` , and ```_pop_vcf_.txt```  
+
+10. ```bash write_output -s species -l <lower bp range> -u <upper bp range> -g <(y/n) include genes> ``` 
 
 
 ---
