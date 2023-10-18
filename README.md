@@ -2,12 +2,12 @@
 novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations
 ---
 TODO: bcftools, pandas, bwa
- conda install -c conda-forge selenium
+ 
  picard
 
 ### Setup
 
-##### Installing INSurVeyor 
+##### Installing INSurVeyor and other requirements
 Conda is preferred method 
 
 ```
@@ -15,7 +15,11 @@ conda activate insurveyor-env
 conda config --append channels bioconda
 conda install insurveyor
 conda install -c bioconda bedtools
-``` 
+conda install -c conda-forge selenium
+conda install -c bioconda bcftools
+conda install -c bioconda bwa
+pip install -r requirements.txt
+```
 Singularity and source options also available https://github.com/kensung-lab/INSurVeyor
 
 ### Start Options
