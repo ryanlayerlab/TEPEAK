@@ -1,10 +1,6 @@
 # TEPEAK
 novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations
 ---
-TODO: bcftools, pandas, bwa
- 
- picard
-
 ### Setup
 
 ##### Installing INSurVeyor and other requirements
@@ -24,32 +20,29 @@ Singularity and source options also available https://github.com/kensung-lab/INS
 
 ### Start Options
 
-1. Species Name
+#### 1. Species Name
 
-Simply supply a species name and the location of a desired reference genome and TEPEAK will do the rest. 
+Simply supply a species name and the location of a desired reference genome and TEPEAK will do the rest.
 
-Reference genome database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
 
-See Wiki for details on setting up the requirements for this option.
+**Requirements**: Find reference genome in NCBI database [Reference genome database](https://www.ncbi.nlm.nih.gov/datasets/genome/) (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Choosing-a-reference-genome) for guide)
 
-Requirements: Find reference genome in NCBI database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
-
-Setup webscraper, NCBI SDK, and picard (see Wiki)
+Setup webscraper, NCBI SDK, and picard (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions)
 
 Once the requirements are setup and a reference and species name is chosen navigate to Species Name Start below
 
-2. SRA List
+#### 2. SRA List
 
 Start with a list of SRA number for the same species
 
-Requirements: Find reference genome in NCBI database https://www.ncbi.nlm.nih.gov/datasets/genome/ (please see Wiki for details)
+**Requirements**: Find reference genome in NCBI database [Reference genome database](https://www.ncbi.nlm.nih.gov/datasets/genome/) (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Choosing-a-reference-genome) for guide)
 
-Setup NCBI SDK, and picard (see Wiki)
+Setup NCBI SDK, and picard (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions)
 
 Once the requirements are setup and a reference and species name is chosen navigate to SRA List Start below
 
 
-3. Aligned BAMs
+#### 3. Aligned BAMs
 
 Insurveyor requires coordinate sorted, indexed with MC and MQ tags, BAM files.
 
@@ -73,7 +66,7 @@ DATA_DIR/
   SAMPLE2.BAM
   SAMPLE2.BAM.BAI
 
-  horse.fa
+  horse.fa  (ref must be named <species>.fa)
   horse.fa.fai
 
   horse.gtf (optional)
@@ -87,7 +80,7 @@ Note: The reference and GTF file need to be named after the species.
 
 Required data: zipped reference genome downloaded and species name 
 
-Required environment setup: webscraper, NCBI SDK, picard (SEE WIKI) 
+Required environment setup: webscraper, NCBI SDK, picard (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Species-Name-and-SRA-List-Startup))
 
 Begin by creating a config file
 
@@ -145,7 +138,7 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 Required data: zipped reference genome downloaded and SRA list
 
-Required environment setup: NCBI SDK, picard (SEE WIKI) 
+Required environment setup: NCBI SDK, picard (See [wiki](https://github.com/mrburke00/TEPEAK/wiki/Species-Name-and-SRA-List-Startup))
 
 Prepare reference genome 
 
