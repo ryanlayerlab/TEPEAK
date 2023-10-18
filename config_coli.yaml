@@ -1,4 +1,0 @@
-species: coli
-data_directory: data
-threads: 6
-bam_dir: data
