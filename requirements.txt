@@ -1,0 +1,43 @@
+attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1683424013410/work
+biopython @ file:///Users/runner/miniforge3/conda-bld/biopython_1676639327377/work
+Brotli @ file:///Users/runner/miniforge3/conda-bld/brotli-split_1695989838345/work
+certifi==2023.7.22
+charset-normalizer==3.3.0
+contourpy @ file:///Users/runner/miniforge3/conda-bld/contourpy_1695554308980/work
+cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1696677705766/work
+exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1692026125334/work
+fonttools @ file:///Users/runner/miniforge3/conda-bld/fonttools_1696601219319/work
+h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1664132893548/work
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
+importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1688754491823/work
+kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1695380028307/work
+matplotlib @ file:///Users/runner/miniforge3/conda-bld/matplotlib-suite_1697011224951/work
+munkres==1.1.4
+numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1695290936444/work/dist/numpy-1.26.0-cp310-cp310-macosx_10_9_x86_64.whl#sha256=42cb022d77b1d1a025ceb5c99bc1c6bb24a1094728a06994d5100e93e2d92121
+outcome @ file:///home/conda/feedstock_root/build_artifacts/outcome_1655217710638/work
+packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1696202382185/work
+pandas @ file:///Users/runner/miniforge3/conda-bld/pandas_1696030150446/work
+Pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1666920704267/work
+pyaml==23.9.7
+pyfaidx @ file:///opt/conda/conda-bld/pyfaidx_1695402632613/work
+pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1690737849915/work
+pysam==0.20.0
+PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1693930252784/work
+PyVCF3 @ file:///opt/conda/conda-bld/pyvcf3_1650931562118/work
+PyYAML==6.0.1
+requests==2.31.0
+selenium @ file:///home/conda/feedstock_root/build_artifacts/selenium_1682107665443/work
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+sniffio @ file:///home/conda/feedstock_root/build_artifacts/sniffio_1662051266223/work
+sortedcontainers @ file:///home/conda/feedstock_root/build_artifacts/sortedcontainers_1621217038088/work
+tornado @ file:///Users/runner/miniforge3/conda-bld/tornado_1695373570914/work
+trio @ file:///Users/runner/miniforge3/conda-bld/trio_1696377938518/work
+trio-websocket @ file:///home/conda/feedstock_root/build_artifacts/trio-websocket_1695816857197/work/dist
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1695040754690/work
+tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1680081134351/work
+unicodedata2 @ file:///Users/runner/miniforge3/conda-bld/unicodedata2_1695848189757/work
+urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1696425423864/work
+wsproto @ file:///home/conda/feedstock_root/build_artifacts/wsproto_1661356345548/work
+zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1695255097490/work
