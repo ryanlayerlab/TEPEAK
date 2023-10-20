@@ -14,6 +14,7 @@ conda install -c bioconda bedtools
 conda install -c conda-forge selenium
 conda install -c bioconda bcftools
 conda install -c bioconda bwa
+conda install jq
 pip install -r requirements.txt
 ```
 Singularity and source options also available https://github.com/kensung-lab/INSurVeyor
