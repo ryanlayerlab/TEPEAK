@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+set -u
+set -o pipefail
 
 # Variables for filename and species name
 FILENAME=""
@@ -42,16 +45,17 @@ BASENAME=$(basename "${FILENAME%.*}")
 DIR_PATH=$(dirname "${FILENAME}")
 
 # Move the only file from the specified path to the current directory and rename
-mv ncbi_dataset/data/${BASENAME}/$(ls ncbi_dataset/data/${BASENAME}/ | head -n 1) ${SPECIES}.fa
+#mv ncbi_dataset/data/${BASENAME}/$(ls ncbi_dataset/data/${BASENAME}/ | head -n 1) ${SPECIES}.fa
 
-echo $pwd
+FA=$(cat ncbi_dataset/data/dataset_catalog.json | jq -r '.assemblies[] | select(.accession).files[].filePath' | grep GCF)
 
-rm -r ncbi_dataset/
-mv ${SPECIES}.fa "${DATA_DIR}/${SPECIES}/"
+FA=ncbi_dataset/data/$FA
+
+#rm -r ncbi_dataset/
+cp ${FA} "${DATA_DIR}/${SPECIES}/${SPECIES}.fa"
 
 echo "File has been moved and renamed as ${SPECIES}.fa"
 cd "${DATA_DIR}/${SPECIES}/"
 samtools faidx ${SPECIES}.fa
 
 bwa index -p ${SPECIES} ${SPECIES}.fa
-
