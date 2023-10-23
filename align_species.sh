@@ -1,4 +1,7 @@
 #!/bin/bash
+set -eu
+set -o pipefail
+
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided"
     exit 1
@@ -26,8 +29,8 @@ while IFS= read -r line; do
     sra_example=$line
     cd $data_dir/$species
 
-    mkdir $sra_example
-    mkdir "${sra_example}"/bwa_errors
+    mkdir -p $sra_example
+    mkdir -p "${sra_example}"/bwa_errors
 
     cd $sra_example
 
