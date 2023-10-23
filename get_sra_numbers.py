@@ -36,7 +36,7 @@ data_dir = data['data_directory']
 
 
 df = pd.read_csv (options.sra_file, low_memory = False)
-sorted_df = df.sort_values(by='bases', ascending=False)
+sorted_df = df.sort_values(by='Bases', ascending=False)
 top_N_runs = sorted_df.head(int(options.max_n))['Run']
 #
 with open(data_dir+'/'+options.species+'/'+options.species + '_samples.txt', 'w') as f:
