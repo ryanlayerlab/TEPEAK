@@ -51,10 +51,10 @@ FA=$(cat ncbi_dataset/data/dataset_catalog.json | jq -r '.assemblies[] | select(
 
 FA=ncbi_dataset/data/$FA
 
-#rm -r ncbi_dataset/
 cp ${FA} "${DATA_DIR}/${SPECIES}/${SPECIES}.fa"
 
 echo "File has been moved and renamed as ${SPECIES}.fa"
+rm -r ncbi_dataset/
 cd "${DATA_DIR}/${SPECIES}/"
 samtools faidx ${SPECIES}.fa
 
