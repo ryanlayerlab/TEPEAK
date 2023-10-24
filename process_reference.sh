@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -u
+set -eu
 set -o pipefail
 
 # Variables for filename and species name
@@ -27,9 +26,9 @@ while getopts "f:s:" opt; do
   esac
 done
 
-DATA_DIR=$(grep 'data_directory:' config_$SPECIES.yaml | awk '{print $2}')
+DATA_DIR=$(grep 'data_directory:' configs/config_$SPECIES.yaml | awk '{print $2}')
 
-echo $DATA_DIR
+echo "$DATA_DIR"
 
 # Check if both required parameters are provided
 if [[ -z $FILENAME || -z $SPECIES ]]; then
@@ -48,14 +47,15 @@ DIR_PATH=$(dirname "${FILENAME}")
 #mv ncbi_dataset/data/${BASENAME}/$(ls ncbi_dataset/data/${BASENAME}/ | head -n 1) ${SPECIES}.fa
 
 FA=$(cat ncbi_dataset/data/dataset_catalog.json | jq -r '.assemblies[] | select(.accession).files[].filePath' | grep GCF)
-
 FA=ncbi_dataset/data/$FA
 
+# much like mv, the cp command can also rename
 cp ${FA} "${DATA_DIR}/${SPECIES}/${SPECIES}.fa"
 
 echo "File has been moved and renamed as ${SPECIES}.fa"
 rm -r ncbi_dataset/
 cd "${DATA_DIR}/${SPECIES}/"
 samtools faidx ${SPECIES}.fa
+# samtools faidx ${DATA_DIR}/${SPECIES}/${SPECIES}.fa
 
 bwa index -p ${SPECIES} ${SPECIES}.fa
