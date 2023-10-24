@@ -3,24 +3,23 @@ novel method for identifying and characterizing polymorphic transposable element
 ---
 ### Setup
 
-##### Installing INSurVeyor and other requirements
-Conda is preferred method 
+#### Installing INSurVeyor and other requirements
 
+Create and activate the insurveyor conda virtual environment. 
 ```
 conda create -n insurveyor-env -c bioconda -c conda-forge insurveyor
 conda activate insurveyor-env
-conda config --append channels bioconda
-conda install insurveyor
-conda install -c bioconda bedtools
-conda install -c conda-forge selenium
-conda install -c bioconda bcftools
-conda install -c bioconda bwa
-conda install -c bioconda samtools
-conda install jq
-pip install -r requirements.txt
 ```
-Singularity and source options also available https://github.com/kensung-lab/INSurVeyor
+Install insurveyor with conda.
+```
+conda install insurveyor
+```
+Conda is the preferred method for installing insurveyor. Singularity and source options are also available at https://github.com/kensung-lab/INSurVeyor
 
+Finish setup by running
+```
+bash src/setup.sh
+```
 ### Start Options
 
 #### 1. Species Name
