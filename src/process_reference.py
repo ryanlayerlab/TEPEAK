@@ -12,8 +12,9 @@ def parse_args():
 def main():
     args = parse_args()
     filename, species = args.filename, args.species
-
-    os_system(f"unzip {filename}")
+    
+    # unzip the file and auto say 'no' to replace README prompt
+    os_system(f'echo "n" | unzip {filename}')
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog, open(f'configs/config_{species}.yaml') as config_file: 
         parsed_dataset = json_load(dataset_catalog)
         config_file = yaml_safe_load(config_file)
