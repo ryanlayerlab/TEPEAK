@@ -14,4 +14,3 @@ picard/
 test_dir/
 *.sh.swp
 # SraRunTable.txt
-configs/
