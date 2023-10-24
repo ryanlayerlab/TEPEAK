@@ -14,10 +14,10 @@ do
    esac
 done
 
-data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
 echo $data_dir
 data_path="$(pwd)/$data_dir/${species}"
-threads=$(grep 'threads:' config_$species.yaml | awk '{print $2}')
+threads=$(grep 'threads:' configs/config_$species.yaml | awk '{print $2}')
 picard_path="$(pwd)"
 
 sra_file=$data_dir/$species/${species}_samples.txt
