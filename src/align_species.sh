@@ -15,7 +15,7 @@ do
 done
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-echo $data_dir
+# echo $data_dir
 data_path="$(pwd)/$data_dir/${species}"
 threads=$(grep 'threads:' configs/config_$species.yaml | awk '{print $2}')
 picard_path="$(pwd)"
@@ -73,6 +73,7 @@ while IFS= read -r line; do
     #rm "${sra_example}"_2.fastq
     #rm  -r tmp 
     
+    echo $data_path
     cd $data_path
   
 done < "$sra_file"
