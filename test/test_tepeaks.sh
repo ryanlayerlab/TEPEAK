@@ -3,7 +3,7 @@ test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest
 
 rm -rf configs/config_ecoli.yaml
 
-run test_species_start_config bash species_start_config.sh -s ecoli -d data -n 1
+run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
 data_exists=false
 if [ -d "data" ]; then 
@@ -29,13 +29,13 @@ assert_equal "data" $(cat configs/config_ecoli.yaml | grep data_directory | cut 
 assert_equal "1" $(cat configs/config_ecoli.yaml | grep thread | cut  -d " " -f 2)
 
 
-run test_get_sra_numbers python get_sra_numbers.py -f SraRunTable.txt -n 4 -s ecoli
+run test_get_sra_numbers src/python get_sra_numbers.py -f SraRunTable.txt -n 4 -s ecoli
 assert_equal "ERR10355883" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355883)
 assert_equal "ERR10355891" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355891)
 assert_equal "ERR10355911" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355911)
 assert_equal "ERR10355944" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355944)
 
-run test_process_reference.sh bash process_reference.sh -s ecoli -f data/ncbi_dataset.zip 
+run test_process_reference.sh src/bash process_reference.sh -s ecoli -f data/ncbi_dataset.zip 
 # run test_process_reference.sh python process_reference.py -s ecoli -f data/ncbi_dataset.zip 
 # testing the creation of files innside data_dir/species_dir
 assert_equal data/ecoli/ecoli.fa $(ls data/ecoli/ecoli.fa)
