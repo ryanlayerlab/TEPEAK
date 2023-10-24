@@ -12,3 +12,5 @@ geckodriver
 geckodriver.log
 picard/
 test_dir/
+*.sh.swp
+# SraRunTable.txt
