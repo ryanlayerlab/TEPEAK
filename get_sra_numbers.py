@@ -1,10 +1,5 @@
-import argparse
 from optparse import OptionParser
 import pandas as pd
-import os
-import json
-from subprocess import Popen, PIPE
-import getpass
 import yaml
 
 
@@ -24,7 +19,7 @@ parser.add_option("-s",
 
 (options, args) = parser.parse_args()
 
-config_file = 'config_'+options.species + '.yaml'
+config_file = f'configs/config_{options.species}.yaml'
 
 with open(config_file, 'r') as stream:
     try:
@@ -36,7 +31,7 @@ data_dir = data['data_directory']
 
 
 df = pd.read_csv (options.sra_file, low_memory = False)
-sorted_df = df.sort_values(by='Bases', ascending=False)
+sorted_df = df.sort_values(by = 'Bases', ascending = False)
 top_N_runs = sorted_df.head(int(options.max_n))['Run']
 #
 with open(data_dir+'/'+options.species+'/'+options.species + '_samples.txt', 'w') as f:
