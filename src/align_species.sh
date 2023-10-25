@@ -27,6 +27,7 @@ while IFS= read -r line; do
 
     line=$(echo "$line" | tr -d '[:space:]')
     sra_example=$line
+    # pwd
     cd $data_dir/$species
 
     mkdir -p $sra_example
@@ -37,7 +38,7 @@ while IFS= read -r line; do
     prefetch "${sra_example}" --max-size 200G
     fastq-dump --split-files "${sra_example}"
 
-    echo $data_path
+    # echo $data_path
 
     bwa mem -M -t $threads -R "@RG\tID:1\tSM:""${sra_example}" \
          $data_path/$species \
@@ -73,8 +74,9 @@ while IFS= read -r line; do
     #rm "${sra_example}"_2.fastq
     #rm  -r tmp 
     
-    echo $data_path
+    # echo $data_path
     cd $data_path
+    cd ../..
   
 done < "$sra_file"
 
