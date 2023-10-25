@@ -19,7 +19,7 @@ mkdir -p output/$species
 
 
 
-BAM_DIR_VALUE=$(grep '^bam_dir:' config_${species}.yaml | awk '{print $2}')
+BAM_DIR_VALUE=$(grep '^bam_dir:' configs/config_${species}.yaml | awk '{print $2}')
 
 if [ -n "$BAM_DIR_VALUE" ]; then
     bam_dir=$BAM_DIR_VALUE
@@ -27,16 +27,16 @@ if [ -n "$BAM_DIR_VALUE" ]; then
 
     # You can now use the $bam_dir variable in your script
 else
-     data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+     data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
      data_path="$(pwd)/$data_dir/${species}"
 fi
 
-data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
+data_dir=$(grep 'data_directory:'configs/config_${species}.yaml | awk '{print $2}')
 echo $data_dir
 
 #data_path="$(pwd)/$data_dir/${species}"
 
-threads=$(grep 'threads:' config_${species}.yaml | awk '{print $2}')
+threads=$(grep 'threads:' configs/config_${species}.yaml | awk '{print $2}')
 picard_path="$(pwd)"
 
 sra_file=$data_dir/$species/${species}_samples.txt
