@@ -18,7 +18,6 @@ mkdir -p output
 mkdir -p output/$species
 
 
-
 BAM_DIR_VALUE=$(grep '^bam_dir:' configs/config_${species}.yaml | awk '{print $2}')
 
 if [ -n "$BAM_DIR_VALUE" ]; then
@@ -31,8 +30,7 @@ else
      data_path="$(pwd)/$data_dir/${species}"
 fi
 
-data_dir=$(grep 'data_directory:'configs/config_${species}.yaml | awk '{print $2}')
-echo $data_dir
+data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
 
 #data_path="$(pwd)/$data_dir/${species}"
 
@@ -43,16 +41,15 @@ sra_file=$data_dir/$species/${species}_samples.txt
 
 
 #mkdir -p output/$species
-
 while IFS= read -r line; do
     line=$(echo "$line" | tr -d '[:space:]')
     sra_example=$line
 
     mkdir -p output/$species/"${sra_example}"
     
-    echo insurveyor.py --threads $threads $data_path/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa | cat -v
+    echo insurveyor.py --threads $threads "$data_path"/"${sra_example}".bam output/$species/"${sra_example}" "$data_path"/$species.fa | cat -v
    
-    insurveyor.py --threads $threads $data_path/"${sra_example}".bam output/$species/"${sra_example}" $data_path/$species.fa
+    insurveyor.py --threads $threads "$data_path"/"${sra_example}".bam output/$species/"${sra_example}" "$data_path"/$species.fa
 
 done < "$sra_file"
 
