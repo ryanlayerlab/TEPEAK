@@ -13,23 +13,24 @@ def main():
         config_file = yaml.safe_load(config_file)
     
     threads = config_file.get('threads')
-    bam_dir = config_file.get('bam_dir')
-    data_dir = config_file.get('data_directory') if bam_dir is None else config_file.get('data_directory')
-
-    sra_file = os.path.join(data_dir, species, species + '_samples.txt')
+    data_dir = config_file.get('data_directory')
+    reference_dir = os.path.join(data_dir, species, f'{species}.fa')
+    cmd = ['insurveyor.py', 
+            '--threads', str(threads), 
+            'BAM_FILE', 
+            'WORKDIR', 
+            reference_dir
+        ]
+    
+    sra_file = os.path.join(data_dir, species, f'{species}_samples.txt')
     with open(sra_file) as sra_file: 
         for line in sra_file: 
             sra_example = line.strip()
             output_dir = os.path.join('output', species, sra_example)
+            bam_file = os.path.join(data_dir, species, f'{sra_example}.bam')
+
             os.makedirs(output_dir, exist_ok = True)
-            cmd = [
-                'insurveyor.py', 
-                '--threads', str(threads), 
-                os.path.join(data_dir, sra_example + '.bam'), 
-                output_dir, 
-                os.path.join(data_dir, species + '.fa')
-            ]
-            print(" ".join(cmd))
+            cmd[3], cmd[4] = bam_file, output_dir 
             subprocess.run(cmd)
 
 if __name__ == '__main__':
