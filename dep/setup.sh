@@ -6,4 +6,4 @@ conda install -c bioconda bcftools
 conda install -c bioconda bwa
 conda install -c bioconda samtools
 conda install jq
-pip install -r requirements.txt
+pip install -r dep/requirements.txt
