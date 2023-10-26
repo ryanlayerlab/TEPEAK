@@ -18,7 +18,7 @@ Conda is the preferred method for installing insurveyor. Singularity and source 
 
 Finish setup by running
 ```
-bash src/setup.sh
+bash dep/setup.sh
 ```
 ### Start Options
 
