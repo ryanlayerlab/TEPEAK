@@ -1,9 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 import requests
-import json
-import yaml
+import yaml, json
 from Bio import pairwise2
 from Bio.Seq import Seq
 from Bio.pairwise2 import format_alignment
@@ -16,6 +14,7 @@ from Bio import SeqIO
 import configparser
 import argparse
 from optparse import OptionParser
+import os.path
 
 parser = OptionParser()
 parser.add_option("-s",
@@ -28,12 +27,13 @@ window_size = 50
 min_window = 200
 max_window = 6400
 
+species = options.species
 
-with open('config_'+options.species+'.yaml', 'r') as file:
+with open('configs/config_'+species+'.yaml', 'r') as file:
     config_data = yaml.safe_load(file)
 data_directory = config_data['data_directory']
-sv_info_file = data_directory + '/' + options.species + '_samples.txt'
-sv_info_file = 'output/'+ options.species +'/' + options.species + '_global_vcf.txt'
+# sv_info_file = 'output/'+ species +'/' + species + '_global_vcf.txt'
+sv_info_file = os.path.join('output', species, f'{species}_global_vcf.txt')
 
 df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
 df.columns = ['chrom','start','end','length','seq']
@@ -139,5 +139,5 @@ df_write['peak_size'] = peak_sizes
 df_write['annotations'] = annotations
 df_write['peak_sequence'] = peak_seqs
 
-out_file = 'output/' + options.species + '/dfam_annotate.csv'
+out_file = 'output/' + species + '/dfam_annotate.csv'
 df_write.to_csv(out_file)
