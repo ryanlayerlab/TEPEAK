@@ -26,8 +26,8 @@ if [ -n "$BAM_DIR_VALUE" ]; then
 
     # You can now use the $bam_dir variable in your script
 else
-     data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-     data_path="$(pwd)/$data_dir/${species}"
+    data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
+    data_path="$(pwd)/$data_dir/${species}"
 fi
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
