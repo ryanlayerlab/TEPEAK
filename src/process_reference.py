@@ -1,10 +1,10 @@
-import argparse
+from  argparse import ArgumentParser
 from os import system as os_system
 from json import load as json_load
 from yaml import safe_load as yaml_safe_load
 
 def parse_args():
-    parser = argparse.ArgumentParser(description = "Process and move files")
+    parser = ArgumentParser(description = "Process and move files")
     parser.add_argument('-f', '--filename', required = True, help = "zipped genome filepath")
     parser.add_argument('-s', '--species', required = True, help = "species name")
     return parser.parse_args()
