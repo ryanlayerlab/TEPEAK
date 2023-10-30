@@ -15,11 +15,8 @@ while getopts ":s:" opt; do
 done
 
 
-data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
-echo $data_dir
+data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
 data_path="$(pwd)/$data_dir/${species}"
-threads=$(grep 'threads:' config_$species.yaml | awk '{print $2}')
-picard_path="$(pwd)"
 
 filename=$data_dir/$species/${species}_samples.txt
 
