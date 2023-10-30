@@ -33,6 +33,6 @@ while read -r line; do
 done < "$sra_file"
 mv  "$species"_global_vcf.txt output/"$species"/"$species"_global_vcf.txt
 
-python3 src/buildHistogram.py -f output/"$species"/"$species"_global_vcf.txt
+python3 src/build_histogram.py -f output/"$species"/"$species"_global_vcf.txt
 
 python3 src/dfam_annotate.py -s "$species"
