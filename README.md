@@ -55,7 +55,7 @@ Ensure your BAM meet the data requirements below then proceed to Aligned Bams St
 ### Data Requirements
 
 For SRA and BAM list options, TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
-directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and optional GTF file in the same directory. 
+directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and an optional GTF file in the same directory. 
 ```
 horse_samples.csv
   SAMPLE1
@@ -110,7 +110,7 @@ Insertion call quality depends highly on sample quality. The following will chec
 
 6. ```bash checkInsertions.sh -s <species>```
 
-Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuing. 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
@@ -124,7 +124,7 @@ Now that you have a range of interest in the histogram extract all sequences wit
 
 8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
 
-Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
+Annotate loci for genes (requires gtf named as ```<species>.gtf```)
 
 9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
 
@@ -144,7 +144,7 @@ Required environment setup: NCBI SDK, picard (See [wiki](https://github.com/mrbu
 
 Prepare reference genome 
 
-SRA list must be txt file with each line being one SRA accessions. Name this file  ```<species>_samples.txt``` and move it to TEPEAK directory
+SRA list must be txt file with each line being one SRA accession. Name this file  ```<species>_samples.txt``` and move it to TEPEAK directory
 
 Begin by creating a config file
 
@@ -200,8 +200,7 @@ Ensure your data matches the data structure requirements. Name your list of BAM 
 
 As of now the BAMs need to be inside the TEPEAK directory, stored in ```<data directory>```
 
-There are two different options for calling insertions, serial and parallel. If you have a large sample size its highly reccomenmded the parallel method 
-is used. See Parallel Insertion Calling section below
+There are two different options for calling insertions, serial and parallel. If you have a large sample size its highly recommended to use the parallel method. See Parallel Insertion Calling section below
 
 ##### Serial Run
 
@@ -211,11 +210,11 @@ Begin by creating a config file
 
 2. ```bash call_insertions_serial.sh -s <species name> ```
 
-Insertion call quality depends highly on sample quality. The following will check the number of insertions per samples
+Insertion call quality depends highly on sample quality. The following will check the number of insertions per sample
 
 3. ```bash checkInsertions.sh -s <species>```
 
-Output will be a tab deliminated file ```count_{species}.txt``` where each line is sample name and respective number of insertions. Remove unsatisfactory samples from samplename file before continuiing. 
+Output will be a tab deliminated file ```count_{species}.txt``` where each line is a sample name and the respective number of insertions. Remove unsatisfactory samples from the samplename file before continuing. 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
@@ -225,13 +224,13 @@ You can get the histogram for specific ranges by running the following. Omitting
 
 5. ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
-Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection feature. 
+Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection features. 
 
 Now that you have a range of interest in the histogram extract all sequences with sizes that match
 
 8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
 
-Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
+Annotate loci for genes (requires gtf named as ```<species>.gtf```)
 
 9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
 
