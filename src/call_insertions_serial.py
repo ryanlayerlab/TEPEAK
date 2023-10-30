@@ -1,7 +1,9 @@
-import os, subprocess, argparse, yaml
+from argparse import ArgumentParser
+from yaml import safe_load as yaml_safe_load
+import os, subprocess
 
 def parse_args():
-    parser = argparse.ArgumentParser(description = "Process and run insurveyor.py on .bam files")
+    parser = ArgumentParser(description = "Process and run insurveyor.py on .bam files")
     parser.add_argument('-s', '--species', required = True, help = "Species name")
     return parser.parse_args()
 
@@ -10,7 +12,7 @@ def main():
     os.makedirs(f'output/{species}', exist_ok = True)    
 
     with open(f'configs/config_{species}.yaml') as config_file: 
-        config_file = yaml.safe_load(config_file)
+        config_file = yaml_safe_load(config_file)
     
     threads = config_file.get('threads')
     data_dir = config_file.get('data_directory')
