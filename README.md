@@ -113,11 +113,11 @@ Output will be a tab deliminated file ```count_{species}.txt``` where each line 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
-7. ```bash getGlobalVCF.sh -s <species>```
+7. ```bash get_global_vcf.sh -s <species>```
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+```python build_histogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 Now that you have a range of interest in the histogram extract all sequences with sizes that match
 
@@ -169,16 +169,16 @@ Output will be a tab deliminated file ```count_{species}.txt``` where each line 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
-7. ```bash getGlobalVCF.sh -s <species>```
+7. ```bash get_global_vcf.sh -s <species>```
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+```python build_histogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 Now that you have a range of interest in the histogram extract all sequences with sizes that match
 
 8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
 
-Annotate loci for genes (requires gtf named as ```<species>.gtf``` 
+Annotate loci for genes (requires gtf named as ```<species>.gtf```)
 
 9. ```bash annotate_genes -s <species> -l <lower bp range> -u <upper bp range> ``` 
 
@@ -217,11 +217,11 @@ Output will be a tab deliminated file ```count_{species}.txt``` where each line 
 
 Run the following to generate the global vcf information file and overall size-frequency histogram. This will also result in the file ```output/dfam_annotate.csv``` containing the DFAM annotations for any significant peak found in the histogram.
 
-4. ```bash getGlobalVCF.sh -s <species>```
+4. ```bash get_global_vcf.sh -s <species>```
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-5. ```python buildHistogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+5. ```python build_histogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
 
 Note: INSurVeyor generates a number of files not directly used in TEPEAK. TEPEAK also does not have any garbage collection features. 
 
