@@ -22,7 +22,6 @@ def main():
     with open('configs/config_'+species+'.yaml', 'r') as file:
         config_data = yaml.safe_load(file)
     data_directory = config_data['data_directory']
-    # sv_info_file = 'output/'+ species +'/' + species + '_global_vcf.txt'
     sv_info_file = os.path.join('output', species, f'{species}_global_vcf.txt')
 
     df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
