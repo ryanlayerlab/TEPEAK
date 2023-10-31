@@ -1,6 +1,5 @@
 import pandas as pd
 import requests
-import yaml
 from Bio import pairwise2
 from argparse import ArgumentParser
 import os.path
@@ -18,10 +17,6 @@ def main():
     max_window = 6400
 
     species = options.species
-
-    with open('configs/config_'+species+'.yaml', 'r') as file:
-        config_data = yaml.safe_load(file)
-    data_directory = config_data['data_directory']
     sv_info_file = os.path.join('output', species, f'{species}_global_vcf.txt')
 
     df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
@@ -46,9 +41,9 @@ def main():
                 peak_sizes.append(mode_idx)
 
 
-        # check if the sequences are good match with each other
-        # if good cluster then keep one sequence with peak number
-        # will need error handle if the cluster is not a good cluster
+    # check if the sequences are good match with each other
+    # if good cluster then keep one sequence with peak number
+    # will need error handle if the cluster is not a good cluster
     # once all peaks are done then submit to dfam
 
     peak_seqs = []
