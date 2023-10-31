@@ -1,7 +1,6 @@
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
 parser = argparse.ArgumentParser(description='Process some arguments.')
 parser.add_argument('-f', '--pop_vcf_file', required=True, help='Population VCF file')

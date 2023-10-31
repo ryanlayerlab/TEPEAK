@@ -1,18 +1,7 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import requests
-import yaml, json
+import yaml
 from Bio import pairwise2
-from Bio.Seq import Seq
-from Bio.pairwise2 import format_alignment
-from io import StringIO
-from Bio.Blast.Applications import NcbiblastnCommandline
-from Bio.Blast import NCBIXML
-import numpy as np
-from Bio.SeqRecord import SeqRecord
-from Bio import SeqIO
-import configparser
-import argparse
 from optparse import OptionParser
 import os.path
 
