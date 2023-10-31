@@ -5,14 +5,13 @@ novel method for identifying and characterizing polymorphic transposable element
 
 #### Installing INSurVeyor and other requirements
 
-Create and activate the insurveyor conda virtual environment. 
+Create the insurveyor conda virtual environment and install insurveyor inside the environment. 
 ```
 conda create -n insurveyor-env -c bioconda -c conda-forge insurveyor
+```
+Activate the insurveyor environment. 
+```
 conda activate insurveyor-env
-```
-Install insurveyor with conda.
-```
-conda install insurveyor
 ```
 Conda is the preferred method for installing insurveyor. Singularity and source options are also available at https://github.com/kensung-lab/INSurVeyor
 
