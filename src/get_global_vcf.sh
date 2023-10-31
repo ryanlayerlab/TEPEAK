@@ -15,18 +15,16 @@ do
 done
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-echo $data_dir
 data_path="$(pwd)/$data_dir/${species}"
-# threads=$(grep 'threads:' configs/config_${species}.yaml | awk '{print $2}')
 picard_path="$(pwd)"
 
 sra_file=$data_dir/$species/${species}_samples.txt
 
 
 while read -r line; do
-	vcf_file="output/$species/${line}/out.pass.vcf.gz"
-	echo $vcf_file
-	gzip -d "$vcf_file"
+	# vcf_file="output/$species/${line}/out.pass.vcf.gz"
+	# echo $vcf_file
+	# gzip -d "$vcf_file"
 	decompressed_file="output/$species/${line}/out.pass.vcf"
 	bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\t%SVINSSEQ\n" "$decompressed_file" >> "$species"_global_vcf.txt
 
