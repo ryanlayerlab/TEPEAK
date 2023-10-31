@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from Bio import pairwise2
+from Bio.Align import PairwiseAligner
 from argparse import ArgumentParser
 import os.path
 
@@ -59,7 +59,7 @@ def main():
             X_seq = X
             for j,Y in enumerate(remaining_sequences):
                 Y_seq = Y
-                alignments = pairwise2.align.globalxx(X_seq, Y_seq)
+                alignments = PairwiseAligner.align.globalxx(X_seq, Y_seq)
                 if float(alignments[0].score) >= 0.75 * peak:
                     cluster.append(Y)
                     del remaining_sequences[j]
@@ -80,7 +80,8 @@ def main():
     for peak_s in peak_seqs:
         peak_s_annots = []
         
-        response = requests.post('https://dfam.org/api/searches', data={'sequence': peak_s, 'organism' : "Equus caballus",'cutoff': 'curated'})
+        # response = requests.post('https://dfam.org/api/searches/', data={'sequence': peak_s, 'organism' : "Equus caballus", 'cutoff': 'curated'})
+        response = requests.post('https://dfam.org/api/searches/', data={'sequence': peak_s, 'organism' : "Escherichia coli", 'cutoff': 'curated'})
         print(response)
         print(response.json())
         resp_id = response.json()['id']
