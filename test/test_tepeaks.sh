@@ -31,7 +31,6 @@ assert_equal "ERR10355911" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355911
 assert_equal "ERR10355944" $(cat data/ecoli/ecoli_samples.txt | grep ERR10355944)
 # ===============
 
-# run test_process_reference bash src/process_reference.sh -s ecoli -f data/ncbi_dataset.zip 
 run test_process_reference python src/process_reference.py -s ecoli -f data/ncbi_dataset.zip
 # testing the creation of files inside data_dir/species_dir
 assert_equal "data/ecoli/ecoli.fa" $(ls data/ecoli/ecoli.fa)
