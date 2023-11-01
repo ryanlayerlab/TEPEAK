@@ -28,7 +28,7 @@ while read -r line; do
     vcf_file="output/$species/${line}/out.pass.vcf.gz"
     echo $vcf_file    
     # Unzip the file
-    gzip -d "$vcf_file"
+    gzip -dk "$vcf_file"
     decompressed_file="output/$species/${line}/out.pass.vcf"
 
     # Count occurrences of "SVLEN"
