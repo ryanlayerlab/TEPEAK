@@ -1,8 +1,8 @@
 import pandas as pd
-import requests
+import requests, os.path
 from Bio.Align import PairwiseAligner
 from argparse import ArgumentParser
-import os.path
+from time import sleep
 
 def parse_args():
     parser = ArgumentParser(description = "Process some arguments")
@@ -94,7 +94,7 @@ def main():
             i=0
             while not finished:
                 print("query not finished - checking again in 5 seconds")
-                time.sleep(5)
+                sleep(5)
                 response = requests.get('https://dfam.org/api/searches/'+resp_id)
                 results = response.json()
                 if 'seconds' in results['duration']:
