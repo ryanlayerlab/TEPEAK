@@ -15,8 +15,9 @@ def main():
     low, high = args.lower, args.upper
 
     peak_path = os.path.join('output', species, f'peak_{low}-{high}')
-    annotated_file = os.path.join(peak_path, f'{species}_{low}-{high}_gene_annotate.txt')
+    peak_species_filename = f'{species}_{low}-{high}'
 
+    annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gene_annotate.txt')
     # Read the BED file into a DataFrame
     df = pd.read_csv(annotated_file, sep="\t", header=None, names=["Chrom", "start", "end", "sequence", "sampleID", "gene", "type"])
 
@@ -49,7 +50,7 @@ def main():
 
     # Convert to a new DataFrame
     merged_df = pd.DataFrame(merged_rows)
-    out_file = os.path.join(peak_path, f'{species}_{low}-{high}_genes_merged.txt')
+    out_file = os.path.join(peak_path, f'{peak_species_filename}_genes_merged.txt')
     # Write to a new BED file
     merged_df.to_csv(out_file, sep="\t", header=False, index=False)
 
