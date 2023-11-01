@@ -173,7 +173,7 @@ Run the following to generate the global vcf information file and overall size-f
 
 You can get the histogram for specific ranges by running the following. Omitting the ranges will set the default as 0-10,000bp.
 
-```python build_histogram.py -f <global VCF filename> -s <species> -l <lower range> -u <upper range>```
+```python build_histogram.py -f <global VCF filename> -l <lower range> -u <upper range>```
 Now that you have a range of interest in the histogram extract all sequences with sizes that match
 
 8. ``` bash extract_range.sh -s <species> -l <lower bp range> -u <upper bp range> ```
