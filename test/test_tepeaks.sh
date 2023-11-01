@@ -63,7 +63,6 @@ assert_equal "data/ecoli/ERR10355944.bam" $(ls data/ecoli/ERR10355944.bam)
 assert_equal "data/ecoli/ERR10355944.bam.bai" $(ls data/ecoli/ERR10355944.bam.bai)
 # ===============
 
-## for some reason the .py script produces the desired output while the .sh script does not. 
 run test_call_insertions_serial python src/call_insertions_serial.py -s ecoli
 # run test_call_insertions_serial bash src/call_insertions_serial.sh -s ecoli
 # testing that output/ is made
