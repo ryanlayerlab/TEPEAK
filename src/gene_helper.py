@@ -11,7 +11,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    species =args.species
+    species = args.species
     low, high = args.lower, args.upper
 
     peak_path = os.path.join('output', species, f'peak_{low}-{high}')
@@ -34,28 +34,12 @@ def main():
                 gene_name = gene_name[1].strip('"')
                 
                 s = line[-1:][0].split()
-                s = '\t'.join(s[0:3]) + '\t' + s[4]
+                s = '\t'.join(s[:3]) + '\t' + s[4]
                 
                 int_type = line[0].split()[2]
                 w.write('\t'.join([s, gene_id, gene_name, int_type]) + '\n')
-            except:
-                pass
-            try:
-                #name = re.search('gene_id (.*); gene_version', line).group(1)
-                name = re.search('gene_id (.*); gene_version', line).group(1)
-                line = line.split(';')
-
-                gene_id =  name.strip('"')
-                gene_name = line[2].split()
-                gene_name = gene_name[1].strip('"')
-
-                s = line[-1:][0].split()
-                s = '\t'.join(s[0:3]) + '\t' + s[4]
-
-                int_type = line[0].split()[2]
-                w.write('\t'.join([s, gene_id, gene_name, int_type]) + '\n')
-            except:
-                continue
+            except Exception as e:
+                print(e)
                               
     df = pd.read_csv(loci_annotated_file, sep='\t', comment='t', header=None)
                     
