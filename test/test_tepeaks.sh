@@ -85,13 +85,13 @@ assert_equal "output/ecoli/ERR10355911/out.pass.vcf.gz" $(ls output/ecoli/ERR103
 # ===============
 
 run test_check_insertions bash src/check_insertions.sh -s ecoli 
-# test to see if count_{species}.txt has been created
-assert_equal "count_ecoli.txt" $(ls count_ecoli.txt)
-# test the contents of counts_{species}.txt
-assert_equal "2" $(cat count_ecoli.txt | grep ERR10355883 | cut -f 2)
-assert_equal "2" $(cat count_ecoli.txt | grep ERR10355891 | cut -f 2)
-assert_equal "2" $(cat count_ecoli.txt | grep ERR10355911 | cut -f 2)
-assert_equal "2" $(cat count_ecoli.txt | grep ERR10355944 | cut -f 2)
+# test to see if data_dir/species_dir/count_{species}.txt has been created
+assert_equal "data/ecoli/count_ecoli.txt" $(ls data/ecoli/count_ecoli.txt)
+# test the contents of data_dir/species_dir/counts_{species}.txt
+assert_equal "2" $(cat data/ecoli/count_ecoli.txt | grep ERR10355883 | cut -f 2)
+assert_equal "2" $(cat data/ecoli/count_ecoli.txt | grep ERR10355891 | cut -f 2)
+assert_equal "2" $(cat data/ecoli/count_ecoli.txt | grep ERR10355911 | cut -f 2)
+assert_equal "2" $(cat data/ecoli/count_ecoli.txt | grep ERR10355944 | cut -f 2)
 # ===============
 
 run test_get_global_vcf bash src/get_global_vcf.sh -s ecoli 
