@@ -10,13 +10,11 @@ def parse_args():
     return parser.parse_args()
 
 def construct_peak_sizes(df, min_window, max_window, window_size):
-    peaks = []
-    peak_sizes = []
+    peaks, peak_sizes = [], []
     for i in range(min_window, max_window, window_size):
         min_i = i
         max_i = i + window_size
-        b_rows = df.query('length >= @min_i')
-        t_rows = b_rows.query('length <= @max_i') 
+        t_rows = df.query('length >= @min_i & length <= @max_i')
         t = t_rows['length'].value_counts()
         if len(t) > 0:
             mode = t_rows['length'].mode().values[0]
@@ -31,32 +29,31 @@ def construct_peak_sizes(df, min_window, max_window, window_size):
 # will need error handle if the cluster is not a good cluster
 # once all peaks are done then submit to dfam
 def construct_peak_seq(df, peaks): 
-    def construct_all_clusters():
-        all_clusters = []
-        for X in remaining_sequences:
-            cluster = []
-            X_seq = X
-            for j, Y in enumerate(remaining_sequences):
-                Y_seq = Y
-                alignments = PairwiseAligner.align.globalxx(X_seq, Y_seq)
-                if float(alignments[0].score) >= 0.75 * peak:
-                    cluster.append(Y)
-                    del remaining_sequences[j]
-            if len(cluster) > 0:
-                all_clusters.append(cluster)
-        return all_clusters
-
     peak_seqs = []
     for peak in peaks: 
-        print(peak)
         df_peak = df.loc[df['length'] == peak]
         samples = df_peak.sample(n=10)
         remaining_sequences = samples['seq'].tolist().copy()
-        all_clusters = construct_all_clusters()
+        all_clusters = construct_all_clusters(remaining_sequences, peak)
         cluster_lens = [len(i) for i in all_clusters]
         largest_cluster = cluster_lens.index(max(cluster_lens))
         peak_seqs.append(all_clusters[largest_cluster][0])
     return peak_seqs
+
+def construct_all_clusters(remaining_sequences, peak):
+    all_clusters = []
+    for X in remaining_sequences:
+        cluster = []
+        X_seq = X
+        for j, Y in enumerate(remaining_sequences):
+            Y_seq = Y
+            alignments = PairwiseAligner.align.globalxx(X_seq, Y_seq)
+            if float(alignments[0].score) >= 0.75 * peak:
+                cluster.append(Y)
+                del remaining_sequences[j]
+        if len(cluster) > 0:
+            all_clusters.append(cluster)
+    return all_clusters
 
 def construct_annotations(peak_seqs, url, params):
     annotations = []
@@ -65,13 +62,10 @@ def construct_annotations(peak_seqs, url, params):
         peak_s_annots = []
         
         response = requests.post(url, data = params)
-        print(response)
-        print(response.json())
-        resp_id = response.json()['id']
-        print(resp_id)
-        response = requests.get(url + resp_id)
         results = response.json()
-        #print(results)
+        resp_id = results['id']
+        response = requests.get(url + resp_id)
+
         if results['duration'] == 'Not finished':
             finished = False
             i = 0
@@ -86,18 +80,15 @@ def construct_annotations(peak_seqs, url, params):
                     break
                 i += 1
                 if i == 10:
-                    print('Timed out')
+                    print("Timed out")
                     exit()
-            #query_hits = len(response.json()['results'][0]['hits'])
-        #print(results)
+
         query_hits = len(response.json()['results'][0]['hits'])
-        #print(no_query_hits)
         if query_hits == 0:
             peak_s_annots.append('No matching annotation found')
+        response_hits = results['results'][0]['hits']
         for hit in range(query_hits):
-            peak_s_annots.append((response.json()['results'][0]['hits'][hit]['description'],
-                                response.json()['results'][0]['hits'][hit]['type']))
-            #print(response.json()['results'][0]['hits'][hit]['description'])
+            peak_s_annots.append((response_hits[hit]['description'], response_hits[hit]['type']))
         annotations.append(peak_s_annots)
     return annotations
 
