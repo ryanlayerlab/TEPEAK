@@ -17,7 +17,7 @@ done
 data_dir=$(grep 'data_directory:' config_${species}.yaml | awk '{print $2}')
 echo $data_dir
 data_path="$(pwd)/$data_dir/${species}"
-threads=$(grep 'threads:' config_${species}.yaml | awk '{print $2}')
+# threads=$(grep 'threads:' config_${species}.yaml | awk '{print $2}')
 
 sra_file=$data_dir/$species/${species}_samples.txt
 
