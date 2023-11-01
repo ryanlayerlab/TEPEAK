@@ -14,9 +14,7 @@ def main():
 	name = args.species
 
 	current_path = os.getcwd()
-	print(current_path)
-	gecko_path = current_path + "/geckodriver"
-	print(gecko_path)
+	gecko_path = os.path.join(current_path, '/geckodriver')
 
 	# get download destination path
 	options = Options()
