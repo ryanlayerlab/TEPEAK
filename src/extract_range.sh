@@ -17,9 +17,6 @@ do
 done
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-echo $data_dir
-data_path="$(pwd)/$data_dir/${species}"
-
 sra_file=$data_dir/$species/${species}_samples.txt
 
 mkdir -p output/"${species}"/
