@@ -21,7 +21,7 @@ data_path="$(pwd)/$data_dir/${species}"
 filename=$data_dir/$species/${species}_samples.txt
 
 
-output_file="count_${species}.txt"
+output_file="${data_dir}/${species}/count_${species}.txt"
 echo -e "Sample\tINS Count" > "$output_file"  # Initialize output file with headers
 
 while read -r line; do
