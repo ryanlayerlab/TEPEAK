@@ -1,5 +1,5 @@
 from  argparse import ArgumentParser
-from os import system as os_system
+from subprocess import run
 from json import load as json_load
 from yaml import safe_load as yaml_safe_load
 
@@ -14,14 +14,14 @@ def main():
     filename, species = args.filename, args.species
     
     # unzip the file and auto input 'no' to replace README prompt
-    os_system(f'echo "n" | unzip {filename}')
+    run(f'echo "n" | unzip {filename}', shell = True)
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog, open(f'configs/config_{species}.yaml') as config_file: 
         parsed_dataset = json_load(dataset_catalog)
         config_file = yaml_safe_load(config_file)
     
     data_dir = config_file['data_directory']
     fa_filepath = f"ncbi_dataset/data/{parsed_dataset['assemblies'][2]['files'][0]['filePath']}"
-    os_system(
+    run(
         f"""
         cp {fa_filepath} {data_dir}/{species}/{species}.fa
         echo "File has been moved and renamed to {species}.fa"
@@ -29,7 +29,7 @@ def main():
         cd {data_dir}/{species}
         samtools faidx {species}.fa
         bwa index -p {species} {species}.fa
-        """
+        """, shell = True
     )
 
     ## tried using subprocess.run instead of os.system for all bash commands. it was more hassle than needed. 
