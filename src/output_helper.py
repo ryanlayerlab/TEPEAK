@@ -14,7 +14,8 @@ def main():
     species = args.species
     low, high = args.lower, args.upper
 
-    annotated_file = os.path.join('output', species, f'peak_{low}-{high}', f'{species}_{low}-{high}_gene_annotate.txt')
+    peak_path = os.path.join('output', species, f'peak_{low}-{high}')
+    annotated_file = os.path.join(peak_path, f'{species}_{low}-{high}_gene_annotate.txt')
 
     # Read the BED file into a DataFrame
     df = pd.read_csv(annotated_file, sep="\t", header=None, names=["Chrom", "start", "end", "sequence", "sampleID", "gene", "type"])
@@ -28,7 +29,7 @@ def main():
     max_seq_len = len(current_row["sequence"])
     sample_ids = [current_row["sampleID"]]
 
-    for _, row in df.iloc[1:].iterrows():
+    for row in df.iloc[1:]:
         if row["Chrom"] == current_row["Chrom"] and row["start"] <= current_row["end"]:
             # Adjust end position based on sequence length
             end_pos = current_row["start"] + max_seq_len
@@ -48,7 +49,7 @@ def main():
 
     # Convert to a new DataFrame
     merged_df = pd.DataFrame(merged_rows)
-    out_file = os.path.join('output', species, f'peak_{low}-{high}', f'{species}_{low}-{high}_genes_merged.txt')
+    out_file = os.path.join(peak_path, f'{species}_{low}-{high}_genes_merged.txt')
     # Write to a new BED file
     merged_df.to_csv(out_file, sep="\t", header=False, index=False)
 
