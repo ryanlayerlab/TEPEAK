@@ -1,8 +1,9 @@
 import pandas as pd
-import requests, subprocess
+import requests, os.path, time
 from Bio.Align import PairwiseAligner
 from argparse import ArgumentParser
-import os.path, time
+from subprocess import run, PIPE
+
 
 def parse_args():
     parser = ArgumentParser(description = "Process some arguments")
@@ -111,7 +112,7 @@ def main():
 
     url = 'https://dfam.org/api/searches/'
     cmd = f"cat data/{species}/{species}.fa | head -n 1 | cut -d ' ' -f 2,3" # depends on the file existing, extracts the scientific name from file
-    result = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True, check = True)
+    result = run(cmd, shell = True, stdout = PIPE, stderr = PIPE, text = True, check = True)
     params = {'sequence' : 'PEAK_S', 'organism': result.stdout, 'cutoff' : 'curated'}
 
     peaks, peak_sizes = construct_peak_sizes(df, min_window, max_window, window_size)
