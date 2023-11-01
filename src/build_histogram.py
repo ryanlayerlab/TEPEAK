@@ -23,11 +23,7 @@ def main():
 
 	df['length'].value_counts()
 	df = df[df['length']!='.']
-
-	#### if you get NaN error run this first line and then delete whatever index is causing the error
-	#print(df[df['length'].isnull()])
-	#df = df.drop(73676)
-	####
+	df.dropna(subset = ['length'], inplace = True)
 
 	df['length'] = df['length'].astype(int)
 	df['length'].value_counts()
