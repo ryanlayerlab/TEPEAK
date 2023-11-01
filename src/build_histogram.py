@@ -3,22 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def parse_args():
-	parser = ArgumentParser(description='Process some arguments.')
-	parser.add_argument('-f', '--pop_vcf_file', required=True, help='Population VCF file')
-	parser.add_argument('-l', '--lower', required=False, help='lower range')
-	parser.add_argument('-u', '--upper', required=False, help='upper range') 
+	parser = ArgumentParser(description = "Process some arguments.")
+	parser.add_argument('-f', '--pop_vcf_file', required = True, help = "Population VCF file")
+	parser.add_argument('-l', '--lower', required = False, help = "lower range")
+	parser.add_argument('-u', '--upper', required = False, help = "upper range") 
 	return parser.parse_args()
 
 def main():
 	args = parse_args()
-
-
-	if args.lower is None:
-		args.lower = 0
-
-	if args.upper is None:
-		args.upper = 10000
-
+	if args.lower is None: args.lower = 0
+	if args.upper is None: args.upper = 10000
 
 	min_size = str(args.lower)
 	max_size = str(args.upper)
