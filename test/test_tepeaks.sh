@@ -5,9 +5,9 @@ test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest
 fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin
 
 # fresh start by removing all the directories being produced
-# rm -rf configs/config_ecoli.yaml
-# rm -rf data/ecoli output count_ecoli.txt
-# echo "Files have been removed. Starting afresh."; echo 
+rm -rf configs/config_ecoli.yaml
+rm -rf data/ecoli output
+echo "Files have been removed. Starting afresh."; echo 
 
 run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
@@ -43,10 +43,10 @@ assert_equal "data/ecoli/ecoli.pac" $(ls data/ecoli/ecoli.pac)
 assert_equal "data/ecoli/ecoli.sa" $(ls data/ecoli/ecoli.sa)
 
 # testing the contents of files created inside data_dir/species_dir
-assert_equal "Escherichia coli" $(cat data/ecoli/ecoli.fa | head -n 1 | cut -d " " -f 2,3)
-assert_equal "4641652 1 0" $(cat data/ecoli/ecoli.amb)
-assert_equal "Escherichia coli" $(cat data/ecoli//ecoli.ann | grep NC | cut -d " " -f 3,4)
-assert_equal "NC_000913.3	4641652	72	80	81" $(car data/ecoli/ecoli.fa.fai)
+assert_equal "Escherichia coli" "$(cat data/ecoli/ecoli.fa | head -n 1 | cut -d " " -f 2,3)"
+assert_equal "4641652 1 0" "$(cat data/ecoli/ecoli.amb)"
+assert_equal "Escherichia coli" "$(cat data/ecoli//ecoli.ann | grep NC | cut -d ' ' -f 3,4)"
+assert_equal "NC_000913.3	4641652	72	80	81" "$(cat data/ecoli/ecoli.fa.fai)"
 # ===============
 
 run test_align_species bash src/align_species.sh -s ecoli # this script takes a while. 
@@ -96,13 +96,13 @@ assert_equal "2" $(cat data/ecoli/count_ecoli.txt | grep ERR10355944 | cut -f 2)
 
 run test_get_global_vcf bash src/get_global_vcf.sh -s ecoli 
 # test the creation of output/{species}_global_vcf.txt
-assert_equal "output/ecoli_global_vcf.txt" $(ls output/ecoli_global_vcf.txt)
+assert_equal "output/ecoli/ecoli_global_vcf.txt" $(ls output/ecoli/ecoli_global_vcf.txt)
 # test the creation of output/dfam_annotate.csv
-assert_equal "output/dfam_annotate.csv" $(ls output/dfam_annotate.csv) # this file only contains the column headers for this particular dataset
+assert_equal "output/ecoli/dfam_annotate.csv" $(ls output/ecoli/dfam_annotate.csv) # this file only contains the column headers for this particular dataset
 # ===============
 
 run test_extract_range bash src/extract_range.sh -s ecoli -l 0 -u 10000
 # test the creation of output/peak_low-high folder
-assert_equal "true" $(test -d output/peak_0-10000 && echo true)
+assert_equal "true" $(test -d output/ecoli/peak_0-10000 && echo true)
 # test the creation of output/peak_low-high/species_low-high_pop_vcf.txt file
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
