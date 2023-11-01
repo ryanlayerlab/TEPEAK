@@ -7,3 +7,4 @@ conda install -c bioconda bwa
 conda install -c bioconda samtools
 conda install jq
 pip install -r dep/requirements.txt
+fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin
