@@ -1,4 +1,7 @@
 #!/bin/bash
+set -eu
+set -o pipefail 
+
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided"
     exit 1
