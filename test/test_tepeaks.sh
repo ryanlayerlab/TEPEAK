@@ -47,13 +47,14 @@ assert_equal "data/ecoli/ecoli.sa" $(ls data/ecoli/ecoli.sa)
 
 
 
-run test_align_species bash src/align_species.sh -s ecoli # this test takes a while. 
+run test_align_species bash src/align_species.sh -s ecoli # this script takes a while. 
 # add tests for align_species.sh -- TODO
 
 # ===============
 
-run test_call_insertions_serial python src/call_insertions_serial.py -s ecoli
-# run test_call_insertions_serial bash src/call_insertions_serial.sh -s ecoli # incomplete, write more tests -- TODO
+## for some reason the .py script produces the desired output while the .sh script does not. 
+run test_call_insertions_serial python src/call_insertions_serial.py -s ecoli # incomplete, write more tests -- TODO
+# run test_call_insertions_serial bash src/call_insertions_serial.sh -s ecoli
 # testing that output/ is made
 assert_equal "true" $(test -d output && echo true)
 # testing that output/species is made
@@ -69,6 +70,15 @@ assert_equal "true" $(test -d output/ecoli/ERR10355911 && echo true)
 run test_check_insertions bash src/check_insertions.sh -s ecoli 
 # test to see if count_{species}.txt has been created
 assert_equal "count_ecoli.txt" $(ls count_ecoli.txt)
-# test the contents of counts_{species}.txt -- TODO
-
+# test the contents of counts_{species}.txt
+assert_equal "2" $(cat count_ecoli.txt | grep ERR10355883 | cut -f 2)
+assert_equal "2" $(cat count_ecoli.txt | grep ERR10355891 | cut -f 2)
+assert_equal "2" $(cat count_ecoli.txt | grep ERR10355911 | cut -f 2)
+assert_equal "2" $(cat count_ecoli.txt | grep ERR10355944 | cut -f 2)
 # ===============
+
+run test_get_global_vcf bash src/get_global_vcf.sh -s ecoli 
+# test the creation of output/{species}_global_vcf.txt
+assert_equal "output/ecoli_global_vcf.txt" $(ls output/ecoli_global_vcf.txt)
+# test the creation of output/dfam_annotate.csv
+assert_equal "output/dfam_annotate.csv" $(ls output/dfam_annotate.csv) # this file only contains the column headers for this particular dataset
