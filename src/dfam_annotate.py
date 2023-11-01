@@ -31,13 +31,7 @@ def construct_peak_sizes(df, min_window, max_window, window_size):
 # will need error handle if the cluster is not a good cluster
 # once all peaks are done then submit to dfam
 def construct_peak_seq(df, peaks): 
-    peak_seqs = []
-    for peak in peaks: 
-        print(peak)
-        df_peak = df.loc[df['length'] == peak]
-        samples = df_peak.sample(n=10)
-        #print(samples['seq'].tolist())
-        remaining_sequences = samples['seq'].tolist().copy()
+    def construct_all_clusters():
         all_clusters = []
         for X in remaining_sequences:
             cluster = []
@@ -50,6 +44,15 @@ def construct_peak_seq(df, peaks):
                     del remaining_sequences[j]
             if len(cluster) > 0:
                 all_clusters.append(cluster)
+        return all_clusters
+
+    peak_seqs = []
+    for peak in peaks: 
+        print(peak)
+        df_peak = df.loc[df['length'] == peak]
+        samples = df_peak.sample(n=10)
+        remaining_sequences = samples['seq'].tolist().copy()
+        all_clusters = construct_all_clusters()
         cluster_lens = [len(i) for i in all_clusters]
         largest_cluster = cluster_lens.index(max(cluster_lens))
         peak_seqs.append(all_clusters[largest_cluster][0])
