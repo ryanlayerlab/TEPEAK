@@ -48,7 +48,7 @@ def main():
 
     # Convert to a new DataFrame
     merged_df = pd.DataFrame(merged_rows)
-    out_file = "output/"+species+"/peak_"+low+"-"+high+"/"+species+"_"+low+"-"+high+"_genes_merged.txt"
+    out_file = os.path.join('output', species, f'peak_{low}-{high}', f'{species}_{low}-{high}_genes_merged.txt')
     # Write to a new BED file
     merged_df.to_csv(out_file, sep="\t", header=False, index=False)
 
