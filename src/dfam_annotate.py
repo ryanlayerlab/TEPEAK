@@ -85,13 +85,13 @@ def construct_annotations(peak_seqs, url, params):
                 if i == 10:
                     print('Timed out')
                     exit()
-            #no_query_hits = len(response.json()['results'][0]['hits'])
+            #query_hits = len(response.json()['results'][0]['hits'])
         #print(results)
-        no_query_hits = len(response.json()['results'][0]['hits'])
+        query_hits = len(response.json()['results'][0]['hits'])
         #print(no_query_hits)
-        if no_query_hits == 0:
+        if query_hits == 0:
             peak_s_annots.append('No matching annotation found')
-        for hit in range(no_query_hits):
+        for hit in range(query_hits):
             peak_s_annots.append((response.json()['results'][0]['hits'][hit]['description'],
                                 response.json()['results'][0]['hits'][hit]['type']))
             #print(response.json()['results'][0]['hits'][hit]['description'])
