@@ -64,7 +64,6 @@ assert_equal "data/ecoli/ERR10355944.bam.bai" $(ls data/ecoli/ERR10355944.bam.ba
 # ===============
 
 run test_call_insertions_serial python src/call_insertions_serial.py -s ecoli
-# run test_call_insertions_serial bash src/call_insertions_serial.sh -s ecoli
 # testing that output/ is made
 assert_equal "true" $(test -d output && echo true)
 # testing that output/species is made
