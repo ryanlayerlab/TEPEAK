@@ -54,10 +54,10 @@ def main():
         #print(samples['seq'].tolist())
         remaining_sequences = samples['seq'].tolist().copy()
         all_clusters = []
-        for i,X in enumerate(remaining_sequences):
+        for X in remaining_sequences:
             cluster = []
             X_seq = X
-            for j,Y in enumerate(remaining_sequences):
+            for j, Y in enumerate(remaining_sequences):
                 Y_seq = Y
                 alignments = PairwiseAligner.align.globalxx(X_seq, Y_seq)
                 if float(alignments[0].score) >= 0.75 * peak:
