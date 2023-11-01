@@ -25,17 +25,17 @@ output_file="${data_dir}/${species}/count_${species}.txt"
 echo -e "Sample\tINS Count" > "$output_file"  # Initialize output file with headers
 
 while read -r line; do
-    vcf_file="output/$species/${line}/out.pass.vcf.gz"
-    echo $vcf_file    
-    # Unzip the file
-    gzip -dk "$vcf_file"
-    decompressed_file="output/$species/${line}/out.pass.vcf"
+  vcf_file="output/$species/${line}/out.pass.vcf.gz"
+  echo $vcf_file    
+  # Unzip the file
+  gzip -dk "$vcf_file"
+  decompressed_file="output/$species/${line}/out.pass.vcf"
 
-    # Count occurrences of "SVLEN"
-    count=$(grep -c "SVLEN" "$decompressed_file")
+  # Count occurrences of "SVLEN"
+  count=$(grep -c "SVLEN" "$decompressed_file")
 
-    # Write to output file
-    echo -e "${line}\t${count}" >> "$output_file"
+  # Write to output file
+  echo -e "${line}\t${count}" >> "$output_file"
 
 done < "$filename"
 
