@@ -32,9 +32,5 @@ def main():
         """, shell = True
     )
 
-    ## tried using subprocess.run instead of os.system for all bash commands. it was more hassle than needed. 
-    ## doesn't work well with f"" and multiple commands
-    ## maybe if i moved the multiline commands into a seperate bash script and called the script using subprocess.run
-
 if __name__ == "__main__":
     main()
