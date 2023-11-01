@@ -10,11 +10,11 @@ def parse_args():
     parser.add_argument('-s', '--species', required = True, help = "species name")
     return parser.parse_args()
 
-def construct_peak_sizes(df, min_window, max_window, window_size):
+def construct_peak_sizes(df, min_w, max_w, w_size):
     peaks, peak_sizes = [], []
-    for i in range(min_window, max_window, window_size):
+    for i in range(min_w, max_w, w_size):
         min_i = i
-        max_i = i + window_size
+        max_i = i + w_size
         t_rows = df.query('length >= @min_i & length <= @max_i')
         t = t_rows['length'].value_counts()
         if len(t) > 0:
