@@ -94,13 +94,13 @@ def construct_annotations(peak_seqs, url, params):
     return annotations
 
 def main(): 
-    options = parse_args()
+    args = parse_args()
 
     window_size = 50
     min_window = 200
     max_window = 6400
 
-    species = options.species
+    species = args.species
     sv_info_file = os.path.join('output', species, f'{species}_global_vcf.txt')
 
     df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
