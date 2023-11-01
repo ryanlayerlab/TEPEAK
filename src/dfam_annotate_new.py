@@ -1,5 +1,5 @@
 import pandas as pd
-import requests
+import requests, subprocess
 from Bio.Align import PairwiseAligner
 from argparse import ArgumentParser
 import os.path
@@ -116,17 +116,13 @@ def main():
     print(df.head())
 
     url = 'https://dfam.org/api/searches/'
-    params = {'sequence' : 'PEAK_S', 'organism': 'Escherichia coli', 'cutoff' : 'curated'}
-    # data = "sequence=atcg&cutoff=curated"
-    #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    #headers = {'Content-Type': 'application/json'}
+    cmd = f"cat data/{species}/{species}.fa | head -n 1 | cut -d ' ' -f 2,3" # depends on the file existing, extracts the scientific name from file
+    result = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True, check = True)
+    params = {'sequence' : 'PEAK_S', 'organism': result.stdout, 'cutoff' : 'curated'}
+    
     peaks, peak_sizes = construct_peak_sizes(df, min_window, max_window, window_size)
-    # print("peaks", peaks)
-    # print("peak_sizes", peak_sizes)
-    peak_seqs = construct_peak_seq(df, peaks)
-    # print("peak_seqs", peak_seqs)
+    peak_seqs = construct_peak_seq(df, peaks)  
     annotations = construct_annotations(peak_seqs, url, params)
-    # print("annotations", annotations)
 
     df_write = pd.DataFrame()
     df_write['peak_number'] = peaks
