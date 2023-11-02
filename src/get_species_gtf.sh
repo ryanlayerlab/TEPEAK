@@ -24,6 +24,6 @@ echo "n" | unzip $zipped_gtf_dataset
 gcf_folder=$(ls ncbi_dataset/data | grep GCF)
 gtf_file=$(ls "ncbi_dataset/data/$gcf_folder/")
 
-# moving the gtf file to data_dir/species and renaming as species.gtf
+# moving the gtf file to data_dir/species_dir and renaming as species.gtf
 mv "ncbi_dataset/data/$gcf_folder/$gtf_file" "$data_dir/$species/${species}.gtf"
 rm -rf ncbi_dataset
