@@ -1,7 +1,5 @@
 from  argparse import ArgumentParser
-from subprocess import run
-from json import load as json_load
-from yaml import safe_load as yaml_safe_load
+import subprocess, json, yaml
 
 def parse_args():
     parser = ArgumentParser(description = "Process and move files")
@@ -14,14 +12,14 @@ def main():
     filename, species = args.filename, args.species
     
     # unzip the file and auto input 'no' to replace README prompt
-    run(f'echo "n" | unzip {filename}', shell = True)
+    subprocess.run(f'echo "n" | unzip {filename}', shell = True)
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog, open(f'configs/config_{species}.yaml') as config_file: 
-        parsed_dataset = json_load(dataset_catalog)
-        config_file = yaml_safe_load(config_file)
+        parsed_dataset = json.load(dataset_catalog)
+        config_file = yaml.safe_load(config_file)
     
     data_dir = config_file['data_directory']
     fa_filepath = f"ncbi_dataset/data/{parsed_dataset['assemblies'][2]['files'][0]['filePath']}"
-    run(
+    subprocess.run(
         f"""
         cp {fa_filepath} {data_dir}/{species}/{species}.fa
         echo "File has been moved and renamed to {species}.fa"
