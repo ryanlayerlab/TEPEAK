@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from argparse import ArgumentParser
-import os 
+import os.path
 
 def parse_args():
 	parser = ArgumentParser(description = "Porcess some arguments")
