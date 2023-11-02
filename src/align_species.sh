@@ -7,15 +7,15 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s: flag
-do
+while getopts s: flag; do
     case "${flag}" in
         s) species=${OPTARG};;
-   esac
+        *) echo "Usage: $0 -s species_name."
+            exit 1;;
+    esac
 done
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-# echo $data_dir
 data_path="$(pwd)/$data_dir/${species}"
 threads=$(grep 'threads:' configs/config_$species.yaml | awk '{print $2}')
 picard_path="$(pwd)"
@@ -23,7 +23,6 @@ picard_path="$(pwd)"
 sra_file=$data_dir/$species/${species}_samples.txt
 
 while IFS= read -r line; do
-
 
     line=$(echo "$line" | tr -d '[:space:]')
     sra_example=$line
@@ -44,7 +43,6 @@ while IFS= read -r line; do
         > "${sra_example}".bam
 
     samtools sort "${sra_example}".bam -o "${sra_example}".sorted.bam #-@$threads
-
     samtools index "${sra_example}".sorted.bam #-@$threads
 
     java -jar "$picard_path"/picard/build/libs/picard.jar FixMateInformation \
@@ -58,16 +56,8 @@ while IFS= read -r line; do
     mv "${sra_example}".fixed.bam ../"${sra_example}".bam
     mv "${sra_example}".fixed.bam.bai ../"${sra_example}".bam.bai
     
-    
     cd .. 
     rm -r "${sra_example}"
-
-    #rm "${sra_example}".sorted.bam
-    #rm "${sra_example}".sorted.bam.bai
-    #rm "${sra_example}".bam
-    #rm "${sra_example}"_1.fastq
-    #rm "${sra_example}"_2.fastq
-    #rm  -r tmp 
     
     cd "$data_path"
     cd ../..
