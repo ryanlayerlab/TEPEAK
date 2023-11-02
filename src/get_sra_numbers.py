@@ -1,65 +1,30 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 import pandas as pd
-import yaml
+import yaml, os.path
 
+def parse_args():
+    parser = ArgumentParser(description = "Process some arguments")
+    parser.add_option('-f', '--sra_file', help = "Path to sra runinfo file")
+    parser.add_option('-n', '--max_n', help = "Max number of sra numbers returned")
+    parser.add_option('-s', '--species', help = "species")
+    return parser.parse_args()
 
-parser = OptionParser()
+def main():
+    args = parse_args()
+    species = args.species
+    config_file = f'configs/config_{species}.yaml'
 
-parser.add_option("-f",
-	dest="sra_file",
-	help="Path to sra runinfo file")
-
-parser.add_option("-n",
-	dest="max_n",
-	help="Max number of sra numbers returned")
-
-parser.add_option("-s",
-	dest="species",
-	help="species")
-
-(options, args) = parser.parse_args()
-
-config_file = f'configs/config_{options.species}.yaml'
-
-with open(config_file, 'r') as stream:
-    try:
+    with open(config_file, 'r') as stream:
         data = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
+    data_dir = data['data_directory']
 
-data_dir = data['data_directory']
+    df = pd.read_csv (args.sra_file, low_memory = False)
+    sorted_df = df.sort_values(by = 'Bases', ascending = False)
+    top_N_runs = sorted_df.head(int(args.max_n))['Run']
 
+    with open(os.path.join(data_dir, species, f'{species}_samples.txt'), 'w') as f:
+        for run in top_N_runs:
+            f.write(str(run) + '\n')
 
-df = pd.read_csv (options.sra_file, low_memory = False)
-sorted_df = df.sort_values(by = 'Bases', ascending = False)
-top_N_runs = sorted_df.head(int(options.max_n))['Run']
-#
-with open(data_dir+'/'+options.species+'/'+options.species + '_samples.txt', 'w') as f:
-    for run in top_N_runs:
-        f.write(str(run) + '\n')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    main()
