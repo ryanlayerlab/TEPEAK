@@ -23,14 +23,11 @@ if [[ -z "$species" || -z "$data_dir" || -z "$threads" ]]; then
     exit 1
 fi
 
-mkdir $data_dir
-
-mkdir $data_dir/$species
-
+mkdir -p $data_dir/$species
 cp ${species}_samples.txt $data_dir/${species}/
 
 # Create the config_<species>.yaml file
-config_file="config_${species}.yaml"
+config_file="configs/config_${species}.yaml"
 
 echo "species: $species" > $config_file
 echo "data_directory: $data_dir" >> $config_file
