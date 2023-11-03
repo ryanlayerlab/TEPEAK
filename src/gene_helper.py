@@ -26,32 +26,28 @@ def main():
         lines = f.readlines()
         for line in lines:
             try:
-                #name = re.search('gene_name (.*); gene_source', line).group(1)
-                name = re.search('gene_id (.*); gene_version', line).group(1)
-                line = line.split(';')
+                gene_id = re.search('gene_id (.*?)(?:;|$)', line).group(1).strip('"') # extracts the value after 'gene_id' 
+                gene_name = re.search(r'db_xref "(.*?)"', line).group(1).strip('"') # extracts the value after the first 'db_xref'
+                gene_type = re.search('(.*?);', line).group(1).split('\t', 3)[2] # extracts value in the third column of line 
+                s = re.search(r'([^;]*$)', line).group(1).split() # extracts the last item in line after a ';'
 
-                gene_id =  name.strip('"')
-                gene_name = line[2].split()
-                gene_name = gene_name[1].strip('"')
-                
-                s = line[-1:][0].split()
                 s = '\t'.join(s[:3]) + '\t' + s[4]
-                
-                int_type = line[0].split()[2]
-                w.write('\t'.join([s, gene_id, gene_name, int_type]) + '\n')
+                w.write('\t'.join([s, gene_id, gene_name, gene_type]) + '\n')
             except Exception as e:
                 print(e)
                               
-    df = pd.read_csv(loci_annotated_file, sep='\t', comment='t', header=None)
+    df = pd.read_csv(loci_annotated_file, sep='\t', header=None)
                     
     header = ['chrom', 'chromStart', 'chromEnd','sname', 'gene_id', 'gene_name', 'type']
     df.columns = header[:len(df.columns)]
     df_full = pd.read_csv(pop_vcf_file, sep='\t', lineterminator='\n')
     df_full.columns = ['chrom','chromStart','chromEnd','seq','sname']
 
-    merged_df = pd.merge(df_full, df[['chrom', 'chromStart', 'chromEnd', 'sname', 'gene_name', 'type']], 
-                        on=['chrom', 'chromStart', 'chromEnd', 'sname'], 
-                        how='left')
+    merged_df = pd.merge(
+        df_full, df[['chrom', 'chromStart', 'chromEnd', 'sname', 'gene_name', 'type']],
+        on = ['chrom', 'chromStart', 'chromEnd', 'sname'], 
+        how = 'left'
+    )
     merged_df['gene_name'].fillna('None', inplace=True)
     merged_df['type'].fillna('None', inplace=True)
     out_file = os.path.join(peak_path, f'{peak_species_filename}_gene_annotate.txt')
