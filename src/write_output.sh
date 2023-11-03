@@ -54,5 +54,5 @@ if [ "$g_arg" == "n" ]; then
 
     rm $merged_range_file
 else
-    python3 output_helper.py -s $species -l $low -u $high
+    python3 src/output_helper.py -s $species -l $low -u $high
 fi
