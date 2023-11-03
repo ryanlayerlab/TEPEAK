@@ -4,9 +4,10 @@ import re, os.path
 
 def parse_args():
     parser = ArgumentParser(description = "Process some arguments")
-    parser.add_option('-s', '--species', help = "species name")
-    parser.add_option('-l', '--lower', help = "lower bound")
-    parser.add_option('-u', '--upper', help = "upper bound")
+    parser.add_argument('-s', '--species', help = "species name")
+    parser.add_argument('-l', '--lower', help = "lower bound")
+    parser.add_argument('-u', '--upper', help = "upper bound")
+    return parser.parse_args()
 
 def main():
     args = parse_args()
@@ -53,7 +54,7 @@ def main():
                         how='left')
     merged_df['gene_name'].fillna('None', inplace=True)
     merged_df['type'].fillna('None', inplace=True)
-    out_file = "output/"+species+"/peak_"+low+"-"+high+"/"+species+"_"+low+"-"+high+"_gene_annotate.txt"
+    out_file = os.path.join(peak_path, f'{peak_species_filename}_gene_annotate.txt')
     merged_df.to_csv(out_file,  sep='\t',index=False)
 
 if __name__ == '__main__':
