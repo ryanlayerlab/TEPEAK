@@ -5,9 +5,9 @@ test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest
 fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin
 
 # fresh start by removing all the directories being produced
-rm -rf configs/config_ecoli.yaml
-rm -rf data/ecoli output
-echo "Files have been removed. Starting afresh."; echo 
+# rm -rf configs/config_ecoli.yaml
+# rm -rf data/ecoli output
+# echo "Files have been removed. Starting afresh."; echo 
 
 run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
@@ -103,3 +103,20 @@ run test_extract_range bash src/extract_range.sh -s ecoli -l 0 -u 10000
 assert_equal "true" $(test -d output/ecoli/peak_0-10000 && echo true)
 # test the creation of output/peak_low-high/species_low-high_pop_vcf.txt file
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
+# ===============
+
+run test_get_species_gtf bash src/get_species_gtf.sh -s ecoli -f data/ncbi_dataset_gtf.zip 
+# test the presence of species.gtf in data_dir/species_dir
+assert_equal "data/ecoli/ecoli.gtf" $(ls data/ecoli/ecoli.gtf)
+# ===============
+
+run test_annotate_genes bash src/annotate_genes.sh -s ecoli -l 0 -u 10000
+# testing creation of files inside output/species_dir/peak_low-high
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_gene_annotate.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_gene_annotate.txt)
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_gtf_loci.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_gtf_loci.txt)
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_gtf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_gtf.txt)
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf_sorted.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf_sorted.txt)
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
+
+# test the contents of these files 
+assert_equal "true" $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
