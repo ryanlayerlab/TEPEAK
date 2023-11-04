@@ -25,6 +25,7 @@ if [[ -z "$species" || -z "$data_dir" || -z "$threads" ]]; then
 fi
 
 mkdir -p "$data_dir/$species"
+mkdir -p configs
 
 # Create the config_<species>.yaml file
 config_file="configs/config_${species}.yaml"
