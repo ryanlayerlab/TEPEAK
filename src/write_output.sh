@@ -15,7 +15,7 @@ done
 
 range_file=output/"${species}"/peak_"$low"-"$high"/"${species}"_"$low"-"$high"_pop_vcf.txt
 
-if [ "$g_arg" == "n" ]; then
+if [ "$gene" == "n" ]; then
     bedtools sort -i $range_file > output/"${species}"/peak_"$low"-"$high"/"${species}"_"$low"-"$high"_pop_vcf_sorted.txt
 
     sorted_range_file=output/"${species}"/peak_"$low"-"$high"/"${species}"_"$low"-"$high"_pop_vcf_sorted.txt 
