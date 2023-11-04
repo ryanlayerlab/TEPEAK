@@ -107,7 +107,7 @@ assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/e
 
 run test_get_species_gtf bash src/get_species_gtf.sh -s ecoli -f data/ncbi_dataset_gtf.zip 
 # test the presence of species.gtf in data_dir/species_dir
-assert_equal "data/ecoli/ecoli.gtf" $(ls data/ecoli/ecoli.gtf)
+assert_equal "data/ecoli/ecoli.gtf" $(ls data/ecoli/ecoli.gtf)  
 # ===============
 
 run test_annotate_genes bash src/annotate_genes.sh -s ecoli -l 0 -u 10000
@@ -120,3 +120,8 @@ assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/e
 
 # test the contents of these files 
 assert_equal "true" $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
+
+run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g y
+# testing creation of files inside output/species_dir/peak_low-high
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt") 
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_merged_genes.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_merged_genes.txt")
