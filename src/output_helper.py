@@ -19,18 +19,20 @@ def main():
 
     annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gene_annotate.txt')
     # Read the BED file into a DataFrame
-    df = pd.read_csv(annotated_file, sep="\t", header=None, names=["Chrom", "start", "end", "sequence", "sampleID", "gene", "type"])
+    df = pd.read_csv(annotated_file, sep="\t", header=0, names=["Chrom", "start", "end", "sequence", "sampleID", "gene", "type"])
 
     # Sort the DataFrame
     df = df.sort_values(by=["Chrom", "start", "end"])
+    # df[['start', 'end']] = df[['start', 'end']].apply(pd.to_numeric)
 
     # Merge overlapping rows
     merged_rows = []
     current_row = df.iloc[0]
+    # print(current_row)
     max_seq_len = len(current_row["sequence"])
     sample_ids = [current_row["sampleID"]]
 
-    for row in df.iloc[1:]:
+    for _, row in df.iloc[1:].iterrows():
         if row["Chrom"] == current_row["Chrom"] and row["start"] <= current_row["end"]:
             # Adjust end position based on sequence length
             end_pos = current_row["start"] + max_seq_len
