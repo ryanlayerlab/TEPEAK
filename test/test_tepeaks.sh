@@ -121,7 +121,10 @@ assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/e
 # test the contents of these files 
 assert_equal "true" $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
 
-run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g y
+run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g n
 # testing creation of files inside output/species_dir/peak_low-high
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt") 
+
+run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g y
+# testing creation of files inside output/species_dir/peak_low-high
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_genes_merged.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_genes_merged.txt")
