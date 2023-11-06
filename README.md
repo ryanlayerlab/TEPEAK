@@ -4,7 +4,7 @@ novel method for identifying and characterizing polymorphic transposable element
 ## Setup
 We recommend running everything inside a `conda` virtual environment using the latest version of `conda` (`23.9.0` at the time of writing).
 ### Windows
-A lot of tools used in this project are only available on UNIX based systems such as macOS and Linux. For proper functionality, we recommend running everything through a Windows Susbsytem for Linux (WSL). The instructions to install and set up a WSL on your system are available at https://learn.microsoft.com/en-us/windows/wsl/install. 
+A lot of tools used in this project are only available on UNIX based systems such as macOS and Linux. For proper functionality, we recommend running everything through a Windows Subsytem for Linux (WSL). The instructions to install and set up a WSL on your system are available at https://learn.microsoft.com/en-us/windows/wsl/install. 
 
 ### macOS/Linux
 Continue following the rest of the setup documentation. 
