@@ -29,8 +29,8 @@ while read -r line; do
   echo $vcf_file    
   # Unzip the file
   # gzip -dk "$vcf_file"
-  gzip -dc "$vcf_file" > out.pass.vcf
   decompressed_file="output/$species/${line}/out.pass.vcf"
+  gzip -dc "$vcf_file" > "$decompressed_file"
 
   # Count occurrences of "SVLEN"
   count=$(grep -c "SVLEN" "$decompressed_file")
