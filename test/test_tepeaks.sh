@@ -5,9 +5,9 @@ test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest
 fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin
 
 # fresh start by removing all the directories being produced
-# rm -rf configs/config_ecoli.yaml
-# rm -rf data/ecoli output
-# echo "Files have been removed. Starting afresh."; echo 
+rm -rf configs/config_ecoli.yaml
+rm -rf data/ecoli output
+echo "Files have been removed. Starting afresh."; echo 
 
 run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
@@ -124,4 +124,4 @@ assert_equal "true" $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo
 run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g y
 # testing creation of files inside output/species_dir/peak_low-high
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_merged.txt") 
-assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_merged_genes.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_merged_genes.txt")
+assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_genes_merged.txt" $(ls "output/ecoli/peak_0-10000/ecoli_0-10000_genes_merged.txt")
