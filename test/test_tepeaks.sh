@@ -7,13 +7,14 @@ fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/
 # fresh start by removing all the directories being produced
 rm -rf configs/config_ecoli.yaml
 rm -rf data/ecoli output
-echo "Files have been removed. Starting afresh."; echo 
+echo "Files have been removed. Starting afresh."
+echo "========================================="
 
 run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
-assert_equal "true" $(test -d data && echo true)
+assert_true $(test -d data && echo true)
 #test that a data_dir/species_dir is made
-assert_equal "true" $(test -d data/ecoli && echo true)
+assert_true $(test -d data/ecoli && echo true)
 #test that a config file is made 
 assert_equal configs/config_ecoli.yaml $(ls configs/config_ecoli.yaml)
 #test that "species: $species" is in $config_file
@@ -65,14 +66,14 @@ assert_equal "data/ecoli/ERR10355944.bam.bai" $(ls data/ecoli/ERR10355944.bam.ba
 
 run test_call_insertions_serial python src/call_insertions_serial.py -s ecoli
 # testing that output/ is made
-assert_equal "true" $(test -d output && echo true)
+assert_true $(test -d output && echo true)
 # testing that output/species is made
-assert_equal "true" $(test -d output/ecoli && echo true)
+assert_true $(test -d output/ecoli && echo true)
 # testing creation of other folders 
-assert_equal "true" $(test -d output/ecoli/ERR10355891 && echo true)
-assert_equal "true" $(test -d output/ecoli/ERR10355944 && echo true)
-assert_equal "true" $(test -d output/ecoli/ERR10355883 && echo true)
-assert_equal "true" $(test -d output/ecoli/ERR10355911 && echo true)
+assert_true $(test -d output/ecoli/ERR10355891 && echo true)
+assert_true $(test -d output/ecoli/ERR10355944 && echo true)
+assert_true $(test -d output/ecoli/ERR10355883 && echo true)
+assert_true $(test -d output/ecoli/ERR10355911 && echo true)
 
 # test the existence of out.pass.vcf.gz files inside the above directories -- file is used later on. 
 assert_equal "output/ecoli/ERR10355891/out.pass.vcf.gz" $(ls output/ecoli/ERR10355891/out.pass.vcf.gz)
@@ -100,7 +101,7 @@ assert_equal "output/ecoli/dfam_annotate.csv" $(ls output/ecoli/dfam_annotate.cs
 
 run test_extract_range bash src/extract_range.sh -s ecoli -l 0 -u 10000
 # test the creation of output/peak_low-high folder
-assert_equal "true" $(test -d output/ecoli/peak_0-10000 && echo true)
+assert_true $(test -d output/ecoli/peak_0-10000 && echo true)
 # test the creation of output/peak_low-high/species_low-high_pop_vcf.txt file
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
 # ===============
@@ -119,7 +120,7 @@ assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf_sorted.txt" $(ls o
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
 
 # test the contents of these files 
-assert_equal "true" $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
+assert_true $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
 
 run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g n
 # testing creation of files inside output/species_dir/peak_low-high
