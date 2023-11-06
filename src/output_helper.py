@@ -27,7 +27,7 @@ def main():
 
     # Merge overlapping rows
     merged_rows = []
-    current_row = df.iloc[0]
+    current_row = df.iloc[0].copy()
     # print(current_row)
     max_seq_len = len(current_row["sequence"])
     sample_ids = [current_row["sampleID"]]
