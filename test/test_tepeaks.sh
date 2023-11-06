@@ -6,7 +6,7 @@ fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/
 
 # fresh start by removing all the directories being produced
 rm -rf configs/config_ecoli.yaml
-rm -rf data/ecoli output
+rm -rf data/ecoli output/ecoli
 echo "Files have been removed. Starting afresh."
 echo "========================================="
 
