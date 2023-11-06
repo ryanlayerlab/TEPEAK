@@ -35,4 +35,3 @@ echo "data_directory: $data_dir" >> "$config_file"
 echo "threads: $threads" >> "$config_file"
 
 echo "Config file $config_file created successfully!"
-
