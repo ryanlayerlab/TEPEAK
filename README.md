@@ -1,7 +1,13 @@
 # TEPEAK
 novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations
 ---
-### Setup
+## Setup
+We recommend running everything inside a `conda` virtual environment using the latest version of `conda` (`23.9.0` at the time of writing).
+### Windows
+A lot of tools used in this project are only available on UNIX based systems such as macOS and Linux. For proper functionality, we recommend running everything through a Windows Susbsytem for Linux (WSL). The instructions to install and set up a WSL on your system are available at https://learn.microsoft.com/en-us/windows/wsl/install. 
+
+### macOS/Linux
+Continue following the rest of the setup documentation. 
 
 #### Installing INSurVeyor and other requirements
 
@@ -19,7 +25,7 @@ Finish setup by running
 ```
 bash dep/setup.sh
 ```
-### Start Options
+## Start Options
 
 #### 1. Species Name
 
@@ -77,7 +83,7 @@ Note: The reference and GTF file need to be named after the species.
 ---
 ## Running TEPEAK
 ---
-## OPTION 1: Species Name Start
+### OPTION 1: Species Name Start
 
 Required data: zipped reference genome downloaded and species name 
 
@@ -135,7 +141,7 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ---
 
-## OPTION 2: SRA List Start
+### OPTION 2: SRA List Start
 
 Required data: zipped reference genome downloaded and SRA list
 
@@ -191,7 +197,7 @@ Note: delete the contents of ```prefetch_tmp``` when finished
 
 ---
 
-## OPTION 3: Aligned BAMs Start
+### OPTION 3: Aligned BAMs Start
 
 Required data: reference genome named as ```<species>.fa``` and Aligned BAMs list
 
