@@ -1,5 +1,5 @@
-.DS_Store/
-.DS_Store
+**.DS_Store
+configs/
 data/
 output/
 bcftools-1.18/
@@ -12,3 +12,6 @@ geckodriver
 geckodriver.log
 picard/
 test_dir/
+**.sh.swp
+bedtools2/
+# SraRunTable.txt

@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu 
+set -o pipefail
 #name=$(cat /scratch/Shares/layer/workspace/devin_sra/sv_step/config.yaml | shyaml get-va$
 #procs=$(cat /scratch/Shares/layer/workspace/devin_sra/sv_step/config.yaml | shyaml get-v$
 
@@ -10,7 +12,7 @@ fi
 while getopts s:p:n:d:f: flag
 do
     case "${flag}" in
-        s) name=${OPTARG};; #species
+        s) name=${OPTARG};;
         p) procs=${OPTARG};;
         n) threads=${OPTARG};;
         d) data_dir=${OPTARG};;
@@ -20,11 +22,8 @@ done
 
 
 sra_path="$data_dir"/"$sra_file"
-
 lines=$(wc -l < $sra_path)
-
 x=$((lines / procs))
-
 cat $sra_path | xargs -I {} -L 2 ./call_insertions_parallel.sh -s $name -n $threads -d $data_dir -l {}
 
 #-n $x -P $procs ./call_insertions_parallel.sh -l {}
