@@ -68,15 +68,16 @@ horse_samples.csv
 
 
 DATA_DIR/
-  SAMPLE1.BAM
-  SAMPLE1.BAM.BAI
-  SAMPLE2.BAM
-  SAMPLE2.BAM.BAI
+  SPECIES_DIR/
+    SAMPLE1.BAM
+    SAMPLE1.BAM.BAI
+    SAMPLE2.BAM
+    SAMPLE2.BAM.BAI
 
-  horse.fa  (ref must be named <species>.fa)
-  horse.fa.fai
+    horse.fa  (ref must be named <species>.fa)
+    horse.fa.fai
 
-  horse.gtf (optional)
+    horse.gtf (optional)
 ``` 
 Note: The reference and GTF file need to be named after the species. 
 
