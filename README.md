@@ -9,7 +9,7 @@ A lot of tools used in this project are only available on UNIX based systems suc
 ### macOS/Linux
 Continue following the rest of the setup documentation. 
 
-#### Installing INSurVeyor and other requirements
+### Installing INSurVeyor and other requirements
 
 Create the insurveyor conda virtual environment and install insurveyor inside the environment. 
 ```
