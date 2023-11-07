@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+set -o pipefail 
 
 # Parse command line arguments
 while getopts ":s:" opt; do
@@ -16,19 +18,14 @@ done
 
 
 data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-data_path="$(pwd)/$data_dir/${species}"
-
-filename=$data_dir/$species/${species}_samples.txt
-
-
+filename="$data_dir/$species/${species}_samples.txt"
 output_file="${data_dir}/${species}/count_${species}.txt"
 echo -e "Sample\tINS Count" > "$output_file"  # Initialize output file with headers
 
 while read -r line; do
   vcf_file="output/$species/${line}/out.pass.vcf.gz"
-  echo $vcf_file    
-  # Unzip the file
-  # gzip -dk "$vcf_file"
+
+  # Unzip the file -- not using gzip -k to maintain compatibility with gzip<=1.5
   decompressed_file="output/$species/${line}/out.pass.vcf"
   gzip -dc "$vcf_file" > "$decompressed_file"
 
@@ -41,4 +38,3 @@ while read -r line; do
 done < "$filename"
 
 echo "Processing complete. Check $output_file for results."
-

@@ -1,3 +1,4 @@
+#!/bin/bash
 set -eu
 set -o pipefail 
 
@@ -24,3 +25,4 @@ while read -r -u 3 lineA && read -r -u 4 lineB; do
     [ "$chromA" = "NC_000913.3" ] || exit 1
     [ "$gene_idA" = "b1797" -a "$gene_idB" = "b1797" ] || exit 1
 done 3<$gtf_file 4<$gtf_loci_file
+echo true

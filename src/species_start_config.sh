@@ -2,11 +2,6 @@
 set -eu
 set -o pipefail 
 
-# Initialize variables
-species=""
-data_dir=""
-threads=""
-
 # Parse command-line arguments
 while getopts "s:d:n:" flag; do
     case "${flag}" in

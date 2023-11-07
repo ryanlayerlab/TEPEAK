@@ -1,8 +1,6 @@
+#!/bin/bash
 set -eu
 set -o pipefail 
-
-species=""
-zipped_gtf_dataset=""
 
 while getopts "s:f:" flag; do
     case "${flag}" in 

@@ -1,3 +1,4 @@
+#!/bin/bash
 test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest/master/ssshtest
 . ssshtest
 
@@ -120,7 +121,7 @@ assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf_sorted.txt" $(ls o
 assert_equal "output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt" $(ls output/ecoli/peak_0-10000/ecoli_0-10000_pop_vcf.txt)
 
 # test the contents of these files 
-assert_true $(bash test/annotate_genes/test_contents_gtf_loci.sh && echo true)
+assert_true $(bash test/annotate_genes/test_contents_gtf_loci.sh)
 
 run test_write_output bash src/write_output.sh -s ecoli -l 0 -u 10000 -g n
 # testing creation of files inside output/species_dir/peak_low-high

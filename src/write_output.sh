@@ -1,10 +1,10 @@
+#!/bin/bash
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided"
     exit 1
 fi
 
-while getopts s:l:u:g: flag
-do
+while getopts s:l:u:g: flag; do
     case "${flag}" in
         s) species=${OPTARG};;
         l) low=${OPTARG};;
