@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eu 
 set -o pipefail
-#name=$(cat /scratch/Shares/layer/workspace/devin_sra/sv_step/config.yaml | shyaml get-va$
-#procs=$(cat /scratch/Shares/layer/workspace/devin_sra/sv_step/config.yaml | shyaml get-v$
 
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided"
