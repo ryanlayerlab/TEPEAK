@@ -18,7 +18,7 @@ def main():
         data = yaml.safe_load(stream)
     data_dir = data['data_directory']
 
-    df = pd.read_csv (args.sra_file, low_memory = False)
+    df = pd.read_csv(args.sra_file, low_memory = False)
     sorted_df = df.sort_values(by = 'Bases', ascending = False)
     max_n = len(sorted_df) if args.max_n is None else args.max_n
     top_N_runs = sorted_df.head(int(max_n))['Run']
