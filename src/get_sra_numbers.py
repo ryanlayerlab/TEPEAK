@@ -4,9 +4,9 @@ import yaml, os.path
 
 def parse_args():
     parser = ArgumentParser(description = "Process some arguments")
-    parser.add_argument('-f', '--sra_file', help = "Path to sra runinfo file")
+    parser.add_argument('-f', '--sra_file', required = True, help = "Path to sra runinfo file")
     parser.add_argument('-n', '--max_n', help = "Max number of sra numbers returned")
-    parser.add_argument('-s', '--species', help = "species")
+    parser.add_argument('-s', '--species', required = True, help = "species")
     return parser.parse_args()
 
 def main():
