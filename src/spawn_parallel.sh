@@ -7,7 +7,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:p:n:d:f: flag
+while getopts s:p:n: flag
 do
     case "${flag}" in
         s) species=${OPTARG};;
