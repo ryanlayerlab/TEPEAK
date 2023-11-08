@@ -20,7 +20,8 @@ def main():
 
     df = pd.read_csv (args.sra_file, low_memory = False)
     sorted_df = df.sort_values(by = 'Bases', ascending = False)
-    top_N_runs = sorted_df.head(int(args.max_n))['Run']
+    max_n = len(sorted_df) if args.max_n is None else args.max_n
+    top_N_runs = sorted_df.head(int(max_n))['Run']
 
     with open(os.path.join(data_dir, species, f'{species}_samples.txt'), 'w') as f:
         for run in top_N_runs:
