@@ -58,7 +58,7 @@ Once the requirements are setup and a reference and species name is chosen navig
 
 Insurveyor requires coordinate sorted, indexed with MC and MQ tags, BAM files.
 
-Ensure your BAM meet the data requirements below then proceed to Aligned Bams Start below
+Ensure your BAM files meet the data requirements below then proceed to Aligned Bams Start below
 
 ---
 
