@@ -4,9 +4,9 @@ import yaml, os.path
 
 def parse_args():
     parser = ArgumentParser(description = "Process some arguments")
-    parser.add_argument('-f', '--sra_file', help = "Path to sra runinfo file")
+    parser.add_argument('-f', '--sra_file', required = True, help = "Path to sra runinfo file")
     parser.add_argument('-n', '--max_n', help = "Max number of sra numbers returned")
-    parser.add_argument('-s', '--species', help = "species")
+    parser.add_argument('-s', '--species', required = True, help = "species")
     return parser.parse_args()
 
 def main():
@@ -18,9 +18,10 @@ def main():
         data = yaml.safe_load(stream)
     data_dir = data['data_directory']
 
-    df = pd.read_csv (args.sra_file, low_memory = False)
+    df = pd.read_csv(args.sra_file, low_memory = False)
     sorted_df = df.sort_values(by = 'Bases', ascending = False)
-    top_N_runs = sorted_df.head(int(args.max_n))['Run']
+    max_n = len(sorted_df) if args.max_n is None else args.max_n
+    top_N_runs = sorted_df.head(int(max_n))['Run']
 
     with open(os.path.join(data_dir, species, f'{species}_samples.txt'), 'w') as f:
         for run in top_N_runs:

@@ -11,7 +11,7 @@ rm -rf data/ecoli output/ecoli
 echo "Files have been removed. Starting afresh."
 echo "========================================="
 
-run test_species_start_config bash src/species_start_config.sh -s ecoli -d data -n 1
+run test_create_config bash src/create_config.sh -s ecoli -d data -n 1
 #test that data_dir is made 
 assert_true $(test -d data && echo true)
 #test that a data_dir/species_dir is made

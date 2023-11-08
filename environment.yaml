@@ -95,4 +95,5 @@ dependencies:
       - tzdata==2023.3
       - unicodedata2==15.1.0
       - urllib3==1.26.17
+      - wheel==0.41.2
       - zipp==3.17.0
