@@ -8,21 +8,14 @@ A lot of tools used in this project are only available on UNIX based systems suc
 ### macOS/Linux
 Continue following the rest of the setup documentation. 
 
-### Installing INSurVeyor and other dependencies
-
-Create the insurveyor conda virtual environment and install insurveyor inside the environment. 
+### Creating INSurVeyor `conda` environmet and installing dependecies. 
+Run the following command to create the `insurveyor-env` conda environment and install INSurVeyor along with other dependencies inside the environment. 
 ```
-conda create -n insurveyor-env -c bioconda -c conda-forge insurveyor
+mamba env create -f environment.yaml
 ```
-Activate the insurveyor environment. 
+It is highly recommended to run the command above with `mamba` as it is much faster than `conda`. If you do not have `mamba` installed, you can install it by running  the following command inside your `conda` `base` environment. 
 ```
-conda activate insurveyor-env
-```
-`conda` is the preferred method for installing insurveyor. Singularity and source options are also available at https://github.com/kensung-lab/INSurVeyor.
-
-Download all other dependencies by running
-```
-bash dep/setup.sh
+conda install -c conda-forge mamba
 ```
 
 ### Other environment requirements
