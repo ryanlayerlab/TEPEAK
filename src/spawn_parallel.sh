@@ -7,13 +7,12 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:p:n: flag
+while getopts s:n: flag
 do
     case "${flag}" in
         s) species=${OPTARG};;
-        p) procs=${OPTARG};;
         n) threads=${OPTARG};;
-        *) echo "Usage: $0 -s species_name -p number_of_processes -n number_of_threads_per_process"
+        *) echo "Usage: $0 -s species_name -n number_of_threads_per_process"
            exit 1;;
     esac
 done
