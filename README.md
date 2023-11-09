@@ -31,7 +31,7 @@ This creates the file `configs/config_<species>.yaml` and the directory `data_di
 
 ### Data structure requirements
 
-For SRA and BAM list options, TEPEAK requires a txt/csv file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and an optional GTF file in the same directory. 
+For SRA and BAM list options, TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and an optional GTF file in the same directory. 
 ```
 DATA_DIR/
   SPECIES_DIR/
@@ -77,7 +77,7 @@ Ensure your BAM files meet the data structure requirements and then proceed to A
 - Required data: zipped reference genome downloaded and SRA run list. 
 - Required environment setup: NCBI SDK, picard (See [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup))
 
-The SRA run list must be a txt/csv file with each line being one SRR accession. Name this file  `<species>_samples.txt` and move it to `data_dir/species/`. 
+The SRA run list must be a txt file with each line being one SRR accession. Name this file  `<species>_samples.txt` and move it to `data_dir/species/`. 
 
 ---
 If you'd like to generate an SRA run list instead of creating your own, follow the steps below. 
