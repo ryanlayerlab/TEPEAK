@@ -13,9 +13,9 @@ Run the following command to create the `insurveyor-env` `conda` environment and
 ```
 mamba env create -f environment.yaml
 ```
-It is highly recommended to run the command above with `mamba` as it is much faster than `conda`. If you do not have `mamba` installed, you can install it by running  the following command inside your `conda` `base` environment. 
+It is highly recommended to run the command above with `mamba` as it is much faster than `conda`. If you do not have `mamba` installed, you can install it into your `conda` `base` environment by running  the following command.
 ```
-conda install -c conda-forge mamba
+conda install -n base -c conda-forge mamba
 ```
 
 ### Other environment requirements
