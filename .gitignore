@@ -16,3 +16,4 @@ test_dir/
 bedtools2/
 SraRunTable.txt
 .snakemake
+dag.svg
