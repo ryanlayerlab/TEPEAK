@@ -8,8 +8,8 @@ A lot of tools used in this project are only available on UNIX based systems suc
 ### macOS/Linux
 Continue following the rest of the setup documentation. 
 
-### Creating INSurVeyor `conda` environmet and installing dependecies. 
-Run the following command to create the `insurveyor-env` conda environment and install INSurVeyor along with other dependencies inside the environment. 
+### Creating INSurVeyor `conda` environment and installing dependecies. 
+Run the following command to create the `insurveyor-env` `conda` environment and install INSurVeyor along with other dependencies inside the environment. 
 ```
 mamba env create -f environment.yaml
 ```
@@ -19,29 +19,10 @@ conda install -c conda-forge mamba
 ```
 
 ### Other environment requirements
-Please view the [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions on how to install and setup the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
-
+Please view the [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions on how to install and set up the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
 
 ## Running TEPEAK
 Create a config file for the species you'd like to analyse.
-=======
-Setup NCBI SDK, and picard (See [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions)
-
-Once the requirements are setup and a reference and species name is chosen navigate to SRA List Start below
-
-
-#### 3. Aligned BAMs
-
-Insurveyor requires coordinate sorted, indexed with MC and MQ tags, BAM files.
-
-Ensure your BAM files meet the data requirements below then proceed to Aligned Bams Start below
-
----
-
-### Data Requirements
-
-For SRA and BAM list options, TEPEAK requires a txt file input where each line is a unique sample identifier. This unique sample needs to be attached to a BAM and BAI in the working 
-directory if using the BAM list option. TEPEAK also requires an indexed reference fasta file and an optional GTF file in the same directory. 
 ```
 bash src/create_config.sh -s <species> -d <data_dir> -n <number of threads>
 ```
@@ -120,7 +101,6 @@ This produces `SAMPLE.bam` and `SAMPLE.bam.bai` files inside `data_dir/species/`
 
 Now that you have the aligned BAM files, follow the steps in OPTION 2: Aligned BAMs start. 
 
----
 ### OPTION 2: Aligned BAMs Start
 - Required data: reference genome named as `<species>.fa` and Aligned BAM files. 
 - Ensure your data matches the data structure requirements.
