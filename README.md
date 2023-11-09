@@ -101,7 +101,6 @@ This produces `SAMPLE.bam` and `SAMPLE.bam.bai` files inside `data_dir/species/`
 
 Now that you have the aligned BAM files, follow the steps in OPTION 2: Aligned BAMs start. 
 
----
 ### OPTION 2: Aligned BAMs Start
 - Required data: reference genome named as `<species>.fa` and Aligned BAM files. 
 - Ensure your data matches the data structure requirements.
