@@ -17,6 +17,10 @@ It is highly recommended to run the command above with `mamba` as it is much fas
 ```
 conda install -n base -c conda-forge mamba
 ```
+After the environment has been created, activate it by running 
+```
+conda activate insurveyor-env
+```
 
 ### Other environment requirements
 Please view the [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions on how to install and set up the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
