@@ -114,7 +114,7 @@ There are two different options for calling insertions, serial and parallel. If 
 ```
 python src/call_insertions_serial.py -s <species>
 ```
-- For the parallel method (please note that this has not been tested yet and may not work), run 
+- For the parallel method (<ins>please note that this has not been tested yet and may not work</ins>), run 
 ```
 bash src/spawn_parallel.sh -s <species> -n <number of threads> 
 ```
