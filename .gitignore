@@ -11,7 +11,7 @@ prefetch_tmp/
 geckodriver
 geckodriver.log
 picard/
-test_dir/
+test_data/
 **.sh.swp
 bedtools2/
 SraRunTable.txt
