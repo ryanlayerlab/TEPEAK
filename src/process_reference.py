@@ -1,15 +1,16 @@
-import subprocess, json
+import os, json
 
 def main():
-    subprocess.run(f'echo "n" | unzip {snakemake.input.ref}', shell = True)
+    os.system(f'echo "n" | unzip {snakemake.input.ref}')
     species = snakemake.params.species
     species_dir = snakemake.params.species_dir
+    os.makedirs(species_dir, exist_ok = True)
 
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog: 
         parsed_dataset = json.load(dataset_catalog)
     
     fa_filepath = f"ncbi_dataset/data/{parsed_dataset['assemblies'][2]['files'][0]['filePath']}"
-    subprocess.run(
+    os.system(
         f"""
         cp {fa_filepath} {species_dir}/{species}.fa
         echo "File has been moved and renamed to {species}.fa"
@@ -17,7 +18,7 @@ def main():
         cd {species_dir}
         samtools faidx {species}.fa
         bwa index -p {species} {species}.fa
-        """, shell = True
+        """
     )
 
 if __name__ == "__main__":
