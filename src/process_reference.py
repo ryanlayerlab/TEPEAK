@@ -4,7 +4,6 @@ def main():
     os.system(f'echo "n" | unzip {snakemake.input.ref}')
     species = snakemake.params.species
     species_dir = snakemake.params.species_dir
-    os.makedirs(species_dir, exist_ok = True)
 
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog: 
         parsed_dataset = json.load(dataset_catalog)

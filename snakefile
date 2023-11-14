@@ -33,6 +33,7 @@ def get_sra_numbers(sra_file: str, sample_file: str, max_n: int) -> None:
         for run in top_N_runs:
             f.write(f'{run}\n')
 
+os.makedirs(species_dir, exist_ok = True)
 sample_file = f'{species_dir}/{species}_samples.txt'
 if not os.path.exists(sample_file): 
     get_sra_numbers(
@@ -49,11 +50,10 @@ rule all:
 
 rule process_reference: 
     input: 
-        species_dir = rules.create_species_dir.output.s_dir, 
         sample_file = sample_file, 
         ref = config['zipped_ref_genome_filepath']
     params: 
-        species_dir = species_dir
+        species_dir = species_dir, 
         species = species, 
     output: 
         ref = expand(f'{species_dir}/{species}.{{ext}}', ext = REF_EXTENSIONS)
