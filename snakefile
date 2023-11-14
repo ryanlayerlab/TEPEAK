@@ -5,8 +5,6 @@ shell.prefix(
 configfile: 'snakemake_config.yaml'
 import pandas as pd
 
-# os.system('fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin')
-
 REF_EXTENSIONS = ['fa', 'fa.fai', 'amb', 'ann', 'bwt', 'pac', 'sa']
 ANN_EXTENSIONS = ['gene_annotate.txt', 'gtf_loci.txt', 'gtf.txt', 'pop_vcf_sorted.txt']
 
@@ -47,21 +45,6 @@ SAMPLES = get_samples(sample_file)
 
 rule all:  
     input: 
-        # expand(species_dir + '{sample}.bam', sample = SAMPLES)
-        # expand(
-        #     [
-        #         f'{species_dir}/{{sample}}.bam', 
-        #         f'{species_dir}/{{sample}}.bam.bai', 
-        #     ], 
-        #     sample = SAMPLES
-        # )
-        # expand(f'output/{species}/{{sample}}/out.pass.vcf.gz', sample = SAMPLES)
-        # f'{output_dir}/{species}_count.txt'
-        # f'{output_dir}/{species}_global_vcf.txt'
-        # f'{output_dir}/dfam_annotate.csv'
-        # f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_pop_vcf.txt'
-        # f'{species_dir}/{species}.gtf'
-        # expand(f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_{{ext}}', ext = ANN_EXTENSIONS)
         ALL
 
 # rule create_data_dir: 
