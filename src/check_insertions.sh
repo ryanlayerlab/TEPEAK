@@ -8,7 +8,7 @@ while getopts "s:o:f:" opt; do
     s) species="$OPTARG";;
     o) output_dir="$OPTARG";;
     f) sample_file="$OPTARG";;
-    *) echo "Usage: $0 -s species -o output_dir -t threads -f sample_file"
+    *) echo "Usage: $0 -s species -o output_dir -f sample_file"
     exit 1;;
   esac
 done
