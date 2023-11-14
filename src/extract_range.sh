@@ -7,35 +7,34 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:l:u: flag
+while getopts s:f:o:l:h: flag
 do
     case "${flag}" in
         s) species=${OPTARG};;
+        f) sample_file=${OPTARG};;
+        o) output_dir=${OPTARG};;
         l) low=${OPTARG};;
-        u) high=${OPTARG};;
+        h) high=${OPTARG};;
+        *) "Usage: $0 -s species -f sample_file -o output_dir -l low -h high"
     esac
 done
 
-data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-sra_file=$data_dir/$species/${species}_samples.txt
+mkdir -p "$output_dir"
+mkdir -p "$output_dir/peak_$low-$high/"
 
-mkdir -p output/"${species}"/
-mkdir -p output/"${species}"/peak_"$low"-"$high"/
-
-rm -f output/"${species}"/peak_"$low"-"$high"/output_seqs.vcf
+rm -f "$output_dir/peak_$low-$high/output_seqs.vcf"
 
 while read -r line; do
     sra_example=$line
 
-    bcftools view -i  'SVLEN>='${low}' && SVLEN<='${high}'' output/"${species}"/"${sra_example}"/out.pass.vcf -o  \
-    output/"${species}"/peak_"$low"-"$high"/output_seqs.vcf
+    bcftools view -i  'SVLEN>='${low}' && SVLEN<='${high}'' "$output_dir/${sra_example}/out.pass.vcf" -o  \
+    "$output_dir/peak_$low-$high/output_seqs.vcf"
 
-    bcftools query -f '%CHROM\t%POS\t%INFO/END\t%SVINSSEQ\t'${sra_example}'\n' output/"${species}"/peak_"$low"-"$high"/output_seqs.vcf >> \
-            output/"${species}"/peak_"$low"-"$high"/"${species}"_"$low"-"$high"_pop_vcf.txt
+    bcftools query -f '%CHROM\t%POS\t%INFO/END\t%SVINSSEQ\t'${sra_example}'\n' "$output_dir/peak_$low-$high/output_seqs.vcf" >> \
+            "$output_dir/peak_$low-$high/${species}_$low-${high}_pop_vcf.txt"
 
-    rm -f output/"${species}"/peak_"$low"-"$high"/output_seqs.vcf
-
-done < "$sra_file"
+    rm -f "$output_dir/peak_$low-$high/output_seqs.vcf"
+done < "$sample_file"
 
 
 
