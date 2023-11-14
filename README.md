@@ -149,7 +149,7 @@ Annotate loci for genes (requires gtf named as `<species>.gtf`. You can get the 
 bash src/annotate_genes.sh -s <species> -l <lower bp range> -u <upper bp range> 
 ```
 
-Write final output files for a range. Use the ` -g ` flag to include gene annotations (y or n). This will output a final with merged loci information in ` output/species/peak_l-h/` as `_merged.txt`, `_merged_genes.txt` , and `_pop_vcf_.txt`  
+Write final output files for a range. Use the ` -g ` flag to include gene annotations (y or n). This will output a final with merged loci information in ` output/species/peak_l-h/` as `_merged.txt` if `-g n`, or `_merged_genes.txt` if `-g y`, and `_pop_vcf_.txt`  
 
 ```
 bash src/write_output.sh -s species -l <lower bp range> -u <upper bp range> -g <(y/n) include genes>
