@@ -7,30 +7,28 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s: flag; do
+while getopts s:d:t:f: flag; do
     case "${flag}" in
         s) species=${OPTARG};;
-        *) echo "Usage: $0 -s species_name."
+        d) data_dir=${OPTARG};;
+        t) threads=${OPTARG};;
+        f) sra_file=${OPTARG};;
+        *) echo "Usage: $0 -s species -d species_dir -t threads -f sra_file"
             exit 1;;
     esac
 done
 
-data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-data_path="$(pwd)/$data_dir/${species}"
-threads=$(grep 'threads:' configs/config_$species.yaml | awk '{print $2}')
+data_path="$(pwd)/$data_dir"
 picard_path="$(pwd)"
 
-sra_file=$data_dir/$species/${species}_samples.txt
-
+# sra_file=$data_dir/$species/${species}_samples.txt
 while IFS= read -r line; do
 
     line=$(echo "$line" | tr -d '[:space:]')
     sra_example=$line
-    cd "$data_dir/$species"
 
-    mkdir -p "${sra_example}"/bwa_errors
-
-    cd $sra_example
+    mkdir -p "$data_path/$sra_example/bwa_errors"
+    cd "$data_path/$sra_example"
 
     prefetch "${sra_example}" --max-size 200G
     fastq-dump --split-files "${sra_example}"
@@ -55,11 +53,8 @@ while IFS= read -r line; do
     mv "${sra_example}".fixed.bam ../"${sra_example}".bam
     mv "${sra_example}".fixed.bam.bai ../"${sra_example}".bam.bai
     
-    cd .. 
-    rm -r "${sra_example}"
-    
-    cd "$data_path"
     cd ../..
+    rm -r "$data_path/$sra_example"
   
 done < "$sra_file"
 
