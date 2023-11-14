@@ -2,7 +2,7 @@ import os, subprocess
 
 def main(): 
     threads = snakemake.params.threads
-    reference_dir = snakemake.input.ref
+    ref_file = snakemake.input.ref
     species_dir = snakemake.params.species_dir
     sra_file = snakemake.input.sample_file
     output_dir = snakemake.params.output_dir
@@ -12,7 +12,7 @@ def main():
             '--threads', str(threads), 
             'BAM_FILE', 
             'WORKDIR', 
-            reference_dir
+            ref_file
         ]
     
     with open(sra_file) as sra_file: 
