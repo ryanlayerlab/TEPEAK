@@ -47,19 +47,14 @@ rule all:
     input: 
         ALL
 
-# rule create_data_dir: 
-#     params: 
-#         species_dir
-#     shell: 
-#         "mkdir -p {params}"
-
 rule process_reference: 
     input: 
+        species_dir = rules.create_species_dir.output.s_dir, 
         sample_file = sample_file, 
         ref = config['zipped_ref_genome_filepath']
     params: 
-        species = species, 
         species_dir = species_dir
+        species = species, 
     output: 
         ref = expand(f'{species_dir}/{species}.{{ext}}', ext = REF_EXTENSIONS)
     script: 
