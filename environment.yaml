@@ -85,7 +85,6 @@ dependencies:
   - libedit=3.1.20221030
   - libev=4.33
   - libffi=3.4.4
-  - libgfortran=5.0.0
   - libgfortran5=13.2.0
   - libgrpc=1.59.2
   - liblapack=3.9.0
@@ -200,6 +199,7 @@ dependencies:
       - fonttools==4.43.1
       - importlib-metadata==6.8.0
       - kiwisolver==1.4.5
+      - libgfortran=5.0.0
       - matplotlib==3.8.0
       - munkres==1.1.4
       - outcome==1.2.0
