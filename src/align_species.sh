@@ -21,7 +21,6 @@ done
 data_path="$(pwd)/$data_dir"
 picard_path="$(pwd)"
 
-# sra_file=$data_dir/$species/${species}_samples.txt
 while IFS= read -r line; do
 
     line=$(echo "$line" | tr -d '[:space:]')
