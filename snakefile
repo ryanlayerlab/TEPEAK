@@ -43,7 +43,6 @@ if not os.path.exists(sample_file):
     )
 SAMPLES = get_samples(sample_file)
 
-
 rule all:  
     input: 
         ALL
