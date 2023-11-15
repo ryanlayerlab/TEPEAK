@@ -80,7 +80,6 @@ dependencies:
   - libcblas=3.9.0
   - libcrc32c=1.1.2
   - libcxx=16.0.6
-  - libdeflate=1.18
   - libedit=3.1.20221030
   - libev=4.33
   - libffi=3.4.4
