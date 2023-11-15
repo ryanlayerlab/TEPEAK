@@ -79,7 +79,7 @@ dependencies:
   - libblas=3.9.0
   - libcblas=3.9.0
   - libcrc32c=1.1.2
-  - libcurl=8.2.0
+  - libcurl=8.0.1
   - libcxx=16.0.6
   - libdeflate=1.10
   - libedit=3.1.20221030
