@@ -15,7 +15,7 @@ dependencies:
   - ca-certificates
   - certifi
   - exceptiongroup
-  - gsl
+  - gsl=2.5
   - h11
   - htslib
   - idna
