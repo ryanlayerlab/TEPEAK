@@ -4,7 +4,7 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - bcftools
+  - bcftools=1.10.2
   - bedtools
   - bwa
   - htslib
