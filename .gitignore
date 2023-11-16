@@ -6,7 +6,7 @@ bcftools-1.18/
 bin/
 libexec/
 share/
-sratoolkit.3.0.7-mac64/
+sratoolkit*
 prefetch_tmp/
 geckodriver
 geckodriver.log
