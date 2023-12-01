@@ -9,6 +9,7 @@ dependencies:
   - bwa
   - htslib
   - insurveyor
+  - matplotlib
   - numpy
   - pysam
   - samtools
