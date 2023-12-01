@@ -17,4 +17,4 @@ test_output/
 bedtools2/
 SraRunTable.txt
 .snakemake
-dag.svg
+**.svg
