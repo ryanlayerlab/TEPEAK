@@ -17,7 +17,11 @@ species_dir = f'{data_dir}/{species}'
 output_dir = f"{config['output_dir']}/{species}"
 
 final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
-ALL = f'{final}.txt' if config['gene'].lower() in ('n', 'no') else f'{final}_genes.txt'
+ALL = [
+    f'{output_dir}/{species}_global_vcf.txt', 
+    f'{output_dir}/dfam_annotate.csv', 
+    f'{final}.txt' if config['gene'].lower() in ('n', 'no') else f'{final}_genes.txt'
+]
 
 def get_samples(filename: str) -> list:
     df = pd.read_csv(filename, names = ['samples'])
