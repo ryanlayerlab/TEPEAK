@@ -70,7 +70,7 @@ rule align_species:
     params: 
         species = species, 
         species_dir = species_dir, 
-        threads = 10
+        threads = config['threads']
     output: 
         expand(
             [
