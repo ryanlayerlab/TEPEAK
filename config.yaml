@@ -9,4 +9,4 @@ sra_run:
 threads: 1
 low: 0 
 high: 10000 
-gene:  # ('y' or 'n')
+gene: 'y' # ('y' or 'n')
