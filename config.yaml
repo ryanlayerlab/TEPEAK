@@ -7,6 +7,6 @@ sra_run:
   filepath: SraRunTable.txt # can be a relative path (relative to snakefile)
   number_of_runs: 4
 threads: 1
-low: 0
-high: 10000
-gene: 'n'
+low: 0 
+high: 10000 
+gene:  # ('y' or 'n')
