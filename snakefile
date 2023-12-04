@@ -2,7 +2,7 @@ shell.prefix(
     'fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin;'
 )
 
-configfile: 'snakemake_config.yaml'
+configfile: 'config.yaml'
 import pandas as pd
 
 REF_EXTENSIONS = ['fa', 'fa.fai', 'amb', 'ann', 'bwt', 'pac', 'sa']
