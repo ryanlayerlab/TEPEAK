@@ -1,22 +1,13 @@
-from argparse import ArgumentParser
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def parse_args():
-	parser = ArgumentParser(description = "Process some arguments.")
-	parser.add_argument('-f', '--pop_vcf_file', required = True, help = "Population VCF file")
-	parser.add_argument('-l', '--lower', required = False, help = "lower range")
-	parser.add_argument('-u', '--upper', required = False, help = "upper range") 
-	return parser.parse_args()
-
 def main():
-	args = parse_args()
-	if args.lower is None: args.lower = 0
-	if args.upper is None: args.upper = 10000
+	lower = 0 if snakemake.params.low is None else snakemake.params.low
+	upper = 10000 if snakemake.params.high is None else snakemake.params.high
 
-	min_size = str(args.lower)
-	max_size = str(args.upper)
-	sv_info_file = args.pop_vcf_file
+	min_size = str(lower)
+	max_size = str(upper)
+	sv_info_file = snakemake.input.glpbal_vcf_file
 
 	df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
 	df.columns = ['chrom','start','end','length','seq']
@@ -42,6 +33,8 @@ def main():
 	plt.ylabel('log(Frequency)')
 	plt.xlabel('Insertion Size (bp)')
 	plt.show()
+
+	plt.savefig(snakemake.output.plot)
 
 if __name__ == '__main__':
 	main()
