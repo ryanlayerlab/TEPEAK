@@ -10,21 +10,21 @@ Continue following the rest of the setup documentation.
 
 ### Creating INSurVeyor `conda` environment and installing dependecies. 
 Create the environment with `mamba` as it's much faster than `conda`. You can check if you have mamba installed by running
-```console
+```shell
 mamba --version
 ```
 This should output the version of `mamba` installed. If `mamba` is not installed, run 
-```bash
+```shell
 conda install -n base -c conda-forge mamba
 ```
 to install it into the `base` environment. 
 
 Run the following command to create the `insurveyor-env` environment and install INSurVeyor along with other dependencies inside the environment. 
-```console
+```shell
 mamba env create -f environment.yaml
 ```
 After the environment has been created, activate it by running 
-```bash
+```shell
 conda activate insurveyor-env
 ```
 ### Other environment requirements
@@ -69,12 +69,12 @@ gene: y #(y/n) -- includes gene annotations if 'y'
 Note: If you want to include gene annotations, you must have a zipped gtf file. 
 
 After the config file and the data directory directory structure has been set up, run the TEPEAK pipeline with 
-```
+```shell
 snakemake --cores
 ```
 If your config file is named something other than `config.yaml`, run the pipeline with 
-```
-snakemake --configfile <name and path to config file> --cores 
+```shell
+snakemake --configfile <name and path to config file> --cores
 ```
 This allows you to define multiple config files for different species and run the pipeline for a specific species. Make sure that the new config file follows the exact same format as above. 
 
