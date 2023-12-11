@@ -1,26 +1,22 @@
-from argparse import ArgumentParser
 import pandas as pd
-import re, os.path
-
-def parse_args():
-    parser = ArgumentParser(description = "Process some arguments")
-    parser.add_argument('-s', '--species', help = "species name")
-    parser.add_argument('-l', '--lower', help = "lower bound")
-    parser.add_argument('-u', '--upper', help = "upper bound")
-    return parser.parse_args()
+import re, os
 
 def main():
-    args = parse_args()
+    species = snakemake.params.species
+    gtf_file = snakemake.input.gtf_file 
+    range_file = snakemake.input.range_file
+    output_dir = snakemake.params.output_dir
+    low, high = snakemake.params.low, snakemake.params.high
 
-    species = args.species
-    low, high = args.lower, args.upper
-
-    peak_path = os.path.join('output', species, f'peak_{low}-{high}')
+    peak_path = os.path.join(output_dir, f'peak_{low}-{high}')
     peak_species_filename = f'{species}_{low}-{high}'
 
     gcf_annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gtf.txt')
     loci_annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gtf_loci.txt')
-    pop_vcf_file = os.path.join(peak_path, f'{peak_species_filename}_pop_vcf.txt')
+    sorted_range_file = os.path.join(peak_path, f'{peak_species_filename}_pop_vcf_sorted.txt')
+   
+    os.system(f'bedtools sort -i {range_file} > {sorted_range_file}')
+    os.system(f'bedtools intersect -a {gtf_file} -b {sorted_range_file} -wb > {gcf_annotated_file}')
 
     with open(gcf_annotated_file) as f, open(loci_annotated_file, 'w') as w:
         lines = f.readlines()
@@ -40,7 +36,7 @@ def main():
                     
     header = ['chrom', 'chromStart', 'chromEnd','sname', 'gene_id', 'gene_name', 'type']
     df.columns = header[:len(df.columns)]
-    df_full = pd.read_csv(pop_vcf_file, sep='\t', lineterminator='\n')
+    df_full = pd.read_csv(range_file, sep='\t', lineterminator='\n')
     df_full.columns = ['chrom','chromStart','chromEnd','seq','sname']
 
     merged_df = pd.merge(

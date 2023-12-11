@@ -7,8 +7,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:n: flag
-do
+while getopts s:n: flag; do
     case "${flag}" in
         s) species=${OPTARG};;
         n) threads=${OPTARG};;

@@ -1,0 +1,12 @@
+species: ecoli
+data_dir: test_data
+output_dir: test_output
+zipped_ref_genome_filepath: test_data/ncbi_dataset.zip # can be a relative path (relative to snakefile)
+zipped_gtf_filepath: test_data/ncbi_dataset_gtf.zip # can be a relative path (relative to snakefile)
+sra_run: 
+  filepath: SraRunTable.txt # can be a relative path (relative to snakefile)
+  number_of_runs: 4
+threads: 1
+low: 0 
+high: 10000 
+gene: y # ('y' or 'n')

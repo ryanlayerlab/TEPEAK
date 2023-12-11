@@ -7,23 +7,19 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s: flag
-do
+while getopts s:o:f: flag; do
     case "${flag}" in
-        s) species=${OPTARG};;
+        s) species="$OPTARG";;
+        o) output_dir="$OPTARG";;
+        f) sample_file="$OPTARG";;
+        *) "Usage: $0 -s species -o output_dir -f sample_file"
     esac
 done
 
-data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-
-sra_file=$data_dir/$species/${species}_samples.txt
-
 while read -r line; do
-	decompressed_file="output/$species/${line}/out.pass.vcf"
-	bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\t%SVINSSEQ\n" "$decompressed_file" >> "$species"_global_vcf.txt
-done < "$sra_file"
-mv  "$species"_global_vcf.txt output/"$species"/"$species"_global_vcf.txt
+    decompressed_file="$output_dir/$line/out.pass.vcf"
+	bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\t%SVINSSEQ\n" "$decompressed_file" >> "${species}_global_vcf.txt"
+done < "$sample_file"
+mv  "${species}_global_vcf.txt" "$output_dir/${species}_global_vcf.txt"
 
 # python3 src/build_histogram.py -f output/"$species"/"$species"_global_vcf.txt
-
-python3 src/dfam_annotate.py -s "$species"

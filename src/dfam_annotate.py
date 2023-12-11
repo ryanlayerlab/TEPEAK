@@ -1,18 +1,11 @@
 import pandas as pd
 import requests, os.path, time, subprocess
 from Bio.Align import PairwiseAligner
-from argparse import ArgumentParser
-
-def parse_args():
-    parser = ArgumentParser(description = "Process some arguments")
-    parser.add_argument('-s', '--species', required = True, help = "species name")
-    return parser.parse_args()
 
 def construct_peak_sizes(df, min_w, max_w, w_size):
     peaks, peak_sizes = [], []
     for i in range(min_w, max_w, w_size):
-        min_i = i
-        max_i = i + w_size
+        min_i, max_i = i, i + w_size
         t_rows = df.query('length >= @min_i & length <= @max_i')
         t = t_rows['length'].value_counts()
         if len(t) > 0:
@@ -92,24 +85,21 @@ def construct_annotations(peak_seqs, url, params):
     return annotations
 
 def main(): 
-    args = parse_args()
-
     window_size = 50
     min_window = 200
     max_window = 6400
 
-    species = args.species
-    sv_info_file = os.path.join('output', species, f'{species}_global_vcf.txt')
+    ref_file = snakemake.input.ref
+    output_dir = snakemake.params.output_dir
+    sv_info_file = snakemake.input.global_vcf
 
     df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
     df.columns = ['chrom','start','end','length','seq']
     df = df[df['length']!='.']
     df['length'] = df['length'].astype(int)
 
-    print(df.head())
-
     url = 'https://dfam.org/api/searches/'
-    cmd = f"cat data/{species}/{species}.fa | head -n 1 | cut -d ' ' -f 2,3" # depends on the file existing, extracts the scientific name from file
+    cmd = f"{ref_file} | head -n 1 | cut -d ' ' -f 2,3"
     result = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True, check = True)
     params = {'sequence' : 'PEAK_S', 'organism': result.stdout, 'cutoff' : 'curated'}
 
@@ -123,7 +113,7 @@ def main():
     df_write['annotations'] = annotations
     df_write['peak_sequence'] = peak_seqs
 
-    out_file = os.path.join('output', species, 'dfam_annotate.csv')
+    out_file = os.path.join(output_dir, 'dfam_annotate.csv')
     df_write.to_csv(out_file)
 
 if __name__ == '__main__':

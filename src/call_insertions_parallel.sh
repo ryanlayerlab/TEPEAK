@@ -7,20 +7,19 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-while getopts s:n:d:l: flag
-do
+while getopts s:n:d:l: flag; do
     case "${flag}" in
         l) sra_examples=${OPTARG};;
         s) species=${OPTARG};;
         d) data_dir=${OPTARG};;
         n) threads=${OPTARG};;
+        *) echo "Usage: $0 -s species_name -d data_directory -n number_of_threads -l sra_file"
+           exit 1;;
     esac
 done
 
 IFS=' ' read -ra items <<< "$sra_examples"
-
 data_path="$(pwd)/$data_dir"
-
 mkdir -p output/$species
 
 for item in "${items[@]}"; do
