@@ -20,6 +20,7 @@ final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
 ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
     f'{output_dir}/dfam_annotate.csv', 
+    f'{output_dir}/{species}_plot.svg', 
     f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
