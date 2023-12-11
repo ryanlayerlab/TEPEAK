@@ -9,12 +9,12 @@ REF_EXTENSIONS = ['fa', 'fa.fai', 'amb', 'ann', 'bwt', 'pac', 'sa']
 ANN_EXTENSIONS = ['gene_annotate.txt', 'gtf_loci.txt', 'gtf.txt', 'pop_vcf_sorted.txt']
 
 species = config['species']
-data_dir = config['data_dir']
+data_dir = config['data_dir'].strip('/')
 threads = config['threads']
 low, high = config['low'], config['high']
 
 species_dir = f'{data_dir}/{species}'
-output_dir = f"{config['output_dir']}/{species}"
+output_dir = f"{config['output_dir'].strip('/')}/{species}"
 
 final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
 ALL = [
