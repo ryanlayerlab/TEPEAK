@@ -20,7 +20,7 @@ final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
 ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
     f'{output_dir}/dfam_annotate.csv', 
-    f'{final}.txt' if config['gene'].lower() in ('n', 'no') else f'{final}_genes.txt'
+    f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
 def get_samples(filename: str) -> list:
@@ -197,3 +197,14 @@ rule write_output_genes:
         f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged_genes.txt'
     script: 
         "src/output_helper.py"
+
+rule build_histogram: 
+    input: 
+        global_vcf_file = f'{output_dir}/{species}_global_vcf.txt'
+    params: 
+        low = low, 
+        high = high
+    output: 
+        plot = f'{output_dir}/{species}_plot.svg'
+    script: 
+        "src/build_histogram.py"
