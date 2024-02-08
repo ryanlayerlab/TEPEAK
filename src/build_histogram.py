@@ -7,7 +7,7 @@ def main():
 
 	min_size = str(lower)
 	max_size = str(upper)
-	sv_info_file = snakemake.input.glpbal_vcf_file
+	sv_info_file = snakemake.input.global_vcf_file
 
 	df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
 	df.columns = ['chrom','start','end','length','seq']
