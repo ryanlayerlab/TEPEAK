@@ -9,15 +9,13 @@ def main():
 	max_size = str(upper)
 	sv_info_file = snakemake.input.global_vcf_file
 
-	df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
+	df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n', header=None)
 	df.columns = ['chrom','start','end','length','seq']
 
-	df['length'].value_counts()
 	df = df[df['length']!='.']
 	df.dropna(subset = ['length'], inplace = True)
 
 	df['length'] = df['length'].astype(int)
-	df['length'].value_counts()
 	t_rows = df.query('length >= ' + min_size)
 	t_rows = t_rows.query('length <=  ' + max_size)
 	t = t_rows['length'].value_counts()
