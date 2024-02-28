@@ -254,7 +254,7 @@ rule smoove_3:
 
 rule smoove_4: 
     input: 
-        smoove_file = 'smoove_latest.sif'
+        smoove_file = 'smoove_latest.sif',
         vcf_files = rules.smoove_3.output.results_genotyped
     params: 
         species = species
@@ -282,6 +282,6 @@ rule build_histogram_deletions:
         low = low, 
         high = high
     output: 
-        plot = f'{species}_smoove_plot.svg'
+        plot = f'{output_dir}/{species}_smoove_plot.svg'
     script: 
         "src/build_histogram_deletions.py"
