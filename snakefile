@@ -20,7 +20,8 @@ final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
 ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
     f'{output_dir}/dfam_annotate.csv', 
-    f'{output_dir}/{species}_plot.svg', 
+    f'{output_dir}/{species}_insertions_plot.svg', 
+    f'{output_dir}/{species}_deletions_plot.svg', 
     f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
@@ -199,13 +200,88 @@ rule write_output_genes:
     script: 
         "src/output_helper.py"
 
-rule build_histogram: 
+rule build_histogram_insertions: 
     input: 
         global_vcf_file = f'{output_dir}/{species}_global_vcf.txt'
     params: 
         low = low, 
         high = high
     output: 
-        plot = f'{output_dir}/{species}_plot.svg'
+        plot = f'{output_dir}/{species}_insertions_plot.svg'
     script: 
         "src/build_histogram.py"
+
+rule smoove_1: 
+    input: 
+        smoove_file = 'smoove_latest.sif',
+        reference_file = f'{species_dir}/{species}.fa'
+    params: 
+        output_dir = f'{output_dir}/results-smoove/'
+    output:
+        results_smoove = expand(f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz', sample = SAMPLES)
+    shell: 
+        "singularity exec smoove_latest.sif smoove call --outdir {params.output_dir} --name {wildcard.sample} "
+        "--fasta {input.reference_file} -p 1 --genotype test_data/ecoli/{wildcard.sample}.bam"
+
+rule smoove_2: 
+    input: 
+        smoove_file = 'smoove_latest.sif', 
+        reference_file = f'{species_dir}/{species}.fa'
+    params:
+        prev_output_dir = rules.smoove_1.params.output_dir,
+        output_dir = output_dir
+    output: 
+        merged_sites_file = f'{output_dir}/merged.sites.vcf.gz'
+    shell: 
+        "singularity exec {input.smoove_file} smoove merge --name merged -f {input.reference_file} --outdir {params.output_dir} " 
+        "{params.prev_output_dir}*.genotyped.vcf.gz"
+
+rule smoove_3: 
+    input: 
+        smoove_file = 'smoove_latest.sif', 
+        reference_file = f'{species_dir}/{species}.fa',
+        merged_file = rules.smoove_2.output.merged_sites_file, 
+        bam_files = expand(f'{species_dir}/{{sample}}.bam', sample = SAMPLES)
+    params: 
+        output_dir = f'{output_dir}/results-genotyped/',
+        species_dir = species_dir
+    output: 
+        results_genotyped = expand(f'{output_dir}/results_genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz', sample = SAMPLES)
+    shell: 
+        "singularity exec {input.smoove_file} smoove genotype -d -x -p 1 --name {wildcard.sample}-joint "
+        "--outdir {params.output_dir} --fasta {input.reference_file} --vcf {input.merged_file} "
+        "{params.species_dir}/{wildcard.sample}.bam"
+
+rule smoove_4: 
+    input: 
+        smoove_file = 'smoove_latest.sif'
+        vcf_files = rules.smoove_3.output.results_genotyped
+    params: 
+        species = species
+    output: 
+        f'{species}.smoove.squared.vcf.gz'
+    shell: 
+        "singularity exec {input.smoove_file} smoove paste --name {params.species} {input.vcf_files}"
+
+rule smoove_global_vcf: 
+    input: 
+        f'{species}.smoove.squared.vcf.gz'
+    params: 
+        input_file = f'{species}.smoove.squared.vcf'
+    output:
+        f'{species}_smoove_global.vcf'
+    shell: 
+        "gzip -d {input};"
+        """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} >> {output} """
+
+
+rule build_histogram_deletions: 
+    input: 
+        global_vcf_file = rules.smoove_4.output
+    params: 
+        low = low, 
+        high = high
+    output: 
+        plot = f'{species}_smoove_plot.svg'
+    script: 
+        "src/build_histogram_deletions.py"
