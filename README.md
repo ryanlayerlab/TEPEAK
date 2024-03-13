@@ -26,7 +26,7 @@ After the environment has been created, activate it by running
 conda activate insurveyor-env
 ```
 ### Other environment requirements
-Please view the [wiki](https://github.com/ryanlayer/TEPEAK/wiki/Species-Name-and-SRA-List-Startup) for instructions on how to install and set up the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
+Please view the [wiki](https://github.com/ryanlayerlab/TEPEAK/wiki/Installing-NCBI-SDK-and-Picard) for instructions on how to install and set up the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
 
 ## Data requirements
 TEPEAK requires the following files to run properly: 
