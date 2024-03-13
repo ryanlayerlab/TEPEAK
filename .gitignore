@@ -20,3 +20,4 @@ bedtools2/
 SraRunTable.txt
 .snakemake
 **.svg
+smoove_latest.sif

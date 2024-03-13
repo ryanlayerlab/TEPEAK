@@ -2,11 +2,9 @@
 A novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations.
 ## Setup
 We recommend running everything inside a `conda` virtual environment using the latest version of `conda` (`23.9.0` at the time of writing). This is because some packages installed by older versions of `conda` may not work properly. 
-### Windows
-Most of the tools used in this project are only available on UNIX based systems such as macOS and Linux. For proper functionality, we recommend running everything through a Windows Subsytem for Linux (WSL). The instructions to install and set up a WSL on your system are available at https://learn.microsoft.com/en-us/windows/wsl/install. 
 
-### macOS/Linux
-Continue following the rest of the setup documentation. 
+## OS requirements
+We recommend running everything on a Linux machine. If you're on Windows, you can run everything through a Windows Subsystem for Linux (WSL). The instructions to install and set up a WSL on a Windows machine are available at https://learn.microsoft.com/en-us/windows/wsl/install.  
 
 ### Creating INSurVeyor `conda` environment and installing dependecies. 
 Create the environment with `mamba` as it's much faster than `conda`. You can check if you have mamba installed by running

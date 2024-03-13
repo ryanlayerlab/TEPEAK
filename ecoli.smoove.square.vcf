@@ -1,0 +1,85 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##fileDate=20240313
+##reference=test_data/ecoli/ecoli.fa
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
+##INFO=<ID=SVLEN,Number=.,Type=Integer,Description="Difference in length between REF and ALT alleles">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant described in this record">
+##INFO=<ID=STRANDS,Number=.,Type=String,Description="Strand orientation of the adjacency in BEDPE format (DEL:+-, DUP:-+, INV:++/--)">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">
+##INFO=<ID=CIPOS,Number=2,Type=Integer,Description="Confidence interval around POS for imprecise variants">
+##INFO=<ID=CIEND,Number=2,Type=Integer,Description="Confidence interval around END for imprecise variants">
+##INFO=<ID=CIPOS95,Number=2,Type=Integer,Description="Confidence interval (95%) around POS for imprecise variants">
+##INFO=<ID=CIEND95,Number=2,Type=Integer,Description="Confidence interval (95%) around END for imprecise variants">
+##INFO=<ID=MATEID,Number=.,Type=String,Description="ID of mate breakends">
+##INFO=<ID=EVENT,Number=1,Type=String,Description="ID of event associated to breakend">
+##INFO=<ID=SECONDARY,Number=0,Type=Flag,Description="Secondary breakend in a multi-line variants">
+##INFO=<ID=SU,Number=.,Type=Integer,Description="Number of pieces of evidence supporting the variant across all samples">
+##INFO=<ID=PE,Number=.,Type=Integer,Description="Number of paired-end reads supporting the variant across all samples">
+##INFO=<ID=SR,Number=.,Type=Integer,Description="Number of split reads supporting the variant across all samples">
+##INFO=<ID=BD,Number=.,Type=Integer,Description="Amount of BED evidence supporting the variant across all samples">
+##INFO=<ID=EV,Number=.,Type=String,Description="Type of LUMPY evidence contributing to the variant call">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=SNAME,Number=.,Type=String,Description="Source sample name">
+##INFO=<ID=ALG,Number=1,Type=String,Description="Evidence PDF aggregation algorithm">
+##ALT=<ID=DEL,Description="Deletion">
+##ALT=<ID=DUP,Description="Duplication">
+##ALT=<ID=INV,Description="Inversion">
+##ALT=<ID=DUP:TANDEM,Description="Tandem duplication">
+##ALT=<ID=INS,Description="Insertion of novel sequence">
+##ALT=<ID=CNV,Description="Copy number variable region">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=SU,Number=1,Type=Integer,Description="Number of pieces of evidence supporting the variant">
+##FORMAT=<ID=PE,Number=1,Type=Integer,Description="Number of paired-end reads supporting the variant">
+##FORMAT=<ID=SR,Number=1,Type=Integer,Description="Number of split reads supporting the variant">
+##FORMAT=<ID=BD,Number=1,Type=Integer,Description="Amount of BED evidence supporting the variant">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype quality">
+##FORMAT=<ID=SQ,Number=1,Type=Float,Description="Phred-scaled probability that this site is variant (non-reference in this sample">
+##FORMAT=<ID=GL,Number=G,Type=Float,Description="Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reference allele observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observations, with partial observations recorded fractionally">
+##FORMAT=<ID=QR,Number=1,Type=Integer,Description="Sum of quality of reference observations">
+##FORMAT=<ID=QA,Number=A,Type=Integer,Description="Sum of quality of alternate observations">
+##FORMAT=<ID=RS,Number=1,Type=Integer,Description="Reference allele split-read observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=AS,Number=A,Type=Integer,Description="Alternate allele split-read observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=ASC,Number=A,Type=Integer,Description="Alternate allele clipped-read observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=RP,Number=1,Type=Integer,Description="Reference allele paired-end observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=AP,Number=A,Type=Integer,Description="Alternate allele paired-end observation count, with partial observations recorded fractionally">
+##FORMAT=<ID=AB,Number=A,Type=Float,Description="Allele balance, fraction of observations from alternate allele, QA/(QR+QA)">
+##smoove_count_stats=ERR10355944:2164,6256,1437,4508
+##smoove_count_stats=ERR10355911:1438,3744,940,2693
+##smoove_count_stats=ERR10355891:2512,6571,1740,4789
+##bcftools_viewVersion=1.11+htslib-1.11
+##smoove_count_stats=ERR10355883:2048,4675,1430,3436
+##smoove_version=0.2.6
+##contig=<ID=NC_000913.3,length=4641652>
+##source=LUMPY
+##SAMPLE=<ID=ERR10355883>
+##SAMPLE=<ID=ERR10355891>
+##SAMPLE=<ID=ERR10355911>
+##SAMPLE=<ID=ERR10355944>
+##bcftools_annotateVersion=1.11+htslib-1.11
+##bcftools_annotateCommand=annotate -x INFO/PRPOS,INFO/PREND -Oz -o test_output/ecoli/results-genotyped/ERR10355891-joint-smoove.genotyped.vcf.gz; Date=Wed Mar 13 14:12:20 2024
+##INFO=<ID=GCF,Number=1,Type=Float,Description="GC-content fraction for the variant region betwee 0 and 1.">
+##FORMAT=<ID=DHFC,Number=1,Type=Float,Description="duphold depth fold-change">
+##FORMAT=<ID=DHBFC,Number=1,Type=Float,Description="duphold depth fold-change compared to bins with matching GC">
+##FORMAT=<ID=DHFFC,Number=1,Type=Float,Description="duphold depth flank fold-change compared to 1000bp left and right of event">
+##FORMAT=<ID=DHSP,Number=1,Type=Integer,Description="duphold count of spanning read-pairs">
+##bcftools_mergeVersion=1.11+htslib-1.11
+##bcftools_mergeCommand=merge -o ecoli.smoove.square.vcf.gz -O z --threads 3 test_output/ecoli/results-genotyped/ERR10355891-joint-smoove.genotyped.vcf.gz test_output/ecoli/results-genotyped/ERR10355944-joint-smoove.genotyped.vcf.gz test_output/ecoli/results-genotyped/ERR10355883-joint-smoove.genotyped.vcf.gz test_output/ecoli/results-genotyped/ERR10355911-joint-smoove.genotyped.vcf.gz; Date=Wed Mar 13 14:19:03 2024
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ERR10355891	ERR10355944	ERR10355883	ERR10355911
+NC_000913.3	10	4	N	<DUP>	1766.54	.	SVTYPE=DUP;SVLEN=4641642;END=4641652;STRANDS=-+:382;CIPOS=-9,19;CIEND=-1,1;CIPOS95=0,0;CIEND95=0,0;SU=382;PE=177;SR=205;SNAME=ERR10355883:16,ERR10355944:15,ERR10355891:14,ERR10355911:10;ALG=PROD;GCF=0.507907;AN=8;AC=8	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	1/1:200:1766.54:-232,-81,-55:117:0:117:0:116:0:38:3:0:75:1:1:92:0.989247	1/1:197:1355.36:-178,-62,-42:90:0:90:0:89:0:21:7:0:60:1:1:85:1	1/1:200:1416.28:-186,-65,-44:94:0:94:0:93:0:28:8:0:57:1:1:77:0.987179	1/1:137:944.18:-124,-43,-30:63:0:63:0:62:0:18:3:0:40:1:1:60:1
+NC_000913.3	257906	7_1	N	N]NC_000913.3:258751]	587.38	.	SVTYPE=BND;STRANDS=++:40;IMPRECISE;CIPOS=-30,322;CIEND=-25,334;CIPOS95=-30,48;CIEND95=-25,54;MATEID=7_2;EVENT=7;SU=40;PE=40;SR=0;SNAME=ERR10355883:2_1,ERR10355891:1_1,ERR10355911:1_1,ERR10355944:1_1;ALG=PROD;GCF=0.524882;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:503.34:-55,-5,-44:93:66:26:66:26:66:26:0:0:0:0.28:0:0:0	0/1:200:476.35:-53,-5,-45:92:66:25:66:25:66:25:0:0:0:0.27:0:0:0	0/1:200:587.38:-62,-3,-35:85:56:28:56:28:56:28:0:0:0:0.33:0:0:0	0/1:200:566.4:-60,-3,-34:82:54:27:54:27:54:27:0:0:0:0.33:0:0:0
+NC_000913.3	257907	1	N	<DEL>	3456.46	.	SVTYPE=DEL;SVLEN=-768;END=258675;STRANDS=+-:313;CIPOS=0,0;CIEND=-18,20;CIPOS95=0,0;CIEND95=0,0;SU=313;PE=122;SR=191;SNAME=ERR10355891:2,ERR10355911:2,ERR10355944:2,ERR10355883:3;ALG=PROD;GCF=0.53186;AN=8;AC=8	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC:DHSP	1/1:200:3456.46:-351,-35,-5:118:0:118:0:117:0:45:20:0:51:1:0:0:0:52	1/1:200:3220.12:-327,-33,-5:110:0:110:0:109:0:46:7:0:55:1:0:0:0:56	1/1:200:3397.38:-345,-35,-5:116:0:116:0:115:0:48:6:0:60:1:0:0:0:61	1/1:200:2924.7:-297,-30,-5:100:0:100:0:99:0:49:10:0:39:1:0:0:0:40
+NC_000913.3	258751	7_2	N	N]NC_000913.3:257906]	587.38	.	SVTYPE=BND;STRANDS=++:40;IMPRECISE;CIPOS=-25,334;CIEND=-30,322;CIPOS95=-25,54;CIEND95=-30,48;MATEID=7_1;EVENT=7;SECONDARY;SU=40;PE=40;SR=0;SNAME=ERR10355883:2_1,ERR10355891:1_1,ERR10355911:1_1,ERR10355944:1_1;ALG=PROD;GCF=0.524882;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:503.34:-55,-5,-44:93:66:26:66:26:66:26:0:0:0:0.28:0:0:0	0/1:200:476.35:-53,-5,-45:92:66:25:66:25:66:25:0:0:0:0.27:0:0:0	0/1:200:587.38:-62,-3,-35:85:56:28:56:28:56:28:0:0:0:0.33:0:0:0	0/1:200:566.4:-60,-3,-34:82:54:27:54:27:54:27:0:0:0:0.33:0:0:0
+NC_000913.3	1207789	5	N	<DUP>	70.22	.	SVTYPE=DUP;SVLEN=1883;END=1209672;STRANDS=-+:9;IMPRECISE;CIPOS=-606,38;CIEND=-50,584;CIPOS95=-115,38;CIEND95=-50,107;SU=9;PE=9;SR=0;SNAME=ERR10355883:6,ERR10355911:3;ALG=PROD;GCF=0.452229;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:70:70.22:-10,-3,-11:151:135:15:135:15:135:12:2:0:0:0.1:0.978261:0.9375:0.957447	0/1:30:30.21:-7,-4,-11:134:122:11:122:11:122:11:0:0:0:0.083:1.02353:0.956044:1.02353	0/1:46:46.87:-8,-3,-9:116:104:11:104:11:104:11:0:0:0:0.096:1.02597:0.963415:1.01282	0/1:27:27.28:-5,-3,-8:92:83:8:83:8:83:8:0:0:0:0.088:0.983333:0.936508:0.983333
+NC_000913.3	1207798	8	N	<INV>	1355.05	.	SVTYPE=INV;SVLEN=1810;END=1209608;STRANDS=++:149,--:126;IMPRECISE;CIPOS=-3,0;CIEND=0,3;CIPOS95=0,0;CIEND95=0,3;SU=275;PE=121;SR=154;SNAME=ERR10355883:7,ERR10355891:5,ERR10355911:4,ERR10355944:4;ALG=PROD;GCF=0.455549;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:1064.17:-108,-1,-31:106:59:46:59:46:0:0:0:59:46:0.44:0.978261:0.9375:0.957447	0/1:200:1355.05:-137,-1,-29:119:61:57:61:57:0:0:0:61:57:0.48:1.02353:0.956044:1.02353	0/1:200:1109.2:-112,-1,-26:101:53:47:53:47:0:0:0:53:47:0.47:1.02597:0.951807:1.01282	0/1:200:653.45:-67,-2,-24:73:43:29:43:29:0:0:0:43:29:0.4:0.983333:0.951613:0.983333
+NC_000913.3	1299497	9	N	<INV>	1244.08	.	SVTYPE=INV;SVLEN=1273;END=1300770;STRANDS=++:54,--:1;IMPRECISE;CIPOS=-11,312;CIEND=-43,292;CIPOS95=-11,45;CIEND95=-33,33;SU=55;PE=55;SR=0;SNAME=ERR10355891:6,ERR10355944:5_1,ERR10355911:5_1,ERR10355883:8_1;ALG=PROD;GCF=0.516484;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:1244.08:-126,-1,-31:116:62:53:62:53:62:50:2:0:0:0.46:0:0:0	0/1:200:971.31:-98,-1,-22:87:45:41:45:41:45:34:7:0:0:0.48:0:0:0	0/1:191:953.34:-96,-1,-20:83:42:40:42:40:42:34:5:0:0:0.49:0:0:0	0/1:200:551.43:-58,-3,-31:77:50:26:50:26:50:25:0:0:0:0.34:0:0:0
+NC_000913.3	1299498	2	N	<DEL>	4460.91	.	SVTYPE=DEL;SVLEN=-1195;END=1300693;STRANDS=+-:320;CIPOS=0,0;CIEND=0,0;CIPOS95=0,0;CIEND95=0,0;SU=320;PE=86;SR=234;SNAME=ERR10355883:9,ERR10355891:7,ERR10355911:6,ERR10355944:6;ALG=PROD;GCF=0.531773;AN=8;AC=8	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC:DHSP	1/1:200:4460.91:-453,-45,-7:152:0:152:0:151:0:77:15:0:58:1:0:0:0:59	1/1:200:3633.72:-369,-37,-6:124:0:124:0:123:0:58:14:0:50:1:0:0:0:51	1/1:200:3456.46:-351,-35,-5:118:0:118:0:117:0:57:14:0:45:1:0:0:0:46	1/1:200:2717.9:-276,-28,-4:93:0:93:0:92:0:43:13:0:35:1:0:0:0:36
+NC_000913.3	1978501	10_1	N	N]NC_000913.3:1979347]	779.18	.	SVTYPE=BND;STRANDS=++:63;IMPRECISE;CIPOS=-25,252;CIEND=-13,263;CIPOS95=-25,33;CIEND95=-13,40;MATEID=10_2;EVENT=10;SU=63;PE=63;SR=0;SNAME=ERR10355944:7_1,ERR10355891:8_1,ERR10355883:10_1,ERR10355911:7_1;ALG=PROD;GCF=0.513609;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:701.09:-76,-6,-60:127:90:36:90:36:90:36:0:0:0:0.29:0:0:0	0/1:200:779.18:-82,-4,-45:111:73:37:73:37:73:37:0:0:0:0.34:0:0:0	0/1:200:581.37:-61,-3,-37:87:58:28:58:28:58:28:0:0:0:0.33:0:0:0	0/1:200:347.48:-40,-5,-39:75:55:19:55:19:55:19:0:0:0:0.26:0:0:0
+NC_000913.3	1978502	3	N	<DEL>	4697.25	.	SVTYPE=DEL;SVLEN=-768;END=1979270;STRANDS=+-:331;CIPOS=-1,0;CIEND=-1,0;CIPOS95=0,0;CIEND95=0,0;SU=331;PE=122;SR=209;SNAME=ERR10355911:8,ERR10355883:11,ERR10355891:9,ERR10355944:8;ALG=PROD;GCF=0.53316;AN=8;AC=8	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC:DHSP	1/1:200:4697.25:-477,-48,-7:160:0:160:0:159:0:65:12:0:81:1:0:0:0:82	1/1:200:4224.57:-429,-43,-7:144:0:144:0:143:0:65:10:0:67:1:0:0:0:68	1/1:200:3249.67:-330,-33,-5:111:0:111:0:110:0:53:11:0:45:1:0:0:0:46	1/1:200:2452.02:-249,-25,-4:84:0:84:0:83:0:32:9:0:41:1:0:0:0:42
+NC_000913.3	1979347	10_2	N	N]NC_000913.3:1978501]	779.18	.	SVTYPE=BND;STRANDS=++:63;IMPRECISE;CIPOS=-13,263;CIEND=-25,252;CIPOS95=-13,40;CIEND95=-25,33;MATEID=10_1;EVENT=10;SECONDARY;SU=63;PE=63;SR=0;SNAME=ERR10355944:7_1,ERR10355891:8_1,ERR10355883:10_1,ERR10355911:7_1;ALG=PROD;GCF=0.513609;AN=8;AC=4	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/1:200:701.09:-76,-6,-60:127:90:36:90:36:90:36:0:0:0:0.29:0:0:0	0/1:200:779.18:-82,-4,-45:111:73:37:73:37:73:37:0:0:0:0.34:0:0:0	0/1:200:581.37:-61,-3,-37:87:58:28:58:28:58:28:0:0:0:0.33:0:0:0	0/1:200:347.48:-40,-5,-39:75:55:19:55:19:55:19:0:0:0:0.26:0:0:0
+NC_000913.3	4542681	6	N	<DUP>	9.49	.	SVTYPE=DUP;SVLEN=378;END=4543059;STRANDS=-+:6;IMPRECISE;CIPOS=-614,29;CIEND=-17,496;CIPOS95=-128,1;CIEND95=-2,127;SU=6;PE=6;SR=0;SNAME=ERR10355944:13;ALG=PROD;GCF=0.335092;AN=8;AC=1	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/0:174:0:-1,-18,-35:222:218:3:217:2:127:1:0:90:1:0.0091:1.03261:1.06742:0.979381	0/1:8:9.49:-7,-6,-16:174:160:13:159:12:97:5:1:62:5:0.07:0.929412:0.918605:0.877778	0/0:154:0:-1,-16,-29:168:168:0:167:0:92:0:0:75:0:0:0.896104:0.851852:0.851852	0/0:14:0.15:-2,-4,-8:77:72:4:72:4:72:3:0:0:0:0.053:0.966667:0.966667:0.920635
+NC_000913.3	4542690	11	N	<INV>	253.91	.	SVTYPE=INV;SVLEN=305;END=4542995;STRANDS=++:21,--:15;CIPOS=-29,20;CIEND=-29,20;CIPOS95=0,0;CIEND95=0,0;SU=36;PE=8;SR=28;SNAME=ERR10355944:14,ERR10355911:9;ALG=PROD;GCF=0.313726;AN=8;AC=2	GT:GQ:SQ:GL:DP:RO:AO:QR:QA:RS:AS:ASC:RP:AP:AB:DHFC:DHFFC:DHBFC	0/0:200:0:-6,-47,-173:190:183:6:182:5:104:0:0:78:5:0.027:1.04348:1.07865:0.969697	0/1:200:253.91:-46,-20,-112:168:141:26:140:25:84:7:1:56:16:0.15:0.905882:0.885057:0.855556	0/0:200:0:-3,-38,-137:149:144:4:143:3:82:1:0:61:2:0.021:0.883117:0.85:0.819277	0/1:95:95.17:-28,-19,-93:131:113:17:112:16:66:8:0:46:7:0.12:0.983333:0.983333:0.907692

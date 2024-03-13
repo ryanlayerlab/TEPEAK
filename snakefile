@@ -21,7 +21,7 @@ ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
     f'{output_dir}/dfam_annotate.csv', 
     f'{output_dir}/{species}_insertions_plot.svg', 
-    f'{output_dir}/{species}_deletions_plot.svg', 
+    f'{output_dir}/{species}_smoove_plot.svg', 
     f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
@@ -213,20 +213,22 @@ rule build_histogram_insertions:
 
 rule smoove_1: 
     input: 
+        bam_files = 'test_data/ecoli/{sample}.bam',
         smoove_file = 'smoove_latest.sif',
         reference_file = f'{species_dir}/{species}.fa'
     params: 
         output_dir = f'{output_dir}/results-smoove/'
     output:
-        results_smoove = expand(f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz', sample = SAMPLES)
+        results_smoove = f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz'
     shell: 
-        "singularity exec smoove_latest.sif smoove call --outdir {params.output_dir} --name {wildcard.sample} "
-        "--fasta {input.reference_file} -p 1 --genotype test_data/ecoli/{wildcard.sample}.bam"
+        "singularity exec smoove_latest.sif smoove call --outdir {params.output_dir} --name {wildcards.sample} "
+        "--fasta {input.reference_file} -p 1 --genotype test_data/ecoli/{wildcards.sample}.bam"
 
 rule smoove_2: 
     input: 
         smoove_file = 'smoove_latest.sif', 
-        reference_file = f'{species_dir}/{species}.fa'
+        reference_file = f'{species_dir}/{species}.fa',
+	    results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
     params:
         prev_output_dir = rules.smoove_1.params.output_dir,
         output_dir = output_dir
@@ -241,35 +243,36 @@ rule smoove_3:
         smoove_file = 'smoove_latest.sif', 
         reference_file = f'{species_dir}/{species}.fa',
         merged_file = rules.smoove_2.output.merged_sites_file, 
-        bam_files = expand(f'{species_dir}/{{sample}}.bam', sample = SAMPLES)
+        bam_files = f'{species_dir}/{{sample}}.bam'
     params: 
         output_dir = f'{output_dir}/results-genotyped/',
-        species_dir = species_dir
+        species_dir = species_dir,
+	    samples = SAMPLES
     output: 
-        results_genotyped = expand(f'{output_dir}/results_genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz', sample = SAMPLES)
+        results_genotyped = f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz'
     shell: 
-        "singularity exec {input.smoove_file} smoove genotype -d -x -p 1 --name {wildcard.sample}-joint "
+        "singularity exec {input.smoove_file} smoove genotype -d -x -p 1 --name {wildcards.sample}-joint "
         "--outdir {params.output_dir} --fasta {input.reference_file} --vcf {input.merged_file} "
-        "{params.species_dir}/{wildcard.sample}.bam"
+        "{params.species_dir}/{wildcards.sample}.bam"
 
 rule smoove_4: 
     input: 
         smoove_file = 'smoove_latest.sif',
-        vcf_files = rules.smoove_3.output.results_genotyped
+        vcf_files = expand(rules.smoove_3.output.results_genotyped, sample = SAMPLES)
     params: 
         species = species
     output: 
-        f'{species}.smoove.squared.vcf.gz'
+        f'{species}.smoove.square.vcf.gz'
     shell: 
         "singularity exec {input.smoove_file} smoove paste --name {params.species} {input.vcf_files}"
 
 rule smoove_global_vcf: 
     input: 
-        f'{species}.smoove.squared.vcf.gz'
+        f'{species}.smoove.square.vcf.gz'
     params: 
-        input_file = f'{species}.smoove.squared.vcf'
+        input_file = f'{species}.smoove.square.vcf'
     output:
-        f'{species}_smoove_global.vcf'
+        global_vcf = f'{species}_smoove_global.vcf'
     shell: 
         "gzip -d {input};"
         """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} >> {output} """
@@ -277,7 +280,7 @@ rule smoove_global_vcf:
 
 rule build_histogram_deletions: 
     input: 
-        global_vcf_file = rules.smoove_4.output
+        global_vcf_file = rules.smoove_global_vcf.output.global_vcf
     params: 
         low = low, 
         high = high
