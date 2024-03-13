@@ -26,7 +26,7 @@ After the environment has been created, activate it by running
 conda activate insurveyor-env
 ```
 ### Other environment requirements
-Please view the [wiki](https://github.com/ryanlayerlab/TEPEAK/wiki/Installing-NCBI-SDK-and-Picard) for instructions on how to install and set up the NCBI SDK, Picard, and verifying that you have an appropriate version of Java installed. 
+Please view the [wiki](https://github.com/ryanlayerlab/TEPEAK/wiki/Installing-NCBI-SDK%2C-Picard%2C-and-Smoove) for instructions on how to install and set up the NCBI SDK, Picard, Smoove, and verifying that you have an appropriate version of Java installed. 
 
 ## Data requirements
 TEPEAK requires the following files to run properly: 
@@ -76,7 +76,9 @@ snakemake --configfile <name and path to config file> --cores
 ```
 This allows you to define multiple config files for different species and run the pipeline for a specific species. Make sure that the new config file follows the exact same format as above. 
 
-Make sure to always run the pipeline with the `insurveyor-env` activated and from the TEPEAK directory. The pipeline produces a histogram. If you're running the pipeline from a remote machine, the pipeline creates the file `<output_dir>/<species>/<species>_plot.svg` which stores the plot. 
+Make sure to always run the pipeline with the `insurveyor-env` activated and from the TEPEAK directory. The pipeline produces two histograms, both of which are located in `<output_dir>/<species>/`. `<species>_
+
+If you're running the pipeline from a remote machine, the pipeline creates the file `<output_dir>/<species>/<species>_plot.svg` which stores the plot. 
 
 ---
 Note: Delete the contents of `prefetch_tmp` when finished

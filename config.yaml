@@ -8,5 +8,5 @@ sra_run:
   number_of_runs: 4
 threads: 1
 low: 0
-high: 1
+high: 10000
 gene: n #(y/n) -- includes gene annotations if 'y'
