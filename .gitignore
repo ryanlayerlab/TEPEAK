@@ -21,3 +21,4 @@ SraRunTable.txt
 .snakemake
 **.svg
 smoove_latest.sif
+*.vcf
