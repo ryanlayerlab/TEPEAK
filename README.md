@@ -76,7 +76,7 @@ snakemake --configfile <name and path to config file> --cores
 ```
 This allows you to define multiple config files for different species and run the pipeline for a specific species. Make sure that the new config file follows the exact same format as above. 
 
-Make sure to always run the pipeline with the `insurveyor-env` activated and from the TEPEAK directory. The pipeline produces two histograms, both of which are located in `<output_dir>/<species>/`. `<species>_
+Make sure to always run the pipeline with the `insurveyor-env` activated and from the TEPEAK directory. The pipeline produces two histograms, both of which are located in `<output_dir>/<species>/`.
 
 If you're running the pipeline from a remote machine, the pipeline creates the file `<output_dir>/<species>/<species>_plot.svg` which stores the plot. 
 
