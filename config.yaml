@@ -1,12 +1,12 @@
-species: ecoli
-data_dir: test_data
-output_dir: test_output
-zipped_ref_genome_filepath: test_data/ncbi_dataset.zip
-zipped_gtf_filepath: test_data/ncbi_dataset_gtf.zip
+species: #species name
+data_dir: #name and path of the data directory
+output_dir: #name and path of the output directory
+zipped_ref_genome_filepath: #zipped reference genome file for species
+zipped_gtf_filepath:  #zipped gtf file for species
 sra_run: 
-  filepath: SraRunTable.txt
-  number_of_runs: 4
-threads: 1
-low: 0
-high: 10000
-gene: n #(y/n) -- includes gene annotations if 'y'
+  filepath: #sra run list for species
+  number_of_runs: #number of runs to analyse
+threads: #number of threads for downloading bam files
+low: #lower bp range
+high: #upper bp range
+gene: #(y/n) -- includes gene annotations if 'y'
