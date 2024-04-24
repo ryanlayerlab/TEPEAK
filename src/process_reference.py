@@ -8,7 +8,7 @@ def main():
     with open('ncbi_dataset/data/dataset_catalog.json') as dataset_catalog: 
         parsed_dataset = json.load(dataset_catalog)
     
-    fa_filepath = f"ncbi_dataset/data/{parsed_dataset['assemblies'][2]['files'][0]['filePath']}"
+    fa_filepath = f"ncbi_dataset/data/{parsed_dataset['assemblies'][-1]['files'][0]['filePath']}"
     os.system(
         f"""
         cp {fa_filepath} {species_dir}/{species}.fa
