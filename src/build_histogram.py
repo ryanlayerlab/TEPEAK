@@ -24,10 +24,9 @@ def main():
 	#print(t[0:20])
 	#mean = t.sum()
 	#print(mean)
-	###
+	### 
 
 	plt.hist(t_rows['length'], density=False, bins=len(t))
-	#plt.yscale('log')
 	plt.ylabel('log(Frequency)')
 	plt.xlabel('Insertion Size (bp)')
 	plt.show()
