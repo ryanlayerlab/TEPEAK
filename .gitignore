@@ -1,5 +1,5 @@
 **.DS_Store
-configs/
+config.yaml
 data/
 output/
 bcftools-1.18/
