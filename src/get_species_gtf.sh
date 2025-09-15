@@ -1,23 +1,34 @@
-#!/bin/bash
-set -eu
-set -o pipefail 
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
 while getopts "s:d:f:" flag; do
-    case "${flag}" in 
-        s) species=${OPTARG};;
-        d) species_dir=${OPTARG};;
-        f) zipped_gtf_dataset=${OPTARG};;
-        *) echo "Usage: $0 -s species_name -d species_dir -f zipped_gtf_dataset"
-            exit 1;;
-    esac
-done 
+  case "${flag}" in
+    s) species="${OPTARG}" ;;
+    d) species_dir="${OPTARG}" ;;
+    f) zip_file="${OPTARG}" ;;
+    *) exit 1 ;;
+  esac
+done
 
-# data_dir=$(grep 'data_directory:' configs/config_${species}.yaml | awk '{print $2}')
-echo "n" | unzip $zipped_gtf_dataset
-# extracting the genomic.gtf refseq file
-gcf_folder=$(ls ncbi_dataset/data | grep GCF)
-gtf_file=$(ls "ncbi_dataset/data/$gcf_folder/")
+if [[ -z "${species:-}" || -z "${species_dir:-}" || -z "${zip_file:-}" ]]; then
+  echo "Usage: $0 -s species -d species_dir -f zip" >&2
+  exit 1
+fi
 
-# moving the gtf file to data_dir/species_dir and renaming as species.gtf
-mv "ncbi_dataset/data/$gcf_folder/$gtf_file" "$species_dir/${species}.gtf"
-rm -rf ncbi_dataset
+mkdir -p "${species_dir}"
+
+# Unzip directly into species_dir (creates species_dir/ncbi_dataset/…)
+if [[ ! -f "${species_dir}/ncbi_dataset/data/dataset_catalog.json" ]]; then
+  unzip -o "${zip_file}" -d "${species_dir}" > /dev/null
+else
+  echo "Dataset already extracted, proceeding..."
+fi
+
+gtf_path="$(find "${species_dir}/ncbi_dataset" -type f -name '*.gtf' | head -n 1 || true)"
+if [[ -z "${gtf_path}" ]]; then
+  echo "No .gtf found under ${species_dir}/ncbi_dataset" >&2
+  exit 1
+fi
+
+cp "${gtf_path}" "${species_dir%/}/${species}.gtf"

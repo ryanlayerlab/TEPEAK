@@ -1,0 +1,2 @@
+drwxr-xr-x@ 7 devinburke  staff  224 Sep 15 12:03 output/horse
+drwxr-xr-x@ 2 devinburke  staff   64 Sep 15 12:03 output/horse/peak_0-10000

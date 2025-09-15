@@ -1,18 +1,19 @@
 name: insurveyor-env
 channels:
-  - defaults
   - bioconda
   - conda-forge
+  - defaults
 dependencies:
-  - bcftools=1.10.2
+  - python=3.9
+  - insurveyor
+  - snakemake
+  - bcftools
   - bedtools
   - bwa
   - htslib
-  - insurveyor
+  - samtools
   - matplotlib
   - numpy
   - pysam
-  - samtools
-  - snakemake
   - pyyaml
   - pandas

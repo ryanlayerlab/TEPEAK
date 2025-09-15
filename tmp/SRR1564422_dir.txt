@@ -1,0 +1,27 @@
+total 114280
+-rw-r--r--@ 1 devinburke  staff    11K Sep 11 18:06 assembled_ins.annotated.vcf.gz
+-rw-r--r--@ 1 devinburke  staff    10K Sep 11 18:06 assembled_ins.vcf.gz
+-rw-r--r--@ 1 devinburke  staff    72K Sep 11 18:06 assembly_failed.bad_anchors.sv
+-rw-r--r--@ 1 devinburke  staff    23K Sep 11 18:06 assembly_failed.lt50bp.sv
+-rw-r--r--@ 1 devinburke  staff     0B Sep 11 18:06 assembly_failed.mh_too_long.sv
+-rw-r--r--@ 1 devinburke  staff    21K Sep 11 18:06 assembly_failed.no_seq.sv
+-rw-r--r--@ 1 devinburke  staff     0B Sep 11 18:06 assembly_failed.too_many_reads.sv
+-rw-r--r--@ 1 devinburke  staff     0B Sep 11 18:06 assembly_failed.w_cycle.sv
+-rw-r--r--@ 1 devinburke  staff    12K Sep 11 18:06 assembly_succeeded.sv
+-rw-r--r--@ 1 devinburke  staff   243B Sep 11 18:05 config.txt
+-rw-r--r--@ 1 devinburke  staff     0B Sep 11 18:06 consensus_log.txt
+-rw-r--r--@ 1 devinburke  staff   9.1K Sep 11 18:05 contig_map
+-rw-r--r--@ 1 devinburke  staff   135B Sep 11 18:05 full_cmd.txt
+-rw-r--r--@ 1 devinburke  staff     0B Sep 11 18:06 graph.txt
+-rw-r--r--@ 1 devinburke  staff   2.8K Sep 11 18:06 min_disc_pairs_by_size.txt
+-rw-r--r--@ 1 devinburke  staff    18K Sep 11 18:06 out.pass.vcf.gz
+-rw-r--r--@ 1 devinburke  staff   3.1K Sep 11 18:06 out.pass.vcf.gz.tbi
+-rw-r--r--@ 1 devinburke  staff    21K Sep 11 18:06 out.vcf.gz
+-rw-r--r--@ 1 devinburke  staff   3.9K Sep 11 18:06 out.vcf.gz.tbi
+-rw-r--r--@ 1 devinburke  staff    55M Sep 11 18:05 random_pos.txt
+-rw-r--r--@ 1 devinburke  staff   6.4K Sep 11 18:06 small_ins.annotated.vcf.gz
+-rw-r--r--@ 1 devinburke  staff   6.3K Sep 11 18:06 small_ins.vcf.gz
+-rw-r--r--@ 1 devinburke  staff   3.0K Sep 11 18:06 stats.txt
+-rw-r--r--@ 1 devinburke  staff    15K Sep 11 18:06 transurveyor_ins.annotated.vcf.gz
+-rw-r--r--@ 1 devinburke  staff    29K Sep 11 18:06 transurveyor_ins.vcf.gz
+drwxr-xr-x@ 7 devinburke  staff   224B Sep 11 18:05 workspace

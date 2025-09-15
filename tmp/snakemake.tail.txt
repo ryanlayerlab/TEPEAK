@@ -1,0 +1,86 @@
+Config file config.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                           count
+--------------------------  -------
+align_species                     1
+all                               1
+annotate_genes                    1
+build_histogram_deletions         1
+build_histogram_insertions        1
+dfam_annotate                     1
+extract_range                     1
+get_global_vcf                    1
+smoove_1                          1
+smoove_2                          1
+smoove_3                          1
+smoove_4                          1
+smoove_global_vcf                 1
+write_output_genes                1
+total                            14
+
+Select jobs to execute...
+
+[Mon Sep 15 10:50:57 2025]
+rule align_species:
+    input: data/horse/horse.fa, data/horse/horse.fa.fai, data/horse/horse.fa.amb, data/horse/horse.fa.ann, data/horse/horse.fa.bwt, data/horse/horse.fa.pac, data/horse/horse.fa.sa, horse_samples.txt
+    output: data/horse/SRR1564422.bam, data/horse/SRR1564422.bam.bai
+    jobid: 11
+    reason: Missing output files: data/horse/SRR1564422.bam; Updated input files: data/horse/horse.fa.sa, data/horse/horse.fa.pac, data/horse/horse.fa.bwt, data/horse/horse.fa.ann, data/horse/horse.fa
+    threads: 4
+    resources: tmpdir=/var/folders/pg/327w_pss0yq30v19glh5dtd00000gn/T
+
+[Mon Sep 15 11:57:51 2025]
+Finished job 11.
+1 of 14 steps (7%) done
+Select jobs to execute...
+
+[Mon Sep 15 11:57:52 2025]
+rule smoove_1:
+    input: data/horse/SRR1564422.bam, data/horse/horse.fa, data/horse
+    output: output/horse/results-smoove/SRR1564422-smoove.genotyped.vcf.gz
+    jobid: 10
+    reason: Input files updated by another job: data/horse/SRR1564422.bam
+    wildcards: sample=SRR1564422
+    resources: tmpdir=/var/folders/pg/327w_pss0yq30v19glh5dtd00000gn/T
+
+
+[Mon Sep 15 11:57:52 2025]
+rule get_global_vcf:
+    input: horse_samples.txt, output/horse/SRR1564422/out.pass.vcf.gz
+    output: output/horse/horse_global_vcf.txt
+    jobid: 1
+    reason: Missing output files: output/horse/horse_global_vcf.txt
+    resources: tmpdir=/var/folders/pg/327w_pss0yq30v19glh5dtd00000gn/T
+
+
+[Mon Sep 15 11:57:52 2025]
+rule extract_range:
+    input: horse_samples.txt, output/horse/SRR1564422/out.pass.vcf.gz
+    output: output/horse/peak_0-10000/horse_0-10000_pop_vcf.txt
+    jobid: 15
+    reason: Missing output files: output/horse/peak_0-10000/horse_0-10000_pop_vcf.txt
+    resources: tmpdir=/var/folders/pg/327w_pss0yq30v19glh5dtd00000gn/T
+
+Waiting at most 60 seconds for missing files.
+[Mon Sep 15 11:57:53 2025]
+Error in rule get_global_vcf:
+    jobid: 1
+    input: horse_samples.txt, output/horse/SRR1564422/out.pass.vcf.gz
+    output: output/horse/horse_global_vcf.txt
+    shell:
+        bash src/get_global_vcf.sh -s horse -o output/horse -f horse_samples.txt
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+MissingOutputException in rule extract_range in file /Users/devinburke/Documents/TEPEAK/Snakefile, line 166:
+Job 15  completed successfully, but some output files are missing. Missing files after 60 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+output/horse/peak_0-10000/horse_0-10000_pop_vcf.txt
+[Mon Sep 15 11:58:53 2025]
+Finished job 10.
+2 of 14 steps (14%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-09-15T105050.601287.snakemake.log

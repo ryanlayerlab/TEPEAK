@@ -22,3 +22,121 @@ SraRunTable.txt
 **.svg
 smoove_latest.sif
 *.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.bam
+*.bam.bai
+*.fa
+*.fa.fai
+*.fa.amb
+*.fa.ann
+*.fa.bwt
+*.fa.pac
+*.fa.sa
+*.gtf
+*.log
+*.err
+debug_*.sh
+test_*.sh
+custom_samples.txt
+horse_samples.txt
+*_samples.txt
+config_*_custom.yaml
+config_*_sra.yaml
+*.fastq.gz
+ncbi_dataset/
+README.html
+md5sum.txt
+
+
+# OS/editor noise
+.DS_Store
+*.swp
+*.swo
+*.tmp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Snakemake
+.snakemake/
+.snakemake/*
+
+# Logs / scratch
+*.log
+logs/
+prefetch_tmp/
+
+# Outputs (these are generated)
+output/
+
+# Species build artifacts (safe to regenerate)
+# Keep zipped inputs tracked; ignore extracted/reference indexes & bulky caches.
+# Reference + indexes produced by bwa/samtools
+data/*/*.fa
+data/*/*.fa.*
+# Extracted NCBI dataset payloads
+data/*/ncbi_dataset/
+# Local FASTQs (user-provided; can be huge)
+data/*/fastq/
+
+# Common bioinformatics outputs anywhere (belt-and-suspenders)
+**/*.bam
+**/*.bam.bai
+**/*.cram
+**/*.cram.crai
+**/*.vcf
+**/*.vcf.gz
+**/*.vcf.gz.tbi
+**/*.bcf
+**/*.bcf.csi
+**/*.bed
+**/*.bed.gz
+**/*.bed.gz.tbi
+
+# Picard build artifacts
+picard/build/
+picard/.gradle/
+.gradle/
+
+# Node/npm (if ever used for docs/tools)
+node_modules/
+
+# OS/editor noise
+.DS_Store
+*.swp
+*.swo
+*.tmp
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Snakemake
+.snakemake/
+.snakemake/*
+
+# Logs / scratch
+*.log
+logs/
+prefetch_tmp/
+
+# All results and user data (never committed)
+data/
+output/
+
+# Picard build artifacts
+picard/build/
+picard/.gradle/
+.gradle/
+
+# Keep only configs, docs, and code
+!config*.yaml
+!Snakefile
+!src/**
+!scripts/**
+!*.md
+
