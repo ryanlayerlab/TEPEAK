@@ -140,3 +140,21 @@ picard/.gradle/
 !scripts/**
 !*.md
 
+# Temporary and cache dirs
+prefetch_tmp/
+.snakemake/
+tmp/
+*.tmp
+
+# Ignore data + output
+data/
+output/
+
+# Ignore horse setup docs
+HORSE_SETUP.html
+HORSE_SETUP.md
+
+# Ignore debug + tree scripts
+debug_align.sh
+tree.sh
+
