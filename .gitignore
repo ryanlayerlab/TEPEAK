@@ -1,4 +1,6 @@
 **.DS_Store
+debug.sh
+.Rhistory
 config.yaml
 data/
 output/
