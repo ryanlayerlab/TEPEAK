@@ -1,7 +1,7 @@
 import os, json
 from pathlib import Path
 
-# noqa: F821
+
 
 def main():
     species = snakemake.params.species

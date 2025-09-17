@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bash 3 compatible; robust PE filename handling; multi-lane concat; fail-fast if no mapped reads.
+
 
 IFS=$'\n\t'
 shopt -s nullglob
@@ -29,7 +29,6 @@ fi
 PICARD_JAR="$(dirname "$0")/../picard/build/libs/picard.jar"
 ref="${data_path}/${species}.fa"
 
-# Global arrays so Bash 3 + set -u never sees "unbound variable"
 declare -a R1_LIST=()
 declare -a R2_LIST=()
 
@@ -100,7 +99,7 @@ align_from_fastq() {
     exit 1
   fi
 
-  # Build FIFOs and stream-concat all lanes
+
   local tmpd r1_fifo r2_fifo pid1 pid2
   tmpd="$(mktemp -d)"; r1_fifo="${tmpd}/r1.fq"; r2_fifo="${tmpd}/r2.fq"
   mkfifo "$r1_fifo" "$r2_fifo"
@@ -125,7 +124,7 @@ align_from_fastq() {
   mv "${data_path}/${sample}.rg.bam"     "${data_path}/${sample}.bam"
   mv "${data_path}/${sample}.rg.bam.bai" "${data_path}/${sample}.bam.bai"
 
-  # Fail fast if nothing mapped (now that BAM definitely exists)
+
   local mapped
   mapped=$(samtools view -c -F 4 "${data_path}/${sample}.bam")
   if [[ "${mapped}" -eq 0 ]]; then

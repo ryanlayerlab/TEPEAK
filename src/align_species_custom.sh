@@ -1,8 +1,6 @@
 #!/bin/bash
 set -x
-# Temporarily remove -eu to debug where it fails
-# set -eu
-# set -o pipefail
+
 
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided"
@@ -58,7 +56,7 @@ while IFS= read -r line; do
         exit 1
     fi
 
-    # Rest of the alignment process is identical to original
+ 
     bwa mem -M -t $threads -R "@RG\tID:1\tSM:""${sample_name}" \
              "$data_path/${species}.fa" \
          "${sample_name}"_1.fastq "${sample_name}"_2.fastq  \
