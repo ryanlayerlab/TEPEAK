@@ -4,8 +4,9 @@ shell.prefix(
 
 configfile: 'config.yaml'
 import pandas as pd
+import os
 
-REF_EXTENSIONS = ['fa', 'fa.fai', 'amb', 'ann', 'bwt', 'pac', 'sa']
+REF_EXTENSIONS = ['fa', 'fa.fai', 'fa.amb', 'fa.ann', 'fa.bwt', 'fa.pac', 'fa.sa']
 ANN_EXTENSIONS = ['gene_annotate.txt', 'gtf_loci.txt', 'gtf.txt', 'pop_vcf_sorted.txt']
 
 species = config['species']
@@ -25,6 +26,8 @@ ALL = [
     f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
+
+
 def get_samples(filename: str) -> list:
     df = pd.read_csv(filename, names = ['samples'])
     return list(df['samples'])
@@ -40,30 +43,44 @@ def get_sra_numbers(sra_file: str, sample_file: str, max_n: int) -> None:
             f.write(f'{run}\n')
 
 os.makedirs(species_dir, exist_ok = True)
-sample_file = f'{species_dir}/{species}_samples.txt'
-if not os.path.exists(sample_file): 
-    get_sra_numbers(
-        config['sra_run']['filepath'], 
-        sample_file, 
-        config['sra_run']['number_of_runs']
-    )
+
+# Handle both SRA and custom FASTQ input modes
+input_type = config.get('input_type', 'sra')  # Default to 'sra' for backward compatibility
+
+if input_type == 'fastq':
+    # Custom FASTQ mode
+    sample_file = config['fastq_input']['sample_list']
+    if not os.path.exists(sample_file):
+        raise FileNotFoundError(f"Sample list file not found: {sample_file}")
+else:
+    # Original SRA mode (default)
+    sample_file = f'{species_dir}/{species}_samples.txt'
+    if not os.path.exists(sample_file): 
+        get_sra_numbers(
+            config['sra_run']['filepath'], 
+            sample_file, 
+            config['sra_run']['number_of_runs']
+        )
+
 SAMPLES = get_samples(sample_file)
+# number of samples available to smoove
+N_SAMPLES = len(SAMPLES)
 
 rule all:  
     input: 
         ALL
 
-rule process_reference: 
-    input: 
-        sample_file = sample_file, 
+rule process_reference:
+    input:
         ref = config['zipped_ref_genome_filepath']
-    params: 
-        species_dir = species_dir, 
-        species = species, 
-    output: 
+    params:
+        species_dir = species_dir,
+        species = species
+    output:
         ref = expand(f'{species_dir}/{species}.{{ext}}', ext = REF_EXTENSIONS)
-    script: 
+    script:
         "src/process_reference.py"
+
 
 rule align_species: 
     input: 
@@ -72,7 +89,9 @@ rule align_species:
     params: 
         species = species, 
         species_dir = species_dir, 
-        threads = config['threads']
+        threads = config['threads'],
+        input_type = input_type,
+        fastq_dir = config.get('fastq_input', {}).get('fastq_dir', '') if input_type == 'fastq' else ''
     threads: config['threads']
     output: 
         expand(
@@ -82,8 +101,21 @@ rule align_species:
             ], 
             sample = SAMPLES
         )
-    shell: 
-        "bash src/align_species.sh -s {params.species} -d {params.species_dir} -t {params.threads} -f {input.sample_file}"
+    shell:
+        """
+        if [ "{params.input_type}" = "fastq" ]; then
+            echo "Running custom FASTQ alignment..."
+            bash -x scripts/align_species.sh \
+                -s {params.species} \
+                -d {params.species_dir} \
+                -t {params.threads} \
+                -f {params.fastq_dir} \
+                -l {input.sample_file}
+        else
+            echo "Running SRA alignment..."
+            bash src/align_species.sh -s {params.species} -d {params.species_dir} -t {params.threads} -f {input.sample_file}
+        fi
+        """
 
 rule call_insertions_serial: 
     input: 
@@ -108,7 +140,7 @@ rule check_insertions:
         output_dir = output_dir
     output: 
         count_file = f'{output_dir}/{species}_count.txt', 
-        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf', sample = SAMPLES)
+        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample = SAMPLES)
     shell:
         "bash src/check_insertions.sh -s {params.species} -o {params.output_dir} -f {input.sample_file}"
 
@@ -215,69 +247,118 @@ rule build_histogram_insertions:
 rule smoove_1: 
     input: 
         bam_files = f'{species_dir}/{{sample}}.bam',
-        smoove_file = 'smoove_latest.sif',
         reference_file = f'{species_dir}/{species}.fa', 
         input_dir = f'{species_dir}'
     params: 
-        output_dir = f'{output_dir}/results-smoove/'
+        output_dir = f'{output_dir}/results-smoove/',
+        abs_output_dir = os.path.abspath(f'{output_dir}/results-smoove/'),
+        abs_species_dir = os.path.abspath(species_dir),
+        abs_ref_file = os.path.abspath(f'{species_dir}/{species}.fa')
     output:
         results_smoove = f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz'
     shell: 
-        "singularity exec {input.smoove_file} smoove call --outdir {params.output_dir} --name {wildcards.sample} "
-        "--fasta {input.reference_file} -p 1 --genotype {input.input_dir}/{wildcards.sample}.bam"
+        "mkdir -p {params.output_dir} && "
+        "docker run -v {params.abs_species_dir}:/data -v {params.abs_output_dir}:/output "
+        "brentp/smoove smoove call --outdir /output --name {wildcards.sample} "
+        "--fasta /data/{species}.fa -p 1 --genotype /data/{wildcards.sample}.bam"
 
 rule smoove_2: 
     input: 
-        smoove_file = 'smoove_latest.sif', 
         reference_file = f'{species_dir}/{species}.fa',
-	    results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
+        results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
     params:
         prev_output_dir = rules.smoove_1.params.output_dir,
-        output_dir = output_dir
+        output_dir = output_dir,
+        abs_prev_output_dir = os.path.abspath(rules.smoove_1.params.output_dir),
+        abs_output_dir = os.path.abspath(output_dir),
+        abs_species_dir = os.path.abspath(species_dir)
     output: 
         merged_sites_file = f'{output_dir}/merged.sites.vcf.gz'
-    shell: 
-        "singularity exec {input.smoove_file} smoove merge --name merged -f {input.reference_file} --outdir {params.output_dir} " 
-        "{params.prev_output_dir}*.genotyped.vcf.gz"
+    shell:
+        r"""
+        mkdir -p {params.output_dir} && \
+        docker run \
+        -v {params.abs_species_dir}:/data \
+        -v {params.abs_prev_output_dir}:/input \
+        -v {params.abs_output_dir}:/output \
+        brentp/smoove bash -lc 'smoove merge --name merged -f /data/{species}.fa --outdir /output /input/*.genotyped.vcf.gz'
+        """
 
 rule smoove_3: 
     input: 
-        smoove_file = 'smoove_latest.sif', 
         reference_file = f'{species_dir}/{species}.fa',
         merged_file = rules.smoove_2.output.merged_sites_file, 
         bam_files = f'{species_dir}/{{sample}}.bam'
     params: 
         output_dir = f'{output_dir}/results-genotyped/',
         species_dir = species_dir,
-	    samples = SAMPLES
+        samples = SAMPLES,
+        abs_output_dir = os.path.abspath(f'{output_dir}/results-genotyped/'),
+        abs_species_dir = os.path.abspath(species_dir),
+        abs_merged_file = os.path.abspath(f'{output_dir}/merged.sites.vcf.gz')
     output: 
         results_genotyped = f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz'
     shell: 
-        "singularity exec {input.smoove_file} smoove genotype -d -x -p 1 --name {wildcards.sample}-joint "
-        "--outdir {params.output_dir} --fasta {input.reference_file} --vcf {input.merged_file} "
-        "{params.species_dir}/{wildcards.sample}.bam"
+        "mkdir -p {params.output_dir} && "
+        "docker run -v {params.abs_species_dir}:/data -v {params.abs_output_dir}:/output -v $(dirname {params.abs_merged_file}):/vcf "
+        "brentp/smoove smoove genotype -d -x -p 1 --name {wildcards.sample}-joint "
+        "--outdir /output --fasta /data/{species}.fa --vcf /vcf/merged.sites.vcf.gz "
+        "/data/{wildcards.sample}.bam"
 
-rule smoove_4: 
-    input: 
-        smoove_file = 'smoove_latest.sif',
-        vcf_files = expand(rules.smoove_3.output.results_genotyped, sample = SAMPLES)
-    params: 
-        species = species
-    output: 
-        f'{species}.smoove.square.vcf.gz'
-    shell: 
-        "singularity exec {input.smoove_file} smoove paste --name {params.species} {input.vcf_files}"
 
-rule smoove_global_vcf: 
-    input: 
-        f'{species}.smoove.square.vcf.gz'
-    params: 
-        input_file = f'{species}.smoove.square.vcf'
+
+rule smoove_4:
+    input:
+        vcf_files = expand(f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz',
+                           sample=SAMPLES)
+    params:
+        species = species,
+        n_samples = N_SAMPLES,
+        abs_genotyped_dir = os.path.abspath(f'{output_dir}/results-genotyped/'),
+        abs_output_dir = os.path.abspath(f'{output_dir}')
     output:
-        global_vcf = f'{species}_smoove_global.vcf'
-    shell: 
-        "gzip -d {input};"
-        """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} >> {output} """
+        f'{output_dir}/{species}.smoove.square.vcf.gz'
+    shell:
+        r"""
+        set -euo pipefail
+
+        if [ "{params.n_samples}" -eq 1 ]; then
+            # Single-sample: no paste needed; copy and index
+            src="{input.vcf_files}"
+            dst="{output}"
+            cp -f "$src" "$dst"
+            # ensure .tbi exists (escape braces for Snakemake formatting!)
+            if [ ! -s "$${{dst}}.tbi" ]; then
+                tabix -f -p vcf "$dst"
+            fi
+        else
+            # Multi-sample: square via paste in docker; write into output_dir
+            docker run -v "{params.abs_genotyped_dir}":/input \
+                       -v "{params.abs_output_dir}":/output \
+                       -w /output \
+                       brentp/smoove \
+                       smoove paste --name {params.species} /input/*.genotyped.vcf.gz
+            # Ensure index exists for downstream tools
+            if [ ! -s "{output}.tbi" ]; then
+                tabix -f -p vcf "{output}"
+            fi
+        fi
+        """
+
+
+
+
+rule smoove_global_vcf:
+    input:
+        f'{output_dir}/{species}.smoove.square.vcf.gz'
+    params:
+        input_file = f'{output_dir}/{species}.smoove.square.vcf'
+    output:
+        global_vcf = f'{output_dir}/{species}_smoove_global.vcf'
+    shell:
+        "gzip -f -d {input} && "
+        """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} > {output} """
+
 
 
 rule build_histogram_deletions: 

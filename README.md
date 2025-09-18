@@ -1,82 +1,177 @@
 # TEPEAK
-A novel method for identifying and characterizing polymorphic transposable elements in  non-model species populations.
+A pipeline for identifying and characterizing polymorphic transposable elements in non-model species populations.
+
+---
+
 ## Setup
-We recommend running everything inside a `conda` virtual environment using the latest version of `conda` (`23.9.0` at the time of writing). Some packages installed by older versions of `conda` may not work properly. 
 
-## OS requirements
-We recommend running everything on a Linux machine. If you're on Windows, you can run everything through a Windows Subsystem for Linux (WSL). The instructions to install and set up a WSL on a Windows machine are available at https://learn.microsoft.com/en-us/windows/wsl/install.  
+We recommend running everything inside a dedicated `conda` environment.
 
-### Creating INSurVeyor `conda` environment and installing dependecies. 
-Create the environment with `mamba` as it's much faster than `conda`. You can check if you have mamba installed by running
-```console
-mamba --version
-```
-This should output the version of `mamba` installed. If `mamba` is not installed, run 
+### Create the environment
 ```bash
-conda install -n base -c conda-forge mamba
-```
-to install it into the `base` environment. 
-
-Run the following command to create the `insurveyor-env` environment and install INSurVeyor along with other dependencies inside the environment. 
-```console
-mamba env create -f environment.yaml
-```
-After the environment has been created, activate it by running 
-```bash
+conda env create -f environment.yaml
 conda activate insurveyor-env
 ```
-### Other environment requirements
-Please view the [wiki](https://github.com/ryanlayerlab/TEPEAK/wiki/Installing-NCBI-SDK%2C-Picard%2C-and-Smoove) for instructions on how to install and set up the NCBI SDK, Picard, Smoove, and verifying that you have an appropriate version of Java installed. 
+
+### Additional requirements
+TEPEAK requires a few tools that are not bundled into the conda environment:
+
+#### Picard
+```bash
+git clone https://github.com/broadinstitute/picard.git
+cd picard/
+./gradlew shadowJar
+java -jar build/libs/picard.jar
+```
+
+If you run into Java errors, make sure you have a modern Java JDK installed.
+
+#### Smoove
+
+We run Smoove entirely via Docker. You must have Docker installed. It is not currently possible to run via the binaries. We will implement this feature in the future. 
+
+```bash
+docker pull brentp/smoove
+docker run -it brentp/smoove smoove -h
+```
 
 ## Data requirements
-TEPEAK requires the following files to run properly: 
-- Zipped genome reference file 
-- Zipped genome gtf file (for gene annotations)
-- Sra run list file
 
-The Sra run list file needs to be placed in the TEPEAK directory while the zipped files need to be placed inside the data directory. For example, 
+TEPEAK can run in two modes:
+
+1. NCBI SRA mode (default)
+
+Inputs:
+
+A zipped genome reference (e.g. `ncbi_dataset.zip`)
+
+A zipped genome GTF (for gene annotations, e.g. `ncbi_dataset_gtf.zip`)
+
+An SRA run table (CSV/TSV from NCBI)
+
+Example project structure:
+
 ```
 TEPEAK/
-  snakefile
+  Snakefile
   config.yaml
   SraRunTable.txt
   data/
     ncbi_dataset.zip
     ncbi_dataset_gtf.zip
-  ...
-```
-where `data` is the data directory, `ncbi_dataset.zip` is the zipped reference genome, `ncbi_dataset_gtf.zip` is the zipped gtf, and `SraRunTable.txt` is the SRA run list. 
-## Running TEPEAK
-After the required files have been placed in the appropriate locations, edit `config.yaml` to configure it for the species you'd like to analyse. 
 
-For example, to analyse ecoli, the `config.yaml` file would look like 
-```yaml
+```
+
+
+2. Custom FASTQ mode
+
+Inputs:
+
+- A zipped genome reference
+
+- A zipped genome GTF
+
+- A directory of FASTQs
+
+- A plain text sample list (one sample ID per line)
+
+FASTQs must be paired-end, named with any of the following conventions:
+
+- <sample>_R1.fastq(.gz) / <sample>_R2.fastq(.gz)
+
+- <sample>_1.fastq(.gz) / <sample>_2.fastq(.gz)
+
+- <sample>.R1.fastq(.gz) / <sample>.R2.fastq(.gz)
+
+- <sample>-R1.fastq(.gz) / <sample>-R2.fastq(.gz)
+
+```
+TEPEAK/
+  Snakefile
+  config_custom.yaml
+  custom_samples.txt
+  data/
+    my_species_reference.zip
+    my_species_gtf.zip
+    my_species/
+      fastq/
+        sample1_R1.fastq.gz
+        sample1_R2.fastq.gz
+        sample2_1.fastq.gz
+        sample2_2.fastq.gz
+
+```
+
+### Configuration
+
+All runs are controlled by a config.yaml file.
+You must specify whether you are using SRA or FASTQ input via the input_type field.
+
+Example: SRA input
+```
 species: ecoli
-data_dir: data #name and path of the data directory
-output_dir: output #name and path of the output directory
-zipped_ref_genome_filepath: data/ncbi_dataset.zip #zipped reference genome file for ecoli
-zipped_gtf_filepath: data/ncbi_dataset_gtf.zip  #zipped gtf file for ecoli
+data_dir: data
+output_dir: output
+zipped_ref_genome_filepath: data/ncbi_dataset.zip
+zipped_gtf_filepath: data/ncbi_dataset_gtf.zip
 sra_run: 
-  filepath: SraRunTable.txt #sra run list for ecoli
-  number_of_runs: 4 #number of runs to analyse
+  filepath: SraRunTable.txt
+  number_of_runs: 4
+input_type: sra
 threads: 10
-low: 0 #lower bp range
-high: 10000 #upper bp range
-gene: y #(y/n) -- includes gene annotations if 'y'
+low: 0
+high: 10000
+gene: y
 ```
-Note: If you want to include gene annotations, you must have a zipped gtf file. 
 
-After the config file and the data directory directory structure has been set up, run the TEPEAK pipeline with 
-```
-snakemake --cores
-```
-If your config file is named something other than `config.yaml`, run the pipeline with 
-```
-snakemake --configfile <name and path to config file> --cores 
-```
-This allows you to define multiple config files for different species and run the pipeline for a specific species. Make sure that the new config file follows the exact same format as above. 
+Example: custom FASTQ Input
 
-Make sure to always run the pipeline with the `insurveyor-env` activated and from the TEPEAK directory. The pipeline produces two histograms, both of which are located in `<output_dir>/<species>/`. `<species>_insertions_plot.svg` is the plot with insertions and `<species>_smoove_plot.svg` is the plot with deletions. 
+```
+species: horse
+data_dir: data
+output_dir: output
+zipped_ref_genome_filepath: data/horse_reference.zip
+zipped_gtf_filepath: data/horse_gtf.zip
+fastq_input:
+  sample_list: horse_samples.txt
+  fastq_dir: data/horse/fastq
+input_type: fastq
+threads: 8
+low: 0
+high: 10000
+gene: n
 
----
-Note: Delete the contents of `prefetch_tmp` when finished
+```
+
+## Running TEPEAK
+
+From the TEPEAK directory with the environment activated:
+```
+snakemake --configfile config.yaml --cores 8
+```
+
+## Output
+
+All results are written to <output_dir>/<species>/.
+
+Key outputs include:
+
+- <species>_insertions_plot.svg — insertion histogram
+
+- <species>_smoove_plot.svg — deletion histogram
+
+- <species>_global_vcf.txt — global VCF of insertions
+
+- <species>.smoove.square.vcf.gz — squared Smoove VCF across samples
+
+Gene annotation tables (if gene: y)
+
+## Notes
+
+- Always activate the `insurveyor-env` environment before running.
+
+- For large references, indexing (`bwa index`) may take hours.
+
+- Delete `prefetch_tmp` when finished to save space.
+
+- If running on Windows, use WSL

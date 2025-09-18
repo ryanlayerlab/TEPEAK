@@ -1,0 +1,13 @@
+species: horse
+data_dir: data
+output_dir: output
+zipped_ref_genome_filepath: data/horse_reference.zip
+zipped_gtf_filepath: data/horse_reference.zip
+input_type: fastq
+fastq_input:
+  sample_list: horse_samples.txt
+  fastq_dir: data/horse/fastq
+threads: 8
+low: 0
+high: 10000
+gene: y  # Include gene annotations
