@@ -131,29 +131,30 @@ rule call_insertions_serial:
     script: 
         "src/call_insertions_serial.py"
 
-rule check_insertions: 
-    input: 
-        sample_file = sample_file, 
-        vcf_file = rules.call_insertions_serial.output.vcf_file
-    params: 
-        species = species, 
+rule check_insertions:
+    input:
+        sample_file = sample_file,
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
+    params:
+        species = species,
         output_dir = output_dir
-    output: 
-        count_file = f'{output_dir}/{species}_count.txt', 
-        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample = SAMPLES)
+    output:
+        count_file = f'{output_dir}/{species}_count.txt'
     shell:
+        # your script should *not* re-emit the VCFs; it can validate/summarize only
         "bash src/check_insertions.sh -s {params.species} -o {params.output_dir} -f {input.sample_file}"
 
-rule get_global_vcf: 
-    input: 
-        sample_file = sample_file, 
-        decompressed_file = rules.check_insertions.output.vcf_file
-    params: 
-        species = species, 
+
+rule get_global_vcf:
+    input:
+        sample_file = sample_file,
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
+    params:
+        species = species,
         output_dir = output_dir
-    output: 
+    output:
         global_vcf = f'{output_dir}/{species}_global_vcf.txt'
-    shell: 
+    shell:
         "bash src/get_global_vcf.sh -s {params.species} -o {params.output_dir} -f {input.sample_file}"
 
 rule dfam_annotate: 
@@ -167,18 +168,18 @@ rule dfam_annotate:
     script: 
         "src/dfam_annotate.py"
 
-rule extract_range: 
-    input: 
-        sample_file = sample_file, 
-        vcf_file = rules.check_insertions.output.vcf_file
-    params: 
-        species = species, 
-        output_dir = output_dir, 
-        low = config['low'], 
+rule extract_range:
+    input:
+        sample_file = sample_file,
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
+    params:
+        species = species,
+        output_dir = output_dir,
+        low = config['low'],
         high = config['high']
-    output: 
+    output:
         range_file = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_pop_vcf.txt'
-    shell: 
+    shell:
         "bash src/extract_range.sh -s {params.species} -f {input.sample_file} -o {params.output_dir} -l {params.low} -h {params.high}"
 
 rule get_species_gtf: 

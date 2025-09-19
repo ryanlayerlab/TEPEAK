@@ -7,7 +7,7 @@ while getopts "s:d:f:" flag; do
     s) species="${OPTARG}" ;;
     d) species_dir="${OPTARG}" ;;
     f) zip_file="${OPTARG}" ;;
-    *) exit 1 ;;
+    *) echo "Usage: $0 -s species -d species_dir -f zip" >&2; exit 1 ;;
   esac
 done
 
@@ -18,17 +18,25 @@ fi
 
 mkdir -p "${species_dir}"
 
-# Unzip directly into species_dir (creates species_dir/ncbi_dataset/…)
-if [[ ! -f "${species_dir}/ncbi_dataset/data/dataset_catalog.json" ]]; then
-  unzip -o "${zip_file}" -d "${species_dir}" > /dev/null
-else
-  echo "Dataset already extracted, proceeding..."
-fi
+# Extract to a temp dir so we don't care about the zip's internal layout
+tmpd="$(mktemp -d "${species_dir%/}/.gtf_extract.XXXXXX")"
+cleanup() { rm -rf "${tmpd}" || true; }
+trap cleanup EXIT
 
-gtf_path="$(find "${species_dir}/ncbi_dataset" -type f -name '*.gtf' | head -n 1 || true)"
+unzip -oq "${zip_file}" -d "${tmpd}"
+
+# Find a GTF anywhere inside (prefer uncompressed .gtf; fall back to .gtf.gz)
+gtf_path="$(find "${tmpd}" -type f \( -name '*.gtf' -o -name '*.gtf.gz' \) | head -n 1 || true)"
 if [[ -z "${gtf_path}" ]]; then
-  echo "No .gtf found under ${species_dir}/ncbi_dataset" >&2
+  echo "No .gtf or .gtf.gz found inside ${zip_file}" >&2
   exit 1
 fi
 
-cp "${gtf_path}" "${species_dir%/}/${species}.gtf"
+out="${species_dir%/}/${species}.gtf"
+if [[ "${gtf_path}" == *.gtf.gz ]]; then
+  gunzip -c "${gtf_path}" > "${out}"
+else
+  cp -f "${gtf_path}" "${out}"
+fi
+
+echo "Wrote ${out}"
