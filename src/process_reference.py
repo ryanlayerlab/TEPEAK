@@ -1,43 +1,61 @@
-import os, json
+# src/process_reference.py
+import os, sys, zipfile, gzip, shutil, tempfile, subprocess
 from pathlib import Path
 
 
+species_dir = str(snakemake.params.species_dir).rstrip("/")
+species = str(snakemake.params.species)
+out_fa = f"{species_dir}/{species}.fa"
+
+def run(cmd):
+    subprocess.run(cmd, check=True)
+
+def find_first_fasta(root: Path):
+    exts = {".fa", ".fna", ".fasta"}
+    gz_exts = {e + ".gz" for e in exts}
+    # Prefer uncompressed, then gz
+    cands_plain, cands_gz = [], []
+    for p in root.rglob("*"):
+        if not p.is_file():
+            continue
+        suf = "".join(p.suffixes[-2:]) if len(p.suffixes) >= 2 else p.suffix
+        if p.suffix.lower() in exts:
+            cands_plain.append(p)
+        elif suf.lower() in gz_exts:
+            cands_gz.append(p)
+    if cands_plain:
+        return cands_plain[0], False
+    if cands_gz:
+        return cands_gz[0], True
+    return None, False
 
 def main():
-    species = snakemake.params.species
-    species_dir = Path(snakemake.params.species_dir)
-    zip_path = Path(snakemake.input.ref)
+    os.makedirs(species_dir, exist_ok=True)
 
-    species_dir.mkdir(parents=True, exist_ok=True)
+    if all(Path(p).exists() and Path(p).stat().st_size > 0 for p in snakemake.output.ref):
+        print("Reference and indexes already present; skipping rebuild.", file=sys.stderr)
+        return
 
-    # Unzip directly into species_dir (creates species_dir/ncbi_dataset/…)
-    catalog_probe = species_dir / "ncbi_dataset" / "data" / "dataset_catalog.json"
-    if not catalog_probe.exists():
-        os.system(f'unzip -o "{zip_path}" -d "{species_dir}" > /dev/null')
-    else:
-        print("Dataset already extracted, proceeding...")
+    with tempfile.TemporaryDirectory() as tmpd:
+        tmpd = Path(tmpd)
+        with zipfile.ZipFile(ref_zip) as zf:
+            zf.extractall(tmpd)
 
-    # Find dataset_catalog.json under species_dir/ncbi_dataset
-    candidates = list((species_dir / "ncbi_dataset").glob("**/data/dataset_catalog.json"))
-    if not candidates:
-        raise FileNotFoundError(f"No dataset_catalog.json under {species_dir/'ncbi_dataset'}")
-    catalog_path = candidates[0]
+        fasta_path, is_gz = find_first_fasta(tmpd)
+        if not fasta_path:
+            print(f"[process_reference] ERROR: No FASTA-like file (.fa/.fna/.fasta[.gz]) found inside {ref_zip}", file=sys.stderr)
+            sys.exit(1)
 
-    with open(catalog_path) as f:
-        parsed = json.load(f)
+        # Normalize to species.fa (decompress if needed)
+        if is_gz:
+            with gzip.open(fasta_path, "rb") as inp, open(out_fa, "wb") as outp:
+                shutil.copyfileobj(inp, outp)
+        else:
+            shutil.copyfile(fasta_path, out_fa)
 
-    fa_rel = parsed["assemblies"][-1]["files"][0]["filePath"]
-
-    # Resolve FASTA under species_dir/ncbi_dataset/data/**
-    fa_root = species_dir / "ncbi_dataset" / "data"
-    fa_candidates = [p for p in fa_root.glob("**/*") if str(p).endswith(fa_rel)]
-    fa_path = fa_candidates[0] if fa_candidates else (fa_root / fa_rel)
-
-    target_fa = species_dir / f"{species}.fa"
-    os.system(f'cp "{fa_path}" "{target_fa}"')
-    print(f"File has been moved and renamed to {species}.fa")
-
-    os.system(f'cd "{species_dir}" && samtools faidx "{species}.fa" && bwa index -p "{species}.fa" "{species}.fa"')
+    # Build indexes
+    run(["samtools", "faidx", out_fa])
+    run(["bwa", "index", "-p", out_fa, out_fa])
 
 if __name__ == "__main__":
     main()
