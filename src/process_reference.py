@@ -2,9 +2,11 @@
 import os, sys, zipfile, gzip, shutil, tempfile, subprocess
 from pathlib import Path
 
-
+# >>> ADD THESE 3 LINES <<<
+ref_zip = str(snakemake.input.ref)  # <-- this was missing
 species_dir = str(snakemake.params.species_dir).rstrip("/")
 species = str(snakemake.params.species)
+
 out_fa = f"{species_dir}/{species}.fa"
 
 def run(cmd):
