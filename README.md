@@ -28,11 +28,15 @@ If you run into Java errors, make sure you have a modern Java JDK installed.
 
 #### Smoove
 
-We run Smoove entirely via Docker. You must have Docker installed. It is not currently possible to run via the binaries. We will implement this feature in the future. 
+Install Smoove binaries inside your conda bin directory (i.e. `/opt/anaconda3/envs/insurveyor-env/bin`)
 
 ```bash
-docker pull brentp/smoove
-docker run -it brentp/smoove smoove -h
+conda activate insurveyor-env
+cd /opt/anaconda3/envs/insurveyor-env/bin
+wget https://github.com/brentp/smoove/releases/download/v0.2.8/smoove
+chmod +x smoove
+# Verify
+smoove --help
 ```
 
 ## Data requirements

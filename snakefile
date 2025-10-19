@@ -252,16 +252,15 @@ rule smoove_1:
         input_dir = f'{species_dir}'
     params: 
         output_dir = f'{output_dir}/results-smoove/',
-        abs_output_dir = os.path.abspath(f'{output_dir}/results-smoove/'),
-        abs_species_dir = os.path.abspath(species_dir),
-        abs_ref_file = os.path.abspath(f'{species_dir}/{species}.fa')
+        species_dir = species_dir
     output:
         results_smoove = f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz'
     shell: 
-        "mkdir -p {params.output_dir} && "
-        "docker run -v {params.abs_species_dir}:/data -v {params.abs_output_dir}:/output "
-        "brentp/smoove smoove call --outdir /output --name {wildcards.sample} "
-        "--fasta /data/{species}.fa -p 1 --genotype /data/{wildcards.sample}.bam"
+        """
+        mkdir -p {params.output_dir}
+        smoove call --outdir {params.output_dir} --name {wildcards.sample} \
+            --fasta {input.reference_file} -p 1 --genotype {input.bam_files}
+        """
 
 rule smoove_2: 
     input: 
@@ -269,20 +268,14 @@ rule smoove_2:
         results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
     params:
         prev_output_dir = rules.smoove_1.params.output_dir,
-        output_dir = output_dir,
-        abs_prev_output_dir = os.path.abspath(rules.smoove_1.params.output_dir),
-        abs_output_dir = os.path.abspath(output_dir),
-        abs_species_dir = os.path.abspath(species_dir)
+        output_dir = output_dir
     output: 
         merged_sites_file = f'{output_dir}/merged.sites.vcf.gz'
     shell:
-        r"""
-        mkdir -p {params.output_dir} && \
-        docker run \
-        -v {params.abs_species_dir}:/data \
-        -v {params.abs_prev_output_dir}:/input \
-        -v {params.abs_output_dir}:/output \
-        brentp/smoove bash -lc 'smoove merge --name merged -f /data/{species}.fa --outdir /output /input/*.genotyped.vcf.gz'
+        """
+        mkdir -p {params.output_dir}
+        smoove merge --name merged -f {input.reference_file} \
+            --outdir {params.output_dir} {params.prev_output_dir}/*.genotyped.vcf.gz
         """
 
 rule smoove_3: 
@@ -292,21 +285,16 @@ rule smoove_3:
         bam_files = f'{species_dir}/{{sample}}.bam'
     params: 
         output_dir = f'{output_dir}/results-genotyped/',
-        species_dir = species_dir,
-        samples = SAMPLES,
-        abs_output_dir = os.path.abspath(f'{output_dir}/results-genotyped/'),
-        abs_species_dir = os.path.abspath(species_dir),
-        abs_merged_file = os.path.abspath(f'{output_dir}/merged.sites.vcf.gz')
+        species_dir = species_dir
     output: 
         results_genotyped = f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz'
     shell: 
-        "mkdir -p {params.output_dir} && "
-        "docker run -v {params.abs_species_dir}:/data -v {params.abs_output_dir}:/output -v $(dirname {params.abs_merged_file}):/vcf "
-        "brentp/smoove smoove genotype -d -x -p 1 --name {wildcards.sample}-joint "
-        "--outdir /output --fasta /data/{species}.fa --vcf /vcf/merged.sites.vcf.gz "
-        "/data/{wildcards.sample}.bam"
-
-
+        """
+        mkdir -p {params.output_dir}
+        smoove genotype -d -x -p 1 --name {wildcards.sample}-joint \
+            --outdir {params.output_dir} --fasta {input.reference_file} \
+            --vcf {input.merged_file} {input.bam_files}
+        """
 
 rule smoove_4:
     input:
@@ -315,38 +303,30 @@ rule smoove_4:
     params:
         species = species,
         n_samples = N_SAMPLES,
-        abs_genotyped_dir = os.path.abspath(f'{output_dir}/results-genotyped/'),
-        abs_output_dir = os.path.abspath(f'{output_dir}')
+        genotyped_dir = f'{output_dir}/results-genotyped/',
+        output_dir = output_dir
     output:
         f'{output_dir}/{species}.smoove.square.vcf.gz'
     shell:
-        r"""
+        """
         set -euo pipefail
-
+        
         if [ "{params.n_samples}" -eq 1 ]; then
-            # Single-sample: no paste needed; copy and index
-            src="{input.vcf_files}"
-            dst="{output}"
-            cp -f "$src" "$dst"
-            # ensure .tbi exists (escape braces for Snakemake formatting!)
-            if [ ! -s "$${{dst}}.tbi" ]; then
-                tabix -f -p vcf "$dst"
+            # Single-sample: copy and index
+            cp -f {input.vcf_files} {output}
+            if [ ! -s {output}.tbi ]; then
+                tabix -f -p vcf {output}
             fi
         else
-            # Multi-sample: square via paste in docker; write into output_dir
-            docker run -v "{params.abs_genotyped_dir}":/input \
-                       -v "{params.abs_output_dir}":/output \
-                       -w /output \
-                       brentp/smoove \
-                       smoove paste --name {params.species} /input/*.genotyped.vcf.gz
-            # Ensure index exists for downstream tools
-            if [ ! -s "{output}.tbi" ]; then
-                tabix -f -p vcf "{output}"
+            # Multi-sample: paste
+            smoove paste --name {params.species} --outdir {params.output_dir} \
+                {params.genotyped_dir}/*.genotyped.vcf.gz
+            # Ensure index exists
+            if [ ! -s {output}.tbi ]; then
+                tabix -f -p vcf {output}
             fi
         fi
         """
-
-
 
 
 rule smoove_global_vcf:
