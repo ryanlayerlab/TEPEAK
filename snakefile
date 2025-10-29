@@ -13,6 +13,7 @@ species = config['species']
 data_dir = config['data_dir'].strip('/')
 threads = config['threads']
 low, high = config['low'], config['high']
+run_smoove = config.get('run_smoove', False)
 
 species_dir = f'{data_dir}/{species}'
 output_dir = f"{config['output_dir'].strip('/')}/{species}"
@@ -22,10 +23,14 @@ ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
     f'{output_dir}/dfam_annotate.csv', 
     f'{output_dir}/{species}_insertions_plot.svg', 
-    f'{output_dir}/{species}_smoove_plot.svg', 
-    f'{final}_genes.txt'if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
+    f'{final}_genes.txt' if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
 
+# Add smoove outputs only if run_smoove is True
+if run_smoove:
+    ALL.extend([
+        f'{output_dir}/{species}_smoove_plot.svg'
+    ])
 
 
 def get_samples(filename: str) -> list:
@@ -245,110 +250,109 @@ rule build_histogram_insertions:
     script: 
         "src/build_histogram.py"
 
-rule smoove_1: 
-    input: 
-        bam_files = f'{species_dir}/{{sample}}.bam',
-        reference_file = f'{species_dir}/{species}.fa', 
-        input_dir = f'{species_dir}'
-    params: 
-        output_dir = f'{output_dir}/results-smoove/',
-        species_dir = species_dir
-    output:
-        results_smoove = f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz'
-    shell: 
-        """
-        mkdir -p {params.output_dir}
-        smoove call --outdir {params.output_dir} --name {wildcards.sample} \
-            --fasta {input.reference_file} -p 1 --genotype {input.bam_files}
-        """
+# Only define smoove rules if run_smoove is True
+if run_smoove:
+    rule smoove_1: 
+        input: 
+            bam_files = f'{species_dir}/{{sample}}.bam',
+            reference_file = f'{species_dir}/{species}.fa', 
+            input_dir = f'{species_dir}'
+        params: 
+            output_dir = f'{output_dir}/results-smoove/',
+            species_dir = species_dir
+        output:
+            results_smoove = f'{output_dir}/results-smoove/{{sample}}-smoove.genotyped.vcf.gz'
+        shell: 
+            """
+            mkdir -p {params.output_dir}
+            smoove call --outdir {params.output_dir} --name {wildcards.sample} \
+                --fasta {input.reference_file} -p 1 --genotype {input.bam_files}
+            """
 
-rule smoove_2: 
-    input: 
-        reference_file = f'{species_dir}/{species}.fa',
-        results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
-    params:
-        prev_output_dir = rules.smoove_1.params.output_dir,
-        output_dir = output_dir
-    output: 
-        merged_sites_file = f'{output_dir}/merged.sites.vcf.gz'
-    shell:
-        """
-        mkdir -p {params.output_dir}
-        smoove merge --name merged -f {input.reference_file} \
-            --outdir {params.output_dir} {params.prev_output_dir}/*.genotyped.vcf.gz
-        """
+    rule smoove_2: 
+        input: 
+            reference_file = f'{species_dir}/{species}.fa',
+            results = expand(rules.smoove_1.output.results_smoove, sample = SAMPLES)
+        params:
+            prev_output_dir = rules.smoove_1.params.output_dir,
+            output_dir = output_dir
+        output: 
+            merged_sites_file = f'{output_dir}/merged.sites.vcf.gz'
+        shell:
+            """
+            mkdir -p {params.output_dir}
+            smoove merge --name merged -f {input.reference_file} \
+                --outdir {params.output_dir} {params.prev_output_dir}/*.genotyped.vcf.gz
+            """
 
-rule smoove_3: 
-    input: 
-        reference_file = f'{species_dir}/{species}.fa',
-        merged_file = rules.smoove_2.output.merged_sites_file, 
-        bam_files = f'{species_dir}/{{sample}}.bam'
-    params: 
-        output_dir = f'{output_dir}/results-genotyped/',
-        species_dir = species_dir
-    output: 
-        results_genotyped = f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz'
-    shell: 
-        """
-        mkdir -p {params.output_dir}
-        smoove genotype -d -x -p 1 --name {wildcards.sample}-joint \
-            --outdir {params.output_dir} --fasta {input.reference_file} \
-            --vcf {input.merged_file} {input.bam_files}
-        """
+    rule smoove_3: 
+        input: 
+            reference_file = f'{species_dir}/{species}.fa',
+            merged_file = rules.smoove_2.output.merged_sites_file, 
+            bam_files = f'{species_dir}/{{sample}}.bam'
+        params: 
+            output_dir = f'{output_dir}/results-genotyped/',
+            species_dir = species_dir
+        output: 
+            results_genotyped = f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz'
+        shell: 
+            """
+            mkdir -p {params.output_dir}
+            smoove genotype -d -x -p 1 --name {wildcards.sample}-joint \
+                --outdir {params.output_dir} --fasta {input.reference_file} \
+                --vcf {input.merged_file} {input.bam_files}
+            """
 
-rule smoove_4:
-    input:
-        vcf_files = expand(f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz',
-                           sample=SAMPLES)
-    params:
-        species = species,
-        n_samples = N_SAMPLES,
-        genotyped_dir = f'{output_dir}/results-genotyped/',
-        output_dir = output_dir
-    output:
-        f'{output_dir}/{species}.smoove.square.vcf.gz'
-    shell:
-        """
-        set -euo pipefail
-        
-        if [ "{params.n_samples}" -eq 1 ]; then
-            # Single-sample: copy and index
-            cp -f {input.vcf_files} {output}
-            if [ ! -s {output}.tbi ]; then
-                tabix -f -p vcf {output}
+    rule smoove_4:
+        input:
+            vcf_files = expand(f'{output_dir}/results-genotyped/{{sample}}-joint-smoove.genotyped.vcf.gz',
+                               sample=SAMPLES)
+        params:
+            species = species,
+            n_samples = N_SAMPLES,
+            genotyped_dir = f'{output_dir}/results-genotyped/',
+            output_dir = output_dir
+        output:
+            f'{output_dir}/{species}.smoove.square.vcf.gz'
+        shell:
+            """
+            set -euo pipefail
+            
+            if [ "{params.n_samples}" -eq 1 ]; then
+                # Single-sample: copy and index
+                cp -f {input.vcf_files} {output}
+                if [ ! -s {output}.tbi ]; then
+                    tabix -f -p vcf {output}
+                fi
+            else
+                # Multi-sample: paste
+                smoove paste --name {params.species} --outdir {params.output_dir} \
+                    {params.genotyped_dir}/*.genotyped.vcf.gz
+                # Ensure index exists
+                if [ ! -s {output}.tbi ]; then
+                    tabix -f -p vcf {output}
+                fi
             fi
-        else
-            # Multi-sample: paste
-            smoove paste --name {params.species} --outdir {params.output_dir} \
-                {params.genotyped_dir}/*.genotyped.vcf.gz
-            # Ensure index exists
-            if [ ! -s {output}.tbi ]; then
-                tabix -f -p vcf {output}
-            fi
-        fi
-        """
+            """
 
+    rule smoove_global_vcf:
+        input:
+            f'{output_dir}/{species}.smoove.square.vcf.gz'
+        params:
+            input_file = f'{output_dir}/{species}.smoove.square.vcf'
+        output:
+            global_vcf = f'{output_dir}/{species}_smoove_global.vcf'
+        shell:
+            "gzip -f -d {input} && "
+            """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} > {output} """
 
-rule smoove_global_vcf:
-    input:
-        f'{output_dir}/{species}.smoove.square.vcf.gz'
-    params:
-        input_file = f'{output_dir}/{species}.smoove.square.vcf'
-    output:
-        global_vcf = f'{output_dir}/{species}_smoove_global.vcf'
-    shell:
-        "gzip -f -d {input} && "
-        """bcftools query -f "%CHROM\t%POS\t%INFO/END\t%SVLEN\n" {params.input_file} > {output} """
-
-
-
-rule build_histogram_deletions: 
-    input: 
-        global_vcf_file = rules.smoove_global_vcf.output.global_vcf
-    params: 
-        low = low, 
-        high = high
-    output: 
-        plot = f'{output_dir}/{species}_smoove_plot.svg'
-    script: 
-        "src/build_histogram_deletions.py"
+    rule build_histogram_deletions: 
+        input: 
+            global_vcf_file = rules.smoove_global_vcf.output.global_vcf
+        params: 
+            low = low, 
+            high = high
+        output: 
+            plot = f'{output_dir}/{species}_smoove_plot.svg'
+        script: 
+            "src/build_histogram_deletions.py"
