@@ -2,7 +2,7 @@ species: horse
 data_dir: data
 output_dir: output
 zipped_ref_genome_filepath: data/horse_reference.zip
-zipped_gtf_filepath: data/horse_reference.zip
+zipped_gtf_filepath: data/horse_gtf.zip
 input_type: fastq
 fastq_input:
   sample_list: horse_samples.txt
@@ -10,5 +10,5 @@ fastq_input:
 threads: 8
 low: 0
 high: 10000
-gene: y  # Include gene annotations
-run_smoove: false  # Skip smoove/lumpy deletion analysis
+gene: y
+run_smoove: false

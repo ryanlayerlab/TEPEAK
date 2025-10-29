@@ -126,6 +126,7 @@ threads: 10
 low: 0
 high: 10000
 gene: y
+run_smoove: false
 ```
 
 Example: custom FASTQ Input
@@ -144,8 +145,13 @@ threads: 8
 low: 0
 high: 10000
 gene: n
+run_smoove: false
 
 ```
+
+#### Configuration Parameters
+
+- `run_smoove`: (default: false) Whether to run smoove/lumpy deletion analysis. When false, skips all smoove rules and related outputs to focus only on insertion analysis via insurveyor.
 
 ## Running TEPEAK
 
@@ -162,13 +168,19 @@ Key outputs include:
 
 - <species>_insertions_plot.svg — insertion histogram
 
-- <species>_smoove_plot.svg — deletion histogram
-
 - <species>_global_vcf.txt — global VCF of insertions
+
+- dfam_annotate.csv — Dfam annotations for peak sequences
+
+If `run_smoove: true`:
+
+- <species>_smoove_plot.svg — deletion histogram
 
 - <species>.smoove.square.vcf.gz — squared Smoove VCF across samples
 
-Gene annotation tables (if gene: y)
+If `gene: y`:
+
+- Gene annotation tables in peak_<low>-<high>/ directory
 
 ## Notes
 
