@@ -26,7 +26,11 @@ java -jar build/libs/picard.jar
 
 If you run into Java errors, make sure you have a modern Java JDK installed.
 
-
+## Quick Start
+To run TEPEAK:
+```bash
+snakemake --configfile config.yaml --cores 8
+```
 ## Directory Structure
 
 **The directory structure is flexible** and controlled by your config file parameters. You can organize your files however you prefer. The examples below are just suggestions - adjust the paths in your config.yaml to match your preferred structure.
