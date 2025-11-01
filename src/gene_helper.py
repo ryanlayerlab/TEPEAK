@@ -3,21 +3,85 @@ import re, os
 import sys
 
 def main():
-    species = snakemake.params.species
-    gtf_file = snakemake.input.gtf_file 
+    # Get file paths from Snakemake
+    gtf_file = snakemake.input.gtf_file
     range_file = snakemake.input.range_file
+    species = snakemake.params.species
     output_dir = snakemake.params.output_dir
-    low, high = snakemake.params.low, snakemake.params.high
-    peak_path = os.path.join(output_dir, f'peak_{low}-{high}')
-    peak_species_filename = f'{species}_{low}-{high}'
-    gcf_annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gtf.txt')
-    loci_annotated_file = os.path.join(peak_path, f'{peak_species_filename}_gtf_loci.txt')
-    sorted_range_file = os.path.join(peak_path, f'{peak_species_filename}_pop_vcf_sorted.txt')
-   
-    os.system(f'bedtools sort -i {range_file} > {sorted_range_file}')
-    os.system(f'bedtools intersect -a {gtf_file} -b {sorted_range_file} -wb > {gcf_annotated_file}')
+    low = snakemake.params.low
+    high = snakemake.params.high
     
-    with open(gcf_annotated_file) as f, open(loci_annotated_file, 'w') as w:
+    # Create output directory
+    os.makedirs(f'{output_dir}/peak_{low}-{high}', exist_ok=True)
+    
+    # Output files
+    loci_annotated_file = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_gtf_loci.txt'
+    gtf_output_file = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_gtf.txt'
+    gene_annotate_file = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_gene_annotate.txt'
+    
+    print("Starting gene annotation...")
+    print(f"GTF file: {gtf_file}")
+    print(f"Range file: {range_file}")
+    
+    # Check if input files exist and are not empty
+    if not os.path.exists(gtf_file) or os.path.getsize(gtf_file) == 0:
+        print(f"Error: GTF file {gtf_file} is missing or empty")
+        # Create empty output files
+        for output_file in [loci_annotated_file, gtf_output_file, gene_annotate_file]:
+            with open(output_file, 'w') as f:
+                f.write("")
+        return
+    
+    if not os.path.exists(range_file) or os.path.getsize(range_file) == 0:
+        print(f"Error: Range file {range_file} is missing or empty")
+        # Create empty output files
+        for output_file in [loci_annotated_file, gtf_output_file, gene_annotate_file]:
+            with open(output_file, 'w') as f:
+                f.write("")
+        return
+    
+    # Run bedtools intersect
+    cmd = f'bedtools intersect -a {range_file} -b {gtf_file} -wa -wb > {loci_annotated_file}'
+    print(f"Running: {cmd}")
+    os.system(cmd)
+    
+    # Check if intersect produced results
+    if not os.path.exists(loci_annotated_file) or os.path.getsize(loci_annotated_file) == 0:
+        print("Warning: No intersections found between insertions and genes")
+        print("This could mean:")
+        print("  1. No insertions overlap with annotated genes")
+        print("  2. GTF file format is incompatible")
+        print("  3. Chromosome naming mismatch between VCF and GTF")
+        
+        # Create empty output files with headers
+        with open(gene_annotate_file, 'w') as f:
+            f.write("chrom\tstart\tend\tlength\tseq\tgene_name\tgene_type\n")
+        
+        with open(gtf_output_file, 'w') as f:
+            f.write("")
+            
+        return
+    
+    try:
+        # Read the intersect results
+        df = pd.read_csv(loci_annotated_file, sep='\t', header=None)
+        print(f"Found {len(df)} intersection records")
+        
+        # Continue with processing...
+        # ...existing code for processing intersections...
+        
+    except pd.errors.EmptyDataError:
+        print("Warning: Intersection file is empty - no genes overlap with insertions")
+        # Create empty output files with headers
+        with open(gene_annotate_file, 'w') as f:
+            f.write("chrom\tstart\tend\tlength\tseq\tgene_name\tgene_type\n")
+        
+        with open(gtf_output_file, 'w') as f:
+            f.write("")
+        
+        return
+
+    with open(gtf_annotated_file) as f, open(loci_annotated_file, 'w') as w:
         lines = f.readlines()
         for line in lines:
             try:

@@ -44,17 +44,20 @@ def construct_all_clusters(remaining_sequences, peak):
     aligner.open_gap_score = 0
     aligner.extend_gap_score = 0
     
-    for X in remaining_sequences:
+    for i in range(len(remaining_sequences)):
         cluster = []
-        X_seq = X
-        for j, Y in enumerate(remaining_sequences):
-            Y_seq = Y
-            # Use the aligner instance to perform alignment
+        X_seq = remaining_sequences[i]
+        for j in range(i+1, len(remaining_sequences)):
+            Y_seq = remaining_sequences[j]
+            
+            # Fix: Use modern BioPython API
             alignments = aligner.align(X_seq, Y_seq)
-            # Get the score from the first alignment
-            if float(alignments[0].score) >= 0.75 * peak:
-                cluster.append(Y)
-                del remaining_sequences[j]
+            if alignments:
+                best_alignment = alignments[0]
+                score = best_alignment.score
+                if score >= 0.75 * peak:
+                    cluster.append(Y_seq)
+                    del remaining_sequences[j]
         if len(cluster) > 0:
             all_clusters.append(cluster)
     return all_clusters
