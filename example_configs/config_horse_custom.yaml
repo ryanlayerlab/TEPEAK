@@ -8,7 +8,25 @@ fastq_input:
   sample_list: horse_samples.txt
   fastq_dir: data/horse/fastq
 threads: 8
-low: 0
-high: 10000
+low: 200
+high: 6400
 gene: y  # Include gene annotations
 run_smoove: false  # Skip smoove/lumpy deletion analysis
+
+# Functional Enrichment Analysis (optional)
+run_enrichment: true  # Enable GO/pathway enrichment analysis
+#enrichment_organism: hsapiens  # Override auto-detection
+enrichment_max_pvalue: 0.01  # Stricter p-value threshold
+
+# TEPEAK Peak Finding Parameters (optional - these are defaults)
+tepeak_min_cluster_size: 10
+tepeak_percentile_threshold: 75
+tepeak_window_size: 50
+tepeak_merge_distance: 100
+tepeak_pid_threshold: 0.85
+tepeak_max_clusters: 50
+tepeak_max_sample_seqs: 200
+tepeak_dfam_evalue: 10.0
+tepeak_dfam_batch_size: 5
+tepeak_dfam_delay: 3.0
+tepeak_dfam_organism: "Equus caballus"  # Override auto-detection

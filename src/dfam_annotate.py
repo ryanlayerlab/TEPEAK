@@ -34,12 +34,24 @@ def construct_peak_seq(df, peaks):
 
 def construct_all_clusters(remaining_sequences, peak):
     all_clusters = []
+    
+    # Create aligner once - mimics old pairwise2.align.globalxx behavior
+    # (match=1, mismatch=0, gap=0)
+    aligner = PairwiseAligner()
+    aligner.mode = 'global'
+    aligner.match_score = 1
+    aligner.mismatch_score = 0
+    aligner.open_gap_score = 0
+    aligner.extend_gap_score = 0
+    
     for X in remaining_sequences:
         cluster = []
         X_seq = X
         for j, Y in enumerate(remaining_sequences):
             Y_seq = Y
-            alignments = PairwiseAligner.align.globalxx(X_seq, Y_seq)
+            # Use the aligner instance to perform alignment
+            alignments = aligner.align(X_seq, Y_seq)
+            # Get the score from the first alignment
             if float(alignments[0].score) >= 0.75 * peak:
                 cluster.append(Y)
                 del remaining_sequences[j]

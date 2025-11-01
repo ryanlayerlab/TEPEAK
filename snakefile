@@ -5,6 +5,8 @@ shell.prefix(
 configfile: 'config.yaml'
 import pandas as pd
 import os
+import hashlib
+import json
 
 REF_EXTENSIONS = ['fa', 'fa.fai', 'fa.amb', 'fa.ann', 'fa.bwt', 'fa.pac', 'fa.sa']
 ANN_EXTENSIONS = ['gene_annotate.txt', 'gtf_loci.txt', 'gtf.txt', 'pop_vcf_sorted.txt']
@@ -21,15 +23,31 @@ output_dir = f"{config['output_dir'].strip('/')}/{species}"
 final = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_merged'
 ALL = [
     f'{output_dir}/{species}_global_vcf.txt', 
-    f'{output_dir}/dfam_annotate.csv', 
-    f'{output_dir}/{species}_insertions_plot.svg', 
+    f'{output_dir}/tepeak_families_annotated.csv',
+    f'{output_dir}/tepeak_clusters_plot.png',
+    f'{output_dir}/{species}_insertions_plot.png', 
     f'{final}_genes.txt' if config['gene'].lower() in ('y', 'yes') else f'{final}.txt'
 ]
+
+# Add enrichment analysis outputs if enabled
+if config.get('gene', '').lower() in ('y', 'yes') and config.get('run_enrichment', False):
+    ALL.extend([
+        f'{output_dir}/{species}_enrichment_results.csv',
+        f'{output_dir}/{species}_enrichment_summary.txt'
+    ])
+
+# Add phylogenetic analysis outputs if enabled
+if config.get('run_phylogeny', False):
+    ALL.extend([
+        f'{output_dir}/{species}_te_alignment.fasta',
+        f'{output_dir}/{species}_te_phylogeny.newick',
+        f'{output_dir}/{species}_phylogeny_summary.txt'
+    ])
 
 # Add smoove outputs only if run_smoove is True
 if run_smoove:
     ALL.extend([
-        f'{output_dir}/{species}_smoove_plot.svg'
+        f'{output_dir}/{species}_smoove_plot.png'
     ])
 
 
@@ -162,6 +180,18 @@ rule get_global_vcf:
     shell:
         "bash src/get_global_vcf.sh -s {params.species} -o {params.output_dir} -f {input.sample_file}"
 
+rule tepeak_advanced: 
+    input: 
+        global_vcf = rules.get_global_vcf.output.global_vcf
+    params: 
+        output_dir = output_dir
+    output: 
+        families_csv = f'{output_dir}/tepeak_families_annotated.csv',
+        clusters_plot = f'{output_dir}/tepeak_clusters_plot.png'
+    script: 
+        "src/tepeak_advanced.py"
+
+# Keep the original dfam_annotate rule for backward compatibility
 rule dfam_annotate: 
     input: 
         global_vcf = rules.get_global_vcf.output.global_vcf, 
@@ -246,9 +276,55 @@ rule build_histogram_insertions:
         low = low, 
         high = high
     output: 
-        plot = f'{output_dir}/{species}_insertions_plot.svg'
+        plot = f'{output_dir}/{species}_insertions_plot.png'
     script: 
         "src/build_histogram.py"
+
+# Add a config checkpoint to trigger reruns when config changes
+def get_config_hash():
+    """Generate hash of relevant config parameters to detect changes."""
+    relevant_config = {
+        'run_enrichment': config.get('run_enrichment', False),
+        'gene': config.get('gene', 'n'),
+        'enrichment_organism': config.get('enrichment_organism', ''),
+        'enrichment_sources': config.get('enrichment_sources', []),
+        'enrichment_max_pvalue': config.get('enrichment_max_pvalue', 0.05)
+    }
+    config_str = json.dumps(relevant_config, sort_keys=True)
+    return hashlib.md5(config_str.encode()).hexdigest()
+
+CONFIG_HASH = get_config_hash()
+
+# Only define enrichment rule if both gene annotation and enrichment are enabled
+if config.get('gene', '').lower() in ('y', 'yes') and config.get('run_enrichment', False):
+    rule functional_enrichment:
+        input:
+            annotation_file = f'{output_dir}/peak_{low}-{high}/{species}_{low}-{high}_gene_annotate.txt'
+        params:
+            species = species,
+            output_dir = output_dir,
+            config_hash = CONFIG_HASH  # This will trigger rerun when config changes
+        output:
+            results_csv = f'{output_dir}/{species}_enrichment_results.csv',
+            summary_txt = f'{output_dir}/{species}_enrichment_summary.txt'
+        script:
+            "src/functional_enrichment.py"
+
+# Only define phylogeny rule if enabled
+if config.get('run_phylogeny', False):
+    rule phylogenetic_analysis:
+        input:
+            families_csv = f'{output_dir}/tepeak_families_annotated.csv'
+        params:
+            species = species,
+            output_dir = output_dir
+        threads: config.get('threads', 4)
+        output:
+            alignment = f'{output_dir}/{species}_te_alignment.fasta',
+            tree = f'{output_dir}/{species}_te_phylogeny.newick',
+            summary = f'{output_dir}/{species}_phylogeny_summary.txt'
+        script:
+            "src/phylogenetic_analysis.py"
 
 # Only define smoove rules if run_smoove is True
 if run_smoove:
@@ -353,6 +429,6 @@ if run_smoove:
             low = low, 
             high = high
         output: 
-            plot = f'{output_dir}/{species}_smoove_plot.svg'
+            plot = f'{output_dir}/{species}_smoove_plot.png'
         script: 
             "src/build_histogram_deletions.py"

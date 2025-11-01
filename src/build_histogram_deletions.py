@@ -22,9 +22,9 @@ def main():
     plt.hist(t_rows['length'], density=False, bins=len(t))
     plt.ylabel('Frequency')
     plt.xlabel('Deletion size (bp)')
-    plt.show()
 
     plt.savefig(snakemake.output.plot)
+    plt.close()
 
 if __name__ == '__main__':
     main()

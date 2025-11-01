@@ -17,3 +17,9 @@ dependencies:
   - pysam
   - pyyaml
   - pandas
+  - scipy
+  - seaborn
+  - requests
+  - biopython
+  - mafft
+  - fasttree

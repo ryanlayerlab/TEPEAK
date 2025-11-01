@@ -8,7 +8,32 @@ fastq_input:
   sample_list: horse_samples.txt
   fastq_dir: data/horse/fastq
 threads: 8
-low: 0
-high: 10000
+low: 200
+high: 6400
 gene: y
 run_smoove: false
+run_enrichment: false  # Make sure this is true
+run_phylogeny: true  # Set to true to enable phylogenetic analysis
+
+# Functional Enrichment Analysis (optional)
+enrichment_organism: Equus caballus  
+enrichment_sources: ['GO:BP', 'GO:MF', 'GO:CC', 'KEGG', 'REAC']  # Data sources to query
+enrichment_max_pvalue: 0.05  # P-value threshold
+enrichment_max_terms: 50  # Maximum number of terms to report
+
+# TEPEAK Peak Finding Parameters (optional)
+tepeak_min_cluster_size: 10
+tepeak_percentile_threshold: 75
+tepeak_window_size: 50
+tepeak_merge_distance: 100
+tepeak_pid_threshold: 0.85
+tepeak_max_clusters: 50
+tepeak_max_sample_seqs: 200
+tepeak_dfam_evalue: 1.0  # More reasonable e-value cutoff
+tepeak_dfam_batch_size: 5
+tepeak_dfam_delay: 3.0
+tepeak_dfam_organism: "Equus caballus"  # Scientific name for horse
+
+# Phylogenetic Analysis (optional)
+phylo_min_sequences: 3    # Minimum sequences required for phylogeny
+phylo_max_sequences: 50   # Maximum sequences to include (for performance)
