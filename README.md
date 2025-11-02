@@ -71,7 +71,10 @@ TEPEAK can run in two modes:
 **Required inputs:**
 - Zipped genome reference (e.g. `ncbi_dataset.zip`)
 - Zipped genome GTF (for gene annotations, e.g. `ncbi_dataset_gtf.zip`)  
-- SRA run table (CSV/TSV from NCBI)
+- SRA run table. This can be a list of SRA Accession numbers or the SRARunInfo file downloaded from NCBI SRA
+
+**Need help getting the SRA Run Table?** See our [detailed guide on downloading SRA Run Tables from NCBI](https://github.com/ryanlayerlab/TEPEAK/wiki/Getting-the-SRARunInfo-file).
+
 
 ### 2. Custom FASTQ mode
 
