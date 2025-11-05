@@ -1,0 +1,21 @@
+species: eFus
+data_dir: data
+output_dir: output
+zipped_ref_genome_filepath: data/mEptFus1.3.pri.fa.zip
+zipped_gtf_filepath: data/eFus_toga.gtf.zip
+fastq_input:
+  sample_list: eFus_samples.txt
+  fastq_dir: data/fastq
+input_type: fastq
+threads: 64
+low: 0
+high: 10000
+gene: y
+run_smoove: false
+run_enrichment: false  # Enable if functional analysis is desired
+run_phylogeny: false   # Enable if phylogenetic analysis is desired
+
+# TEPEAK Advanced Parameters (optional)
+tepeak_dfam_organism: "Eptesicus fuscus"  # Scientific name for big brown bat
+tepeak_dfam_evalue: 5.0
+tepeak_max_sample_seqs: 500  # Increase for larger datasets
