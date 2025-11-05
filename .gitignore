@@ -162,3 +162,5 @@ HORSE_SETUP.md
 debug_align.sh
 tree.sh
 
+config_eFus_example.yaml
+config_horse_no_smoove.yaml
