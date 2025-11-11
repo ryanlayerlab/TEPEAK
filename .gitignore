@@ -1,4 +1,7 @@
 **.DS_Store
+scripts/duplicate_horse_sample.sh
+scripts/duplicate_sample_for_testing.py
+scripts/duplicate_sample_for_testing.sh
 config_horse_no_smoove.yaml
 config_eFus_example.yaml
 debug.sh
