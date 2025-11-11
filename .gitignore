@@ -164,3 +164,26 @@ tree.sh
 
 config_eFus_example.yaml
 config_horse_no_smoove.yaml
+
+# Parallelization testing files
+*_test.bam
+*_test.bam.bai
+*_test.fastq
+*_test.fastq.gz
+*_test.fq
+*_test.fq.gz
+*_test/
+
+# Temporary sample files created by per-sample rules
+*_temp.txt
+data/*/SRR*_test*
+data/*/E*_test*
+
+# Test duplicate entries in sample lists (lines ending with _test)
+# Note: This doesn't ignore the files themselves, just warns that 
+# sample files may contain test entries
+
+# Additional temporary files from parallelization
+*.temp
+*.tmp
+temp_*

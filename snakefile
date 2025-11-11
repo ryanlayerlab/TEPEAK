@@ -104,56 +104,124 @@ rule process_reference:
     script:
         "src/process_reference.py"
 
+# REMOVE THIS ENTIRE RULE - it conflicts with align_one_sample
+# rule align_species: 
+#     input: 
+#         ref_files = rules.process_reference.output.ref, 
+#         sample_file = sample_file
+#     params: 
+#         species = species, 
+#         species_dir = species_dir, 
+#         threads = config['threads'],
+#         input_type = input_type,
+#         fastq_dir = config.get('fastq_input', {}).get('fastq_dir', '') if input_type == 'fastq' else ''
+#     threads: config['threads']
+#     output: 
+#         expand(
+#             [
+#                 f'{species_dir}/{{sample}}.bam', 
+#                 f'{species_dir}/{{sample}}.bam.bai', 
+#             ], 
+#             sample = SAMPLES
+#         )
+#     shell:
+#         """
+#         if [ "{params.input_type}" = "fastq" ]; then
+#             echo "Running custom FASTQ alignment..."
+#             bash -x scripts/align_species.sh \
+#                 -s {params.species} \
+#                 -d {params.species_dir} \
+#                 -t {params.threads} \
+#                 -f {params.fastq_dir} \
+#                 -l {input.sample_file}
+#         else
+#             echo "Running SRA alignment..."
+#             bash src/align_species.sh -s {params.species} -d {params.species_dir} -t {params.threads} -f {input.sample_file}
+#         fi
+#         """
 
-rule align_species: 
-    input: 
-        ref_files = rules.process_reference.output.ref, 
+# Per-sample alignment rule for parallelization
+rule align_one_sample:
+    input:
+        ref_files = rules.process_reference.output.ref,
         sample_file = sample_file
-    params: 
-        species = species, 
-        species_dir = species_dir, 
-        threads = config['threads'],
+    params:
+        species = species,
+        species_dir = species_dir,
         input_type = input_type,
         fastq_dir = config.get('fastq_input', {}).get('fastq_dir', '') if input_type == 'fastq' else ''
-    threads: config['threads']
-    output: 
-        expand(
-            [
-                f'{species_dir}/{{sample}}.bam', 
-                f'{species_dir}/{{sample}}.bam.bai', 
-            ], 
-            sample = SAMPLES
-        )
+    threads: max(1, config['threads'] // max(1, len(SAMPLES)))
+    output:
+        bam = f'{species_dir}/{{sample}}.bam',
+        bai = f'{species_dir}/{{sample}}.bam.bai'
     shell:
         """
         if [ "{params.input_type}" = "fastq" ]; then
-            echo "Running custom FASTQ alignment..."
-            bash -x scripts/align_species.sh \
+            echo "Aligning sample {wildcards.sample} with FASTQ input..."
+            echo "{wildcards.sample}" > {params.species_dir}/{wildcards.sample}_temp.txt
+            bash scripts/align_species.sh \
                 -s {params.species} \
                 -d {params.species_dir} \
-                -t {params.threads} \
+                -t {threads} \
                 -f {params.fastq_dir} \
-                -l {input.sample_file}
+                -l {params.species_dir}/{wildcards.sample}_temp.txt
+            rm -f {params.species_dir}/{wildcards.sample}_temp.txt
         else
-            echo "Running SRA alignment..."
-            bash src/align_species.sh -s {params.species} -d {params.species_dir} -t {params.threads} -f {input.sample_file}
+            echo "Aligning sample {wildcards.sample} with SRA input..."
+            echo "{wildcards.sample}" > {params.species_dir}/{wildcards.sample}_temp.txt
+            bash src/align_species.sh \
+                -s {params.species} \
+                -d {params.species_dir} \
+                -t {threads} \
+                -f {params.species_dir}/{wildcards.sample}_temp.txt
+            rm -f {params.species_dir}/{wildcards.sample}_temp.txt
         fi
         """
 
+# Per-sample insertion calling
+rule call_insertions_one_sample:
+    input:
+        ref = f'{species_dir}/{species}.fa',
+        bam = f'{species_dir}/{{sample}}.bam',
+        bai = f'{species_dir}/{{sample}}.bam.bai'
+    params:
+        output_dir = output_dir
+    threads: 1
+    output:
+        vcf = f'{output_dir}/{{sample}}/out.pass.vcf.gz'
+    shell:
+        """
+        mkdir -p {params.output_dir}/{wildcards.sample}
+        echo "Calling insertions for sample {wildcards.sample}..."
+        insurveyor {input.bam} {input.ref} {params.output_dir}/{wildcards.sample}
+        """
+
+# Aggregation rule - ensures all per-sample jobs complete before downstream rules
 rule call_insertions_serial: 
     input: 
         sample_file = sample_file, 
         ref = f'{species_dir}/{species}.fa', 
-        bam_file = expand(f'{species_dir}/{{sample}}.bam', sample = SAMPLES)
+        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES)
     params: 
-        threads = threads, 
         species_dir = species_dir, 
-        output_dir = output_dir
+        output_dir = output_dir,
+        samples = SAMPLES
     output: 
-        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample = SAMPLES)
-    script: 
-        "src/call_insertions_serial.py"
+        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES)
+    shell:
+        """
+        echo "All per-sample insertion calling completed for {len(SAMPLES)} samples"
+        # Verify all files exist
+        for sample in {params.samples}; do
+            if [ ! -f {params.output_dir}/${{sample}}/out.pass.vcf.gz ]; then
+                echo "Error: Missing VCF for sample ${{sample}}"
+                exit 1
+            fi
+        done
+        echo "All VCF files verified successfully"
+        """
 
+# Update downstream rules to depend on aggregation rule
 rule check_insertions:
     input:
         sample_file = sample_file,
@@ -164,9 +232,7 @@ rule check_insertions:
     output:
         count_file = f'{output_dir}/{species}_count.txt'
     shell:
-        # your script should *not* re-emit the VCFs; it can validate/summarize only
         "bash src/check_insertions.sh -s {params.species} -o {params.output_dir} -f {input.sample_file}"
-
 
 rule get_global_vcf:
     input:
@@ -331,8 +397,8 @@ if run_smoove:
     rule smoove_1: 
         input: 
             bam_files = f'{species_dir}/{{sample}}.bam',
-            reference_file = f'{species_dir}/{species}.fa', 
-            input_dir = f'{species_dir}'
+            bai_files = f'{species_dir}/{{sample}}.bam.bai',
+            reference_file = f'{species_dir}/{species}.fa'
         params: 
             output_dir = f'{output_dir}/results-smoove/',
             species_dir = species_dir
