@@ -4,22 +4,35 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  # Python and core packages
   - python=3.9
-  - insurveyor
-  - snakemake
-  - bcftools
-  - bedtools
-  - bwa
-  - htslib
-  - samtools
-  - matplotlib
-  - numpy
-  - pysam
-  - pyyaml
   - pandas
-  - scipy
+  - numpy
+  - matplotlib
   - seaborn
+  - scipy
   - requests
   - biopython
-  - mafft
+
+  # Bioinformatics tools
+  - bwa
+  - samtools
+  - bedtools
+  - bcftools
+  - tabix
+  # Removed picard - using local build as per README
   - fasttree
+  - mafft
+
+  # SRA toolkit for downloading data
+  - sra-tools
+
+  # Java for running Picard (required by README)
+  - openjdk>=11
+
+  # Additional analysis tools
+  - pip
+
+  pip:
+    # Any Python packages not available in conda
+    - gprofiler-official

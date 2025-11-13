@@ -24,7 +24,22 @@ cd picard/
 java -jar build/libs/picard.jar
 ```
 
-If you run into Java errors, make sure you have a modern Java JDK installed.
+**Important**: The Picard jar file must be located at `picard/build/libs/picard.jar` relative to the TEPEAK directory. The alignment scripts will automatically detect and use this path.
+
+If you run into Java errors, make sure you have a modern Java JDK installed:
+```bash
+# Check Java version
+java -version
+
+# If needed, install Java (included in conda environment)
+conda activate insurveyor-env
+java -version  # Should show Java 11 or higher
+```
+
+**Troubleshooting Picard**:
+- If you get "Picard not found" errors, ensure the path `TEPEAK/picard/build/libs/picard.jar` exists
+- If Gradle build fails, try: `./gradlew clean && ./gradlew shadowJar`
+- Make sure you're running the Gradle build from inside the `picard/` directory
 
 ## Quick Start
 To run TEPEAK:

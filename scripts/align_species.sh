@@ -26,7 +26,13 @@ if [[ -z "${species}" || -z "${data_path}" || -z "${sample_file}" ]]; then
   exit 1
 fi
 
-PICARD_JAR="$(dirname "$0")/../picard/build/libs/picard.jar"
+# Get script directory for relative paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEPEAK_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Use conda-installed picard instead of local jar file
+PICARD_CMD="picard"
+
 ref="${data_path}/${species}.fa"
 
 declare -a R1_LIST=()
@@ -115,7 +121,7 @@ align_from_fastq() {
 
   samtools index "${data_path}/${sample}.bam"
 
-  java -jar "${PICARD_JAR}" AddOrReplaceReadGroups \
+  picard AddOrReplaceReadGroups \
     I="${data_path}/${sample}.bam" \
     O="${data_path}/${sample}.rg.bam" \
     RGID="${sample}" RGLB="lib1" RGPL="ILLUMINA" RGPU="unit1" RGSM="${sample}"
@@ -148,7 +154,7 @@ align_from_sra() {
   rm -rf "${tmpdir}"
   samtools index "${data_path}/${sample}.bam"
 
-  java -jar "${PICARD_JAR}" AddOrReplaceReadGroups \
+  picard AddOrReplaceReadGroups \
     I="${data_path}/${sample}.bam" \
     O="${data_path}/${sample}.rg.bam" \
     RGID="${sample}" RGLB="lib1" RGPL="ILLUMINA" RGPU="unit1" RGSM="${sample}"
