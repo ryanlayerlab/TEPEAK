@@ -1,4 +1,7 @@
 shell.prefix(
+    'source ~/.bashrc 2>/dev/null || true; '
+    'conda activate insurveyor-env 2>/dev/null || true; '
+    'export PATH="$CONDA_PREFIX/bin:$PATH"; '
     'fastq-dump > /dev/null 2>&1 || export PATH=$PATH:$PWD/$(ls | grep "sratoolkit")/bin;'
 )
 
@@ -142,59 +145,28 @@ rule align_one_sample:
         fi
         """
 
-# Per-sample insertion calling
-rule call_insertions_one_sample:
-    input:
-        ref = f'{species_dir}/{species}.fa',
-        bam = f'{species_dir}/{{sample}}.bam',
-        bai = f'{species_dir}/{{sample}}.bam.bai'
-    params:
-        output_dir = output_dir
-    threads: 1
-    output:
-        vcf = f'{output_dir}/{{sample}}/out.pass.vcf.gz'
-    shell:
-        """
-        mkdir -p {params.output_dir}/{wildcards.sample}
-        echo "Calling insertions for sample {wildcards.sample}..."
-        insurveyor {input.bam} {input.ref} {params.output_dir}/{wildcards.sample}
-        """
+# Remove the per-sample insertion calling rule and aggregation rule
+# Replace with the original working serial rule
 
-# Aggregation rule - ensures all per-sample jobs complete before downstream rules
 rule call_insertions_serial: 
     input: 
         sample_file = sample_file, 
         ref = f'{species_dir}/{species}.fa', 
-        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES)
+        bam_file = expand(f'{species_dir}/{{sample}}.bam', sample = SAMPLES)
     params: 
+        threads = threads, 
         species_dir = species_dir, 
-        output_dir = output_dir,
-        samples = SAMPLES,
-        num_samples = len(SAMPLES)  # Add this parameter
+        output_dir = output_dir
     output: 
-        # Create a single aggregation marker file instead of the same files as input
-        aggregation_complete = f'{output_dir}/.call_insertions_complete'
-    shell:
-        """
-        echo "All per-sample insertion calling completed for {params.num_samples} samples"
-        # Verify all files exist
-        for sample in {params.samples}; do
-            if [ ! -f {params.output_dir}/${{sample}}/out.pass.vcf.gz ]; then
-                echo "Error: Missing VCF for sample ${{sample}}"
-                exit 1
-            fi
-        done
-        echo "All VCF files verified successfully"
-        # Create completion marker
-        touch {output.aggregation_complete}
-        """
+        vcf_file = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample = SAMPLES)
+    script: 
+        "src/call_insertions_serial.py"
 
-# Update downstream rules to depend on both the VCF files AND aggregation marker
+# Update downstream rules to use the original dependencies
 rule check_insertions:
     input:
         sample_file = sample_file,
-        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES),
-        aggregation_complete = rules.call_insertions_serial.output.aggregation_complete
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
     params:
         species = species,
         output_dir = output_dir
@@ -206,8 +178,7 @@ rule check_insertions:
 rule get_global_vcf:
     input:
         sample_file = sample_file,
-        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES),
-        aggregation_complete = rules.call_insertions_serial.output.aggregation_complete
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
     params:
         species = species,
         output_dir = output_dir
@@ -242,8 +213,7 @@ rule dfam_annotate:
 rule extract_range:
     input:
         sample_file = sample_file,
-        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES),
-        aggregation_complete = rules.call_insertions_serial.output.aggregation_complete
+        vcf_gz = rules.call_insertions_serial.output.vcf_file
     params:
         species = species,
         output_dir = output_dir,

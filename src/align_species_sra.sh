@@ -25,17 +25,50 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEPEAK_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Use local Picard build as per README instructions
-PICARD_JAR="$TEPEAK_DIR/picard/build/libs/picard.jar"
+# Robust Picard detection - check multiple common locations
+PICARD_JAR=""
+POSSIBLE_PICARD_PATHS=(
+    # Relative to TEPEAK directory (README instructions)
+    "$TEPEAK_DIR/picard/build/libs/picard.jar"
+    # Relative to current working directory
+    "$(pwd)/picard/build/libs/picard.jar" 
+    "./picard/build/libs/picard.jar"
+    # Check if user hardcoded a path in environment
+    "${PICARD_JAR_PATH:-}"
+    # Common system locations
+    "/usr/local/bin/picard.jar"
+    "/opt/picard/picard.jar"
+    "$HOME/picard/build/libs/picard.jar"
+    # Check for picard command (conda or system install)
+    "$(which picard 2>/dev/null || echo '')"
+)
 
-# Check if Picard jar exists
-if [ ! -f "$PICARD_JAR" ]; then
-    echo "Error: Picard not found at $PICARD_JAR"
-    echo "Please install Picard following the README instructions:"
-    echo "  git clone https://github.com/broadinstitute/picard.git"
-    echo "  cd picard/"
-    echo "  ./gradlew shadowJar"
-    exit 1
+echo "Searching for Picard installation..."
+for path in "${POSSIBLE_PICARD_PATHS[@]}"; do
+    if [[ -n "$path" && -f "$path" ]]; then
+        PICARD_JAR="$path"
+        echo "Found Picard JAR at: $PICARD_JAR"
+        break
+    fi
+done
+
+# If no JAR found, try picard command
+if [[ -z "$PICARD_JAR" ]]; then
+    if command -v picard &> /dev/null; then
+        PICARD_CMD="picard"
+        echo "Using system picard command: $(which picard)"
+    else
+        echo "Error: Picard not found at any expected location:"
+        printf '  %s\n' "${POSSIBLE_PICARD_PATHS[@]}"
+        echo ""
+        echo "Please install Picard following the README instructions:"
+        echo "  git clone https://github.com/broadinstitute/picard.git"
+        echo "  cd picard/"
+        echo "  ./gradlew shadowJar"
+        echo ""
+        echo "Or set PICARD_JAR_PATH environment variable to the full path"
+        exit 1
+    fi
 fi
 
 echo "Using Picard: $PICARD_JAR"
@@ -75,14 +108,23 @@ while IFS= read -r line; do
     samtools sort "${sra_example}".bam -o "${sra_example}".sorted.bam
     samtools index "${sra_example}".sorted.bam
 
-    # Fix mate information using local Picard build
+    # Fix mate information using detected Picard
     echo "Fixing mate information..."
     mkdir -p tmp
-    java -jar "$PICARD_JAR" FixMateInformation \
-        I="${sra_example}".sorted.bam \
-        ADD_MATE_CIGAR=true \
-        O="${sra_example}".fixed.bam  \
-        TMP_DIR="$(pwd)/tmp"
+    
+    if [[ -n "$PICARD_JAR" ]]; then
+        java -jar "$PICARD_JAR" FixMateInformation \
+            I="${sra_example}".sorted.bam \
+            ADD_MATE_CIGAR=true \
+            O="${sra_example}".fixed.bam  \
+            TMP_DIR="$(pwd)/tmp"
+    else
+        picard FixMateInformation \
+            I="${sra_example}".sorted.bam \
+            ADD_MATE_CIGAR=true \
+            O="${sra_example}".fixed.bam  \
+            TMP_DIR="$(pwd)/tmp"
+    fi
 
     samtools index "${sra_example}".fixed.bam
 

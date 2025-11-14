@@ -14,6 +14,7 @@ conda activate insurveyor-env
 ```
 
 ### Additional requirements
+
 TEPEAK requires a few tools that are not bundled into the conda environment:
 
 #### Picard
@@ -24,22 +25,50 @@ cd picard/
 java -jar build/libs/picard.jar
 ```
 
-**Important**: The Picard jar file must be located at `picard/build/libs/picard.jar` relative to the TEPEAK directory. The alignment scripts will automatically detect and use this path.
+**Important**: The Picard jar file should be located at `picard/build/libs/picard.jar` relative to the TEPEAK directory. The alignment scripts will automatically detect and use this path.
 
-If you run into Java errors, make sure you have a modern Java JDK installed:
-```bash
-# Check Java version
-java -version
+**Troubleshooting Picard Issues:**
 
-# If needed, install Java (included in conda environment)
-conda activate insurveyor-env
-java -version  # Should show Java 11 or higher
-```
+If you encounter Picard path errors, the scripts will search for Picard in this order:
+1. `TEPEAK/picard/build/libs/picard.jar` (recommended location)
+2. `$(pwd)/picard/build/libs/picard.jar` (current directory)
+3. `$PICARD_JAR_PATH` environment variable
+4. Common system locations (`/usr/local/bin/picard.jar`, etc.)
+5. `picard` command in PATH (conda or system install)
 
-**Troubleshooting Picard**:
-- If you get "Picard not found" errors, ensure the path `TEPEAK/picard/build/libs/picard.jar` exists
-- If Gradle build fails, try: `./gradlew clean && ./gradlew shadowJar`
-- Make sure you're running the Gradle build from inside the `picard/` directory
+**Solutions for Picard issues:**
+
+1. **Standard installation** (recommended):
+   ```bash
+   cd TEPEAK
+   git clone https://github.com/broadinstitute/picard.git
+   cd picard/
+   ./gradlew shadowJar
+   ```
+
+2. **Custom location** - set environment variable:
+   ```bash
+   export PICARD_JAR_PATH="/path/to/your/picard.jar"
+   ```
+
+3. **System installation**:
+   ```bash
+   # Using conda (alternative)
+   conda install -c bioconda picard
+   
+   # Or download pre-built JAR
+   wget https://github.com/broadinstitute/picard/releases/download/2.27.5/picard.jar
+   ```
+
+**Java Requirements:**
+- Java 8 or higher is required for Picard
+- Check version: `java -version`
+- If missing: Install OpenJDK (`sudo apt install openjdk-11-jdk` on Ubuntu, or use conda)
+
+If you run into Java errors:
+- Ensure you have a modern Java JDK installed (Java 8+)
+- Try: `./gradlew clean && ./gradlew shadowJar` to rebuild Picard
+- Check Java version: `java -version`
 
 ## Quick Start
 To run TEPEAK:

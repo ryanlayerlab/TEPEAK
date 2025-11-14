@@ -17,7 +17,7 @@ def main():
         ref_file
     ]
 
-# Run insurveyor per sample; ensure output exists even on failure
+    # Run insurveyor per sample; ensure output exists even on failure
     with open(sra_file) as f:
         for line in f:
             sample = line.strip()
@@ -29,6 +29,7 @@ def main():
             # set BAM and working directory args
             cmd[3], cmd[4] = bam_file, work_dir
             try:
+                print(f"Running InsurVeyor for sample {sample}...")
                 subprocess.run(cmd, check=True)
             except subprocess.CalledProcessError:
                 print(f"Warning: insurveyor failed for sample {sample}, creating empty VCF")
