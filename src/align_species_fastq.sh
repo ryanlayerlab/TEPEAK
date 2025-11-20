@@ -121,9 +121,12 @@ echo "Found FASTQ files:"
 echo "  R1: $R1_FILE"
 echo "  R2: $R2_FILE"
 
-# Create temporary directory for this sample
-temp_dir="/tmp/tepeak_${sample_name}_$$"
+# Create temporary directory for this sample - USE SPECIES DIR INSTEAD OF /tmp
+temp_dir="${species_dir}/tmp_${sample_name}_$$"
 mkdir -p "$temp_dir"
+
+# Ensure cleanup happens even if script fails
+trap "rm -rf '$temp_dir'" EXIT
 
 # Align with BWA
 echo "Running BWA alignment..."
@@ -141,14 +144,17 @@ samtools index "${temp_dir}/${sample_name}.sorted.bam"
 echo "Fixing mate information..."
 mkdir -p "${temp_dir}/picard_tmp"
 
+# Set JAVA_OPTS to use our temp directory and increase memory
+export JAVA_OPTS="-Xmx8g -Djava.io.tmpdir=${temp_dir}/picard_tmp"
+
 if [[ -n "$PICARD_JAR" ]]; then
-    java -jar "$PICARD_JAR" FixMateInformation \
+    java -Djava.io.tmpdir="${temp_dir}/picard_tmp" -Xmx8g -jar "$PICARD_JAR" FixMateInformation \
         I="${temp_dir}/${sample_name}.sorted.bam" \
         ADD_MATE_CIGAR=true \
         O="${temp_dir}/${sample_name}.fixed.bam" \
         TMP_DIR="${temp_dir}/picard_tmp"
 else
-    picard FixMateInformation \
+    picard -Djava.io.tmpdir="${temp_dir}/picard_tmp" -Xmx8g FixMateInformation \
         I="${temp_dir}/${sample_name}.sorted.bam" \
         ADD_MATE_CIGAR=true \
         O="${temp_dir}/${sample_name}.fixed.bam" \
@@ -164,7 +170,7 @@ mv "${temp_dir}/${sample_name}.fixed.bam.bai" "${species_dir}/${sample_name}.bam
 
 echo "Successfully processed sample: $sample_name"
 
-# Cleanup temporary files
-rm -rf "$temp_dir"
+# Cleanup is handled by trap
+echo "Temporary files cleaned up from: $temp_dir"
 
 echo "BWA alignment log saved to: ${temp_dir}/bwa_${sample_name}.err"

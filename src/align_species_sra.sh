@@ -87,8 +87,13 @@ while IFS= read -r line; do
 
     echo "Processing SRA sample: $sra_example"
     
-    mkdir -p "$data_path/$sra_example/bwa_errors"
-    cd "$data_path/$sra_example"
+    # Use species directory for temporary files instead of /tmp
+    sample_temp_dir="$data_path/${sra_example}_tmp"
+    mkdir -p "$sample_temp_dir"
+    cd "$sample_temp_dir"
+
+    # Set cleanup trap
+    trap "cd '$data_path' && rm -rf '$sample_temp_dir'" EXIT
 
     # Download and extract FASTQ
     echo "Downloading $sra_example..."
@@ -110,23 +115,24 @@ while IFS= read -r line; do
 
     # Fix mate information using detected Picard
     echo "Fixing mate information..."
-    mkdir -p tmp
+    mkdir -p picard_tmp
+    
+    # Set JAVA_OPTS to use our temp directory and increase memory
+    export JAVA_OPTS="-Xmx8g -Djava.io.tmpdir=$(pwd)/picard_tmp"
     
     if [[ -n "$PICARD_JAR" ]]; then
-        java -jar "$PICARD_JAR" FixMateInformation \
+        java -Djava.io.tmpdir="$(pwd)/picard_tmp" -Xmx8g -jar "$PICARD_JAR" FixMateInformation \
             I="${sra_example}".sorted.bam \
             ADD_MATE_CIGAR=true \
             O="${sra_example}".fixed.bam  \
-            TMP_DIR="$(pwd)/tmp"
+            TMP_DIR="$(pwd)/picard_tmp"
     else
-        picard FixMateInformation \
+        picard -Djava.io.tmpdir="$(pwd)/picard_tmp" -Xmx8g FixMateInformation \
             I="${sra_example}".sorted.bam \
             ADD_MATE_CIGAR=true \
             O="${sra_example}".fixed.bam  \
-            TMP_DIR="$(pwd)/tmp"
+            TMP_DIR="$(pwd)/picard_tmp"
     fi
-
-    samtools index "${sra_example}".fixed.bam
 
     # Move final files to species directory
     mv "${sra_example}".fixed.bam ../"${sra_example}".bam
@@ -135,7 +141,7 @@ while IFS= read -r line; do
     echo "Completed $sra_example"
     
     # Cleanup
-    cd ../..
-    rm -r "$data_path/$sra_example"
+    cd "$data_path"
+    rm -rf "$sample_temp_dir"
   
 done < "$sra_file"
