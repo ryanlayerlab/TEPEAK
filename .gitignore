@@ -190,3 +190,12 @@ data/*/E*_test*
 *.temp
 *.tmp
 temp_*
+
+# Test data (generated files)
+test_output/
+test_config.yaml
+chunks/
+test_data/*.txt
+test_data/*.vcf
+test_data/testSpecies/
+test_data/mock_*
