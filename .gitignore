@@ -199,3 +199,9 @@ test_data/*.txt
 test_data/*.vcf
 test_data/testSpecies/
 test_data/mock_*
+
+TEPEAK_Stage1_BAM_Fix.md
+config_horse_test.yaml
+tepeak_sample_statistics.csv
+tepeak_validation_report.txt
+validate_tepeak_outputs.py

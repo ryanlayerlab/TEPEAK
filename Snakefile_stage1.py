@@ -64,6 +64,43 @@ rule process_reference:
     script:
         "src/process_reference.py"
 
+rule align_one_sample:
+    input:
+        ref_files = rules.process_reference.output.ref,
+        sample_file = sample_file
+    params:
+        species = species,
+        species_dir = species_dir,
+        input_type = input_type,
+        fastq_dir = config.get('fastq_input', {}).get('fastq_dir', '') if input_type == 'fastq' else ''
+    threads: max(1, config['threads'] // max(1, len(SAMPLES)))
+    output:
+        bam = f'{species_dir}/{{sample}}.bam',
+        bai = f'{species_dir}/{{sample}}.bam.bai'
+    shell:
+        """
+        if [ "{params.input_type}" = "fastq" ]; then
+            echo "Aligning sample {wildcards.sample} with FASTQ input..."
+            echo "{wildcards.sample}" > {params.species_dir}/{wildcards.sample}_temp.txt
+            bash src/align_species_fastq.sh \
+                -s {params.species} \
+                -d {params.species_dir} \
+                -t {threads} \
+                -f {params.fastq_dir} \
+                -l {params.species_dir}/{wildcards.sample}_temp.txt
+            rm -f {params.species_dir}/{wildcards.sample}_temp.txt
+        else
+            echo "Aligning sample {wildcards.sample} with SRA input..."
+            echo "{wildcards.sample}" > {params.species_dir}/{wildcards.sample}_temp.txt
+            bash src/align_species_sra.sh \
+                -s {params.species} \
+                -d {params.species_dir} \
+                -t {threads} \
+                -f {params.species_dir}/{wildcards.sample}_temp.txt
+            rm -f {params.species_dir}/{wildcards.sample}_temp.txt
+        fi
+        """
+
 rule align_serial:
     input:
         ref_files = rules.process_reference.output.ref,
@@ -82,9 +119,21 @@ rule align_serial:
         """
         echo "Running serial alignment for $(wc -l < {input.sample_file}) samples..."
         
+        # Use the correct batch alignment script from scripts/ directory
+        # This script is designed to process multiple samples from a file
+        SCRIPT_PATH="$PWD/scripts/align_species.sh"
+        
+        if [ ! -f "$SCRIPT_PATH" ]; then
+            echo "Error: align_species.sh script not found at $SCRIPT_PATH"
+            echo "Available scripts:"
+            ls -la "$PWD/scripts/" || echo "scripts/ directory not found"
+            echo "Current working directory: $PWD"
+            exit 1
+        fi
+        
         if [ "{params.input_type}" = "fastq" ]; then
             echo "Using FASTQ input mode..."
-            bash src/align_species_fastq.sh \
+            bash "$SCRIPT_PATH" \
                 -s {params.species} \
                 -d {params.species_dir} \
                 -t {threads} \
@@ -92,26 +141,58 @@ rule align_serial:
                 -l {input.sample_file}
         else
             echo "Using SRA input mode..."
-            bash src/align_species_sra.sh \
+            bash "$SCRIPT_PATH" \
                 -s {params.species} \
                 -d {params.species_dir} \
                 -t {threads} \
-                -f {input.sample_file}
+                -l {input.sample_file}
         fi
+        
+        echo "Alignment script completed. Verifying outputs..."
+        
+        # List what files were actually created
+        echo "Files created in {params.species_dir}:"
+        ls -la {params.species_dir}/*.bam* 2>/dev/null || echo "No BAM files found"
+        
+        # Verify all expected output files exist
+        missing_files=()
+        for sample in {params.samples}; do
+            bam_file="{params.species_dir}/$sample.bam"
+            bai_file="{params.species_dir}/$sample.bam.bai"
+            
+            if [ ! -f "$bam_file" ]; then
+                missing_files+=("$bam_file")
+            fi
+            
+            if [ ! -f "$bai_file" ]; then
+                missing_files+=("$bai_file")
+            fi
+        done
+        
+        if [ ${{#missing_files[@]}} -gt 0 ]; then
+            echo "Error: Missing expected output files:"
+            printf '  %s\n' "${{missing_files[@]}}"
+            echo ""
+            echo "This might be due to:"
+            echo "1. Sample names in the sample file don't match expected format"
+            echo "2. Alignment script failed for some samples"
+            echo "3. File system latency (try increasing --latency-wait)"
+            exit 1
+        fi
+        
+        echo "All alignment outputs verified successfully"
         """
 
-rule call_insertions_serial:
+rule call_insertions_one_sample:
     input:
         ref = f'{species_dir}/{species}.fa',
-        bam_files = expand(f'{species_dir}/{{sample}}.bam', sample=SAMPLES),
-        bai_files = expand(f'{species_dir}/{{sample}}.bam.bai', sample=SAMPLES),
-        sample_file = sample_file
+        bam = f'{species_dir}/{{sample}}.bam',
+        bai = f'{species_dir}/{{sample}}.bam.bai'
     params:
-        output_dir = output_dir,
-        species_dir = species_dir
+        output_dir = output_dir
     threads: 1
     output:
-        vcf_files = expand(f'{output_dir}/{{sample}}/out.pass.vcf.gz', sample=SAMPLES)
+        vcf = f'{output_dir}/{{sample}}/out.pass.vcf.gz'
     shell:
         """
         # Use the correct insurveyor.py command
@@ -123,18 +204,9 @@ rule call_insertions_serial:
             exit 1
         fi
         
-        echo "Calling insertions for $(wc -l < {input.sample_file}) samples serially..."
+        mkdir -p {params.output_dir}/{wildcards.sample}
+        echo "Calling insertions for sample {wildcards.sample}..."
         echo "Using insurveyor at: $INSURVEYOR_PATH"
         
-        # Process each sample serially to avoid memory issues
-        while IFS= read -r sample; do
-            echo "Processing sample $sample..."
-            mkdir -p {params.output_dir}/$sample
-            
-            if [ -f "{params.species_dir}/$sample.bam" ]; then
-                python "$INSURVEYOR_PATH" "{params.species_dir}/$sample.bam" "{params.output_dir}/$sample" {input.ref}
-            else
-                echo "Warning: BAM file for sample $sample not found"
-            fi
-        done < {input.sample_file}
+        python "$INSURVEYOR_PATH" {input.bam} {params.output_dir}/{wildcards.sample} {input.ref}
         """

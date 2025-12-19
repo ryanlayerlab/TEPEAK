@@ -110,14 +110,15 @@ rule verify_stage1_complete:
     output:
         marker = f'{output_dir}/.stage1_complete'
     params:
-        num_samples = len(SAMPLES) if SAMPLES else 0
+        num_samples = len(SAMPLES) if SAMPLES else 0,
+        output_dir = output_dir
     shell:
         """
         echo "Verifying Stage 1 completion for {params.num_samples} samples..."
         
         if [ {params.num_samples} -eq 0 ]; then
             echo "Error: No samples detected from Stage 1"
-            echo "Expected VCF files in: {output_dir}/*/out.pass.vcf.gz"
+            echo "Expected VCF files in: {params.output_dir}/*/out.pass.vcf.gz"
             exit 1
         fi
         
